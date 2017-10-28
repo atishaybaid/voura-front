@@ -8,6 +8,9 @@ module.exports = {
         filename:'bundle.js',
         publicPath:'/public/'
     },
+    devServer: {
+    port: 8080
+  },
     devtool:'cheap-eval-source-map',
     resolve:{
         extensions:['.js','.jsx','.json']
