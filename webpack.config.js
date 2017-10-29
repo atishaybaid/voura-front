@@ -9,8 +9,10 @@ module.exports = {
         publicPath:'/public/'
     },
     devServer: {
-    port: 8080
+    port: 8080,
+    historyApiFallback: true,
   },
+
     devtool:'cheap-eval-source-map',
     resolve:{
         extensions:['.js','.jsx','.json']
@@ -26,6 +28,16 @@ module.exports = {
             exclude:/node_modules/,
             test: /\.jsx?$/,
             loader: 'babel-loader'
+          },
+          {
+            test:/\.less$/,
+             use: [{
+                loader: "style-loader" // creates style nodes from JS strings 
+            }, {
+                loader: "css-loader" // translates CSS into CommonJS 
+            }, {
+                loader: "less-loader" // compiles Less to CSS 
+            }]
           }
         ]
     }

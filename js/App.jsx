@@ -3,12 +3,19 @@ import ReactDom from 'react-dom';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import {BrowserRouter,Route,Switch} from 'react-router-dom';
 import Landing from './Landing.jsx';
+import Signup from './Signup.jsx';
 
 const App = ()=>(
     <BrowserRouter>
-        <div className="app">
-            <Route  exact path="/" component={Landing} />
-        </div>
+
+        <MuiThemeProvider>
+            <div className="app">
+                <Switch>
+                    <Route  exact path="/" component={Landing} />
+                    <Route  exact path="/signup" component={Signup} />
+                </Switch>
+            </div>
+        </MuiThemeProvider>
         
     </BrowserRouter>
     );
