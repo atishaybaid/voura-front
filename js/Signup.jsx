@@ -1,48 +1,75 @@
 import React ,{ Component } from 'react';
-import VrHeader from './VrHeader.jsx';
 import TextField from 'material-ui/TextField';
+import {Step,Stepper,StepLabel} from 'material-ui/Stepper';
+import FlatButton from 'material-ui/FlatButton';
+import axios from 'axios';
+import VrHeader from './VrHeader.jsx';
 
 
 
-/*class Signup extend Component{
-    constructor()
-}*/
+class Signup extends Component {
+    constructor(props){
+        super();
+        this.state ={
+            finished: false,
+             stepIndex: 0,
+             email:'',
+             pass:''
+        }
 
 
-const Signup =  () => (
-    <div className="signup-page">
-        <VrHeader />
-        <div className="details">
-        <h1>Provide some details,for best experiance</h1>
-        <TextField
-        hintText="Your Name"
-        errorText="Provide Your Name"
-        /><br />
-        <TextField
-        hintText="Your Email"
-        errorText="Provide Your Emai"
-        /><br />
-         <TextField
-        hintText="Password"
-        type="password"
-        errorText="Provide a password"
+    };
+    handleEmailChange(event,newValue){
+        this.setState({email:newValue});
+    };
+    handlePasswordChange(event,newValue){
+        this.setState({pass:newValue});
+    };
+    handleContinue(){
+        //make ajex hit
+        this.setState({stepIndex:1});
+    };
+    render(){
+        return(
+            <div className="signup-page">
+                <VrHeader />
+              
+                <Stepper activeStep={this.state.stepIndex}>
+                    <Step>
+                        <StepLabel>Signup</StepLabel>
+                    </Step>
+                    <Step>
+                        <StepLabel>Add Interests</StepLabel>
+                    </Step>
+                </Stepper>
 
-        /><br />
-        <h2>Education</h2>
-        <TextField
-        hintText="Degree"
-        errorText="Provide Your Degree"
-        /><br />
-        <TextField
-        hintText="Field of Study"
-        errorText="Provide Your Field"
-        /><br />
+                <div className="main">
+                    <h1 className="step-title">Sign up to join community</h1>
+                    <p className="main-line">Just One More step and you're finished.</p>
+                    <TextField
+                        hintText="Email"
+                        errorText="Email is required"
+                        floatingLabelText="Email"
+                        type="email"
+                        onChange={this.handleEmailChange.bind(this)}
+                        value={this.state.email}
+                        /><br />
+                    <TextField
+                        hintText="Password"
+                        errorText="Password is required"
+                        floatingLabelText="Password"
+                        type="password"
+                        onChange={this.handlePasswordChange.bind(this)}
+                        value={this.state.pass}
+                        /><br />
+                    <FlatButton className="landing-btn" label="CONTINUE" primary={true} 
+                            backgroundColor={'#4ebcd5'}  style={{color:'#ffffff'}} onClick={this.handleContinue.bind(this)}
+                 target="_blank"/>
+                </div>
+            </div>
+            )
+    }
+}
 
-
-
-
-        </div>
-    </div>
-    )
 
 export default Signup;
