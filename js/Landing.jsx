@@ -6,7 +6,7 @@ import VrHeader from './VrHeader.jsx';
 
 const Landing = ()=>(
     <div className="landing-page">
-        <VrHeader/>
+        <VrHeader showLogin={true}/>
         <div className="main">
             <div className="info">
                 <h1 className="pitch">A video community to share knowledge!</h1>
