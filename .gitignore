@@ -1,1 +1,15 @@
 node_modules
+i
+# Yarn Integrity file
+.yarn-integrity
+
+
+.idea
+vuora.iml
+*.out
+faltu/
+faltu.*
+public/videos
+package-lock.json
+*.iml
+*.orig

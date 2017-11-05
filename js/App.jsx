@@ -4,6 +4,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import {BrowserRouter,Route,Switch} from 'react-router-dom';
 import Landing from './Landing.jsx';
 import Signup from './Signup.jsx';
+import Seminar from './Seminar.jsx';
 
 const App = ()=>(
     <BrowserRouter>
@@ -12,7 +13,8 @@ const App = ()=>(
             <div className="app">
                 <Switch>
                     <Route  exact path="/" component={Landing} />
-                    <Route  exact path="/signup/:page" component={Signup} />
+                    <Route  exact path="/signup/" component={Signup} />
+                    <Route  exact path="/seminar/" component={Seminar} />
                 </Switch>
             </div>
         </MuiThemeProvider>
