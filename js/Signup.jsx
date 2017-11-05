@@ -45,7 +45,8 @@ class Signup extends Component {
         var axiosInstance = axios.create({
             baseURL: 'http://lapis.intelverse.com:3000/',
             timeout: 5000,
-            headers: {'Access-Control-Allow-Origin': '*'}
+            headers: {'Access-Control-Allow-Origin': 'http://lapis.intelverse.com:3000/' },
+            withCredentials: true
             });
 
         axiosInstance.post('users/signup',data)
