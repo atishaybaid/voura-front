@@ -12,7 +12,10 @@ const App = ()=>(
             <div className="app">
                 <Switch>
                     <Route  exact path="/" component={Landing} />
-                    <Route  exact path="/signup/:page" component={Signup} />
+                    <Route   path="/signup/:page"  component={(props)=>{
+                        return <Signup {...props} />
+                        
+                    }} />
                 </Switch>
             </div>
         </MuiThemeProvider>

@@ -4,9 +4,9 @@ module.exports = {
     context:__dirname,
     entry:'./js/App.jsx',
     output:{
-        path:path.join(__dirname,'public'),
-        filename:'bundle.js',
-        publicPath:'/public/'
+       path: path.join(__dirname, 'public'),
+        filename: 'bundle.js',
+        publicPath: '/public/'
     },
     devServer: {
     port: 8080,
