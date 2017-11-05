@@ -38,12 +38,14 @@ class UserDetails extends Component{
         }        
 
     }
-    handleRequestDelete(selectedTag){
-        console.log("handleRequestDelete called");
-        console.log(selectedTag);
+    handleRequestDelete(tag,index){
+        let selectedTag = this.state.selectedTag;
+
+        this.setState({selectedTag:selectedTag.splice(index,1)});
+        
     }
     renderChips(){
-      return  this.state.selectedTag.map((selectedTag)=>(<Chip key={selectedTag.Name} onRequestDelete={() => this.handleRequestDelete(selectedTag.Name)}>
+      return  this.state.selectedTag.map((selectedTag,index)=>(<Chip key={selectedTag.Name} onRequestDelete={() => this.handleRequestDelete(selectedTag.Name,index)}>
                                         {selectedTag.Name}
                                         </Chip>)
                         

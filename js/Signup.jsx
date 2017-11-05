@@ -43,7 +43,7 @@ class Signup extends Component {
         console.log("on onSubmit called");
 
         var axiosInstance = axios.create({
-            baseURL: 'http://lapis.intelverse.com/',
+            baseURL: 'http://lapis.intelverse.com:3000/',
             timeout: 5000,
             headers: {'Access-Control-Allow-Origin': '*'}
             });
