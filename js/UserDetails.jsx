@@ -12,8 +12,6 @@ class UserDetails extends Component{
             selectedTag:[]
             
         }
-
-        console.log("user details");
         this.renderChips = this.renderChips.bind(this);
         this.handleContinue = this.handleContinue.bind(this);
     }
@@ -21,7 +19,6 @@ class UserDetails extends Component{
         console.log("handleUpdateInput");
     }
     handleTagSelected(chosenTag){
-        console.log(chosenTag);
         let tagObj = {
             tag:chosenTag.Name,
             rating:1
@@ -49,7 +46,6 @@ class UserDetails extends Component{
     handleRequestDelete(tag,index){
         let selectedTag = this.state.selectedTag;
         selectedTag.splice(index,1);
-
        this.setState({selectedTag:selectedTag})
         
     }
@@ -75,17 +71,10 @@ class UserDetails extends Component{
                         
                     )  
     }
-
-    componentDidMount(){
-        console.log("componentDidMount called");
-      
-
-        
-    }
     render(){
         return(
              <div className="userdetails-container">
-                <h1 className="step-title">Provide some intrests,or best experiance</h1>
+                <h1 className="step-title">Provide some intrests,for best experiance</h1>
                 <p className="main-line">Last step and you land to home</p>
                     <AutoComplete
                         hintText="Search Tags"

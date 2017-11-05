@@ -1,8 +1,10 @@
 import React,{Component} from 'react';
+import {Link} from 'react-router-dom';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
 import axios from 'axios';
+import {PostReq} from './utils/apiRequest.jsx';
 import '../less/common.less'
 
 class LoginPopup extends Component {
@@ -13,7 +15,10 @@ class LoginPopup extends Component {
             email:'',
             password:''
         }
-        this.handleLoginOnClick = this.handleLoginOnClick.bind(this)
+        this.handleLoginOnClick = this.handleLoginOnClick.bind(this);
+        this.handleEmailChange = this.handleEmailChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handlePasswordChange = this.handlePasswordChange.bind(this);
     }
     handleLoginOnClick(){
          this.setState({showDialog:true})
@@ -26,22 +31,17 @@ class LoginPopup extends Component {
         this.setState({password:newValue});
     };
     handleSubmit(){
-
-        console.log("handleSubmit called");
         let data = {
             "id":this.state.email,
             "password":this.state.password
         }
-        console.log(data);
-        let axiosInstance = axios.create({
-            baseURL: 'http://lapis.intelverse.com:3000/',
-            timeout: 5000,
-            headers: {'Access-Control-Allow-Origin': '*'}
-            });
-
-        axiosInstance.post('users/signin',data)
+        PostReq('users/signin',data)
             .then(function (response) {
-                console.log(response);
+                console.log(response.status);
+               if(response.status == 200){
+                window.location.href = '/signup/newuser';
+
+               }
            
         })
         .catch(function (error) {
@@ -51,12 +51,11 @@ class LoginPopup extends Component {
     
     render(){
         return(<div className="login-popup">
-                {/*<FlatButton label="Login" onClick={this.handleLoginOnClick}/>*/}
                 <FlatButton className="login-btn" label="Login" primary={true} 
                     backgroundColor={'#4ebcd5'}  style={{color:'#ffffff'}}  onClick={this.handleLoginOnClick}
                 />
 
-             {<Dialog
+             <Dialog
                 title=""
                 actions={null}
                 modal={true}
@@ -70,7 +69,7 @@ class LoginPopup extends Component {
                         floatingLabelText="Email"
                         floatingLabelFixed={true}
                         type="email"
-                        onChange={this.handleEmailChange.bind(this)}
+                        onChange={this.handleEmailChange}
                         value={this.state.email}
                     /><br />
         
@@ -79,16 +78,16 @@ class LoginPopup extends Component {
                     floatingLabelText="Password"
                     floatingLabelFixed={true}
                     type="password"
-                    onChange={this.handlePasswordChange.bind(this)}
+                    onChange={this.handlePasswordChange}
                     value={this.state.pass}
 
                     /><br />
-                    <FlatButton label="Submit" onClick={this.handleSubmit.bind(this)}/>
+                    <FlatButton label="Submit" onClick={this.handleSubmit}/>
 
                 </div>
                
                 </Dialog>
-            }
+            
             </div>
             )
         

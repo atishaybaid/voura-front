@@ -4,40 +4,23 @@ import Login from './Login.jsx';
 const appTitle = 'Voura'
 
 
-
-class VrHeader extends Component{
-    constructor(props){
-        super(props);
-        
+const VrHeader = (props)=>{
         this.utilSpace = null;
-        
         if(props.showLogin){
             this.utilSpace = <Login />
         }
-       
-        
-    }
-    render(){
-        return(
-            <div className="app-header">
+
+    return(<div className="app-header">
                 <AppBar
                 title={appTitle}
                 iconClassNameRight=""
                 showMenuIconButton={false}
                  iconElementRight={this.utilSpace}
                 /> 
-               
-
             </div>
-            
             )
-        
-    }
+
+
 }
-
-/*const VrHeader = () => (
-    
-    )*/
-
 
 export default VrHeader;

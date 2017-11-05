@@ -8,7 +8,9 @@ class SignUpCredentail extends Component {
              email:'',
              pass:''
         }
-
+       this.handleEmailChange = this.handleEmailChange.bind(this);
+       this.handlePasswordChange = this.handlePasswordChange.bind(this);
+       this.handleContinue = this.handleContinue.bind(this);
 
     };
     handleEmailChange(event,newValue){
@@ -30,7 +32,7 @@ class SignUpCredentail extends Component {
                     errorText="Email is required"
                     floatingLabelText="Email"
                     type="email"
-                    onChange={this.handleEmailChange.bind(this)}
+                    onChange={this.handleEmailChange}
                     value={this.state.email}
                 /><br />
                 <TextField
@@ -38,11 +40,11 @@ class SignUpCredentail extends Component {
                     errorText="Password is required"
                     floatingLabelText="Password"
                     type="password"
-                    onChange={this.handlePasswordChange.bind(this)}
+                    onChange={this.handlePasswordChange}
                     value={this.state.pass}
                 /><br />
                 <FlatButton className="landing-btn" label="CONTINUE" primary={true}  backgroundColor={'#4ebcd5'}  style={{color:'#ffffff'}} 
-                    onClick={this.handleContinue.bind(this)} />
+                    onClick={this.handleContinue} />
             </div>
             )
          
