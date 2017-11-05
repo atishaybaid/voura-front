@@ -1,27 +1,21 @@
  import axios from 'axios';
 
- function PostReq(api,baseURL){
+ function PostReq(api,data,timeout,baseURL){
       let axiosInstance = axios.create({
-            baseURL: baseURL || 'http://api.intelverse.com/',
-            timeout: 5000,
+            baseURL: baseURL || 'http://lapis.intelverse.com:3000/',
+            timeout: timeout || 5000,
             headers: {'Access-Control-Allow-Origin': '*'}
             });
 
-        axiosInstance.post(api,data)
-            .then(function (response) {
-                console.log(response);
-           
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
+        return axiosInstance.post(api,data);
+          
  }
 
 
-function GetReq(api,baseURL){
+function GetReq(api,timeout,baseURL){
       let axiosInstance = axios.create({
-            baseURL: baseURL || 'http://api.intelverse.com/',
-            timeout: 5000,
+            baseURL: baseURL || 'http://lapis.intelverse.com:3000/',
+            timeout: timeout||5000,
             headers: {'Access-Control-Allow-Origin': '*',
                 'Authorization': ''}
             });

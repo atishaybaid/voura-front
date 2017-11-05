@@ -1,6 +1,7 @@
 import React,{Component} from 'react';
 import AutoComplete from 'material-ui/AutoComplete';
 import Chip from 'material-ui/Chip';
+import FlatButton from 'material-ui/FlatButton';
 import {PostReq,GetReq} from './utils/apiRequest.jsx';
 
 class UserDetails extends Component{
@@ -14,14 +15,21 @@ class UserDetails extends Component{
 
         console.log("user details");
         this.renderChips = this.renderChips.bind(this);
+        this.handleContinue = this.handleContinue.bind(this);
     }
     handleUpdateInput(){
         console.log("handleUpdateInput");
     }
     handleTagSelected(chosenTag){
-        console.log("handleTagSelected")
         console.log(chosenTag);
-      this.state.selectedTag.push(chosenTag);
+        let tagObj = {
+            tag:chosenTag.Name,
+            rating:1
+        }
+        let tagList = this.state.selectedTag;
+        tagList.push(tagObj);
+        this.setState({selectedTag:tagList})
+       
     }
     handleUpdateUserInput(searchText){
         let that = this;
@@ -40,13 +48,29 @@ class UserDetails extends Component{
     }
     handleRequestDelete(tag,index){
         let selectedTag = this.state.selectedTag;
+        selectedTag.splice(index,1);
 
-        this.setState({selectedTag:selectedTag.splice(index,1)});
+       this.setState({selectedTag:selectedTag})
         
     }
+    handleContinue(){
+        let data = {
+            "id":"atishaybaid@gmail.com",
+            "tags":this.state.selectedTag
+        }
+
+
+        PostReq('/users/tags',data)
+        .then((res)=>{
+            console.log(res);
+        })
+        .catch((err)=>{
+            console.log(error);
+        })
+    }
     renderChips(){
-      return  this.state.selectedTag.map((selectedTag,index)=>(<Chip key={selectedTag.Name} onRequestDelete={() => this.handleRequestDelete(selectedTag.Name,index)}>
-                                        {selectedTag.Name}
+      return  this.state.selectedTag.map((selectedTag,index)=>(<Chip key={`selectedTag.tag_${index}`} onRequestDelete={() => this.handleRequestDelete(selectedTag.tag,index)}>
+                                        {selectedTag.tag}
                                         </Chip>)
                         
                     )  
@@ -74,7 +98,8 @@ class UserDetails extends Component{
                 <div className="selected-tags">
                   {this.renderChips()}
                 </div>
-                
+            <FlatButton className="landing-btn" label="CONTINUE" primary={true}  backgroundColor={'#4ebcd5'}  style={{color:'#ffffff'}} 
+                    onClick={this.handleContinue} />
                 
             </div>   
             )
