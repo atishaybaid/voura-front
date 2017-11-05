@@ -5,7 +5,7 @@ import FlatButton from 'material-ui/FlatButton';
 import axios from 'axios';
 import VrHeader from './VrHeader.jsx';
 import '../less/signup.less'
-
+import iVConfigs from '../Configs/local.json';
 
 class Signup extends Component {
     constructor(props){
@@ -28,7 +28,7 @@ class Signup extends Component {
     handleContinue(){
         //make ajax hit
         let data = {
-            'emailid':this.state.email,
+            'id':this.state.email,
             'password':this.state.pass,
             'name':'',
             'image':''
@@ -36,12 +36,12 @@ class Signup extends Component {
         console.log(data);
 
         var axiosInstance = axios.create({
-            baseURL: 'http://api.intelverse.com/',
-            timeout: 5000,
-            headers: {'Access-Control-Allow-Origin': '*'}
+            baseURL: iVConfigs.common.baseUrl,
+            timeout: iVConfigs.common.timeout,
+            headers: iVConfigs.common.headers
             });
 
-        axiosInstance.post('users/signup',data)
+        axiosInstance.post( iVConfigs.users.signup ,data)
             .then(function (response) {
                 console.log(response);
             this.setState({stepIndex:1});

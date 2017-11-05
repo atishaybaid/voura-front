@@ -9,7 +9,8 @@ module.exports = {
         publicPath:'/public/'
     },
     devServer: {
-    port: 8080,
+    host: "local.intelverse.com",
+    port: 9090,
     historyApiFallback: true,
   },
 

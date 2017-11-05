@@ -6,5 +6,9 @@
     },
     "seminar" : {
         "createSeminarEndpoint" : "timeline/seminar/create"
+    },
+    "users" : {
+        "signup" : "users/signup"
     }
+
 }
