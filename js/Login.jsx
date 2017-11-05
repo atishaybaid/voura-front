@@ -35,8 +35,9 @@ class LoginPopup extends Component {
             "id":this.state.email,
             "password":this.state.password
         }
+
         PostReq('users/signin',data)
-            .then(function (response) {
+        .then(function (response) {
                 console.log(response.status);
                if(response.status == 200){
                 window.location.href = '/signup/newuser';
