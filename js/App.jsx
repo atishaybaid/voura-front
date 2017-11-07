@@ -5,6 +5,8 @@ import {BrowserRouter,Route,Switch} from 'react-router-dom';
 import Landing from './Landing.jsx';
 import Signup from './Signup.jsx';
 import Seminar from './Seminar.jsx';
+import SeminarP from './SeminarP.jsx';
+import SeminarS from './SeminarS.jsx';
 
 const App = ()=>(
     <BrowserRouter>
@@ -17,7 +19,9 @@ const App = ()=>(
                         return <Signup {...props} />
                         
                     }} />
-<Route  exact path="/seminar/" component={Seminar} />
+<Route  exact path="/seminar/create" component={Seminar} />
+<Route  exact path="/seminar/P/:semId" component={SeminarP} />
+<Route  exact path="/seminar/S/:semId" component={SeminarS} />
                 </Switch>
             </div>
         </MuiThemeProvider>
