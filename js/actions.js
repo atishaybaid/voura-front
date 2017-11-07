@@ -1,0 +1,3 @@
+export const SHOW_LOGIN_DIALOG = 'SHOW_LOGIN_DIALOG';
+
+

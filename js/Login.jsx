@@ -6,7 +6,7 @@ import TextField from 'material-ui/TextField';
 import axios from 'axios';
 import {PostReq} from './utils/apiRequest.jsx';
 import '../less/common.less'
-
+import  {connect} from 'react-redux';
 class LoginPopup extends Component {
     constructor(props){
         super(props);
