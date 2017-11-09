@@ -6,7 +6,8 @@ import TextField from 'material-ui/TextField';
 import axios from 'axios';
 import {PostReq} from './utils/apiRequest.jsx';
 import {showLoginDialog,
-        handleEmailChange} from './actionCreators.js';
+        setEmail,
+        setPassword} from './actionCreators.js';
 import '../less/common.less'
 import  {connect} from 'react-redux';
 class LoginPopup extends Component {
@@ -21,7 +22,7 @@ class LoginPopup extends Component {
         //this.handleLoginOnClick = this.handleLoginOnClick.bind(this);
         //this.handleEmailChange = this.handleEmailChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.handlePasswordChange = this.handlePasswordChange.bind(this);
+        //this.handlePasswordChange = this.handlePasswordChange.bind(this);
     }
     handleLoginOnClick(){
          this.setState({showDialog:true})
@@ -74,7 +75,7 @@ class LoginPopup extends Component {
                         floatingLabelFixed={true}
                         type="email"
                         onChange={this.props.handleEmailChange}
-                        value={this.state.email}
+                        value={this.props.email}
                     /><br />
         
                     <TextField
@@ -82,8 +83,8 @@ class LoginPopup extends Component {
                     floatingLabelText="Password"
                     floatingLabelFixed={true}
                     type="password"
-                    onChange={this.handlePasswordChange}
-                    value={this.state.pass}
+                    onChange={this.props.handlePasswordChange}
+                    value={this.props.password}
 
                     /><br />
                     <FlatButton label="Submit" onClick={this.handleSubmit}/>
@@ -98,14 +99,18 @@ class LoginPopup extends Component {
     }
 }
 
-const mapStateToProps = (state) =>({showDialog:state.login.showDialog,email:state.login.email});
+const mapStateToProps = (state) =>({showDialog:state.login.showDialog,email:state.login.email,password:state.login.password});
 const mapDispatchToProps = (dispatch)=>({
-    handleLoginOnClick(){
+    handleLoginOnClick:function(){
         dispatch(showLoginDialog());
-    }
-    /*handleEmailChange(event , newValue){
-        dispatch(handleEmailChange(newValue))
-    }*/
+    },
+    handleEmailChange:function(event,newValue){
+        dispatch(setEmail(newValue))
+    },
+    handlePasswordChange:function(event,newValue){
+        dispatch(setPassword(newValue))
+    },
+
 })
 
 export default connect(mapStateToProps,mapDispatchToProps)(LoginPopup)
