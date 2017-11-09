@@ -13,19 +13,16 @@ import '../less/signup.less'
 class Signup extends Component {
     constructor(props){
         super();
-        this.state ={
-            finished: false,
-            stepIndex: 0
-        }
          this.credentialsSubmit = this.credentialsSubmit.bind(this);
          
          this.utilSpace = null;
+         this.stepIndex=0;
          if(props.match.params.page === 'newuser'){
             this.utilSpace = <SignupCredential   onSubmit={this.credentialsSubmit} />
          }
 
          if(props.match.params.page === 'userdetails'){
-            this.setState({stepIndex:1});
+            this.stepIndex = 1;
             this.utilSpace = <UserDetails />
          }
 
@@ -60,7 +57,7 @@ class Signup extends Component {
                 <VrHeader />
                 <div className="main-container">             
                   <div className="steeper">
-                    <Stepper activeStep={this.state.stepIndex}>
+                    <Stepper activeStep={this.stepIndex}>
                         <Step>
                             <StepLabel>Signup</StepLabel>
                         </Step>

@@ -1,5 +1,4 @@
-import {SHOW_LOGIN_DIALOG} from './actions';
-import {SET_EMAIL,SET_PASSWORD,SIGNUP_SET_EMAIL,SIGNUP_SET_PASSWORD} from './actions';
+import {SHOW_LOGIN_DIALOG,SET_EMAIL,SET_PASSWORD,SIGNUP_SET_EMAIL,SIGNUP_SET_PASSWORD,REQUEST_TAGS,RECEIVE_TAGS} from './actions';
 
 
 const DEFAULT_STATE ={
@@ -11,7 +10,8 @@ const DEFAULT_STATE ={
     signup:{
        email:'',
        pass:''
-    }
+    },
+    tagList:[],
 }
 
 
@@ -35,6 +35,10 @@ const signupSetPassword = (state,action)=>{
     return Object.assign({},state,{signup:{email:state.signup.email,pass:action.payload}})
 }
 
+const receiveTags = (state,action)=>{
+    return Object.assign({},state,{tagList:action.payload});
+}
+
 const rootReducer = (state = DEFAULT_STATE,action)=>{
     switch(action.type){
         case SHOW_LOGIN_DIALOG:
@@ -47,6 +51,10 @@ const rootReducer = (state = DEFAULT_STATE,action)=>{
             return signupSetEmail(state,action);
         case SIGNUP_SET_PASSWORD:
             return signupSetPassword(state,action);
+        case REQUEST_TAGS:
+            return requestTags(state,action);
+        case RECEIVE_TAGS:
+            return receiveTags(state,action);
         default:
             return state;
 

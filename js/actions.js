@@ -10,5 +10,9 @@ export const SIGNUP_SET_EMAIL = 'SIGNUP_SET_EMAIL';
 export const SIGNUP_SET_PASSWORD = 'SIGNUP_SET_PASSWORD';
 
 
+//userDetails methods
+export const REQUEST_TAGS = 'REQUEST_TAGS';
+export const RECEIVE_TAGS = 'RECEIVE_TAGS';
+
 
 

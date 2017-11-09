@@ -20,7 +20,7 @@ const App = ()=>(
                         return <Signup {...props} />
                         
                     }} />
-<Route  exact path="/seminar/" component={Seminar} />
+                    <Route  exact path="/seminar/" component={Seminar} />
                 </Switch>
             </div>
         </MuiThemeProvider>

@@ -3,25 +3,12 @@ import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 import  {connect} from 'react-redux';
 import {signupSetEmail,
-        signupSetPassword,
-        } from './actionCreators.js';
+        signupSetPassword} from './actionCreators.js';
 class SignUpCredentail extends Component {
     constructor(props){
         super();
-        this.state ={
-             email:'',
-             pass:''
-        }
-       this.handleEmailChange = this.handleEmailChange.bind(this);
-       this.handlePasswordChange = this.handlePasswordChange.bind(this);
        this.handleContinue = this.handleContinue.bind(this);
 
-    };
-    handleEmailChange(event,newValue){
-        this.setState({email:newValue});
-    };
-    handlePasswordChange(event,newValue){
-        this.setState({pass:newValue});
     };
     handleContinue(){
         this.props.onSubmit({email:this.props.email,pass:this.props.pass});
