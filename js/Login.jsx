@@ -14,30 +14,12 @@ class LoginPopup extends Component {
     constructor(props){
         console.log(props);
         super(props);
-        this.state={
-            showDialog:false,
-            email:'',
-            password:''
-        }
-        //this.handleLoginOnClick = this.handleLoginOnClick.bind(this);
-        //this.handleEmailChange = this.handleEmailChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-        //this.handlePasswordChange = this.handlePasswordChange.bind(this);
     }
-    handleLoginOnClick(){
-         this.setState({showDialog:true})
-        
-    }
-    handleEmailChange(event,newValue){
-        this.setState({email:newValue});
-    };
-    handlePasswordChange(event,newValue){
-        this.setState({password:newValue});
-    };
     handleSubmit(){
         let data = {
-            "id":this.state.email,
-            "password":this.state.password
+            "id":this.props.email,
+            "password":this.props.password
         }
 
         PostReq('users/signin',data)
@@ -109,7 +91,7 @@ const mapDispatchToProps = (dispatch)=>({
     },
     handlePasswordChange:function(event,newValue){
         dispatch(setPassword(newValue))
-    },
+    }
 
 })
 

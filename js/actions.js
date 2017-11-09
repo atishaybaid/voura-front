@@ -5,7 +5,9 @@ export const SET_EMAIL = 'SET_EMAIL';
 export const SET_PASSWORD = 'SET_PASSWORD';
 
 
-
+//signup methods
+export const SIGNUP_SET_EMAIL = 'SIGNUP_SET_EMAIL';
+export const SIGNUP_SET_PASSWORD = 'SIGNUP_SET_PASSWORD';
 
 
 
