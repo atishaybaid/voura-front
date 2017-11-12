@@ -2,14 +2,15 @@ const path = require('path');
 
 module.exports = {
     context:__dirname,
-    entry:'./js/App.jsx',
+    entry:'./js/ClientApp.jsx',
     output:{
        path: path.join(__dirname, 'public'),
         filename: 'bundle.js',
         publicPath: '/public/'
     },
     devServer: {
-    port: 8080,
+    host: "local.intelverse.com",
+    port: 9090,
     historyApiFallback: true,
   },
 

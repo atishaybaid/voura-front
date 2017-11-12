@@ -1,7 +1,9 @@
 import React,{Component} from 'react';
 import AutoComplete from 'material-ui/AutoComplete';
 import Chip from 'material-ui/Chip';
-import {PostReq,GetReq} from './utils/apiRequest.jsx';
+import FlatButton from 'material-ui/FlatButton';
+import {fetchTags} from './actionCreators.js'
+import {connect} from 'react-redux';
 
 class UserDetails extends Component{
     constructor(props){
@@ -11,73 +13,79 @@ class UserDetails extends Component{
             selectedTag:[]
             
         }
-
-        console.log("user details");
         this.renderChips = this.renderChips.bind(this);
+        this.handleContinue = this.handleContinue.bind(this);
     }
     handleUpdateInput(){
         console.log("handleUpdateInput");
     }
     handleTagSelected(chosenTag){
-        console.log("handleTagSelected")
-        console.log(chosenTag);
-      this.state.selectedTag.push(chosenTag);
+        let tagObj = {
+            tag:chosenTag.Name,
+            rating:1
+        }
+        let tagList = this.state.selectedTag;
+        tagList.push(tagObj);
+        this.setState({selectedTag:tagList})
+       
     }
-    handleUpdateUserInput(searchText){
-        let that = this;
-        if(searchText.length >= 3){
-            GetReq(`users/suggestions/tag?t=${searchText}`,' http://api.intelverse.com:3000')
-            .then((res)=>{
-                let tags = JSON.parse(res.data.data);
-                that.setState({tags:tags})
-
-            })
-            .catch((err)=>{
-                console.log(err);
-            })
-        }        
-
+    handleRequestDelete(tag,index){
+        let selectedTag = this.state.selectedTag;
+        selectedTag.splice(index,1);
+       this.setState({selectedTag:selectedTag})
+        
     }
-    handleRequestDelete(selectedTag){
-        console.log("handleRequestDelete called");
-        console.log(selectedTag);
+    handleContinue(){
+        let data = {
+            "id":"atishaybaid@gmail.com",
+            "tags":this.state.selectedTag
+        }
+
+
+        PostReq('/users/tags',data)
+        .then((res)=>{
+            console.log(res);
+        })
+        .catch((err)=>{
+            console.log(error);
+        })
     }
     renderChips(){
-      return  this.state.selectedTag.map((selectedTag)=>(<Chip key={selectedTag.Name} onRequestDelete={() => this.handleRequestDelete(selectedTag.Name)}>
-                                        {selectedTag.Name}
+      return  this.state.selectedTag.map((selectedTag,index)=>(<Chip key={`selectedTag.tag_${index}`} onRequestDelete={() => this.handleRequestDelete(selectedTag.tag,index)}>
+                                        {selectedTag.tag}
                                         </Chip>)
                         
                     )  
     }
-
-    componentDidMount(){
-        console.log("componentDidMount called");
-      
-
-        
-    }
     render(){
         return(
              <div className="userdetails-container">
-                <h1 className="step-title">Provide some intrests,or best experiance</h1>
+                <h1 className="step-title">Provide some intrests,for best experiance</h1>
                 <p className="main-line">Last step and you land to home</p>
                     <AutoComplete
                         hintText="Search Tags"
-                        dataSource={this.state.tags}
+                        dataSource={this.props.tags}
                         dataSourceConfig={{text:"Name",value:"Name"}}
                         maxSearchResults={10}
                         onNewRequest={this.handleTagSelected.bind(this)}
-                        onUpdateInput={this.handleUpdateUserInput.bind(this)}
+                        onUpdateInput={this.props.handleUpdateUserInput}
                     />
                 <div className="selected-tags">
                   {this.renderChips()}
                 </div>
-                
+            <FlatButton className="landing-btn" label="CONTINUE" primary={true}  backgroundColor={'#4ebcd5'}  style={{color:'#ffffff'}} 
+                    onClick={this.handleContinue} />
                 
             </div>   
             )
        
     }
 }
+const mapStateToProps = (state) =>({tags:state.tagList})
 
-export default UserDetails;
+const mapDispatchToProps = (dispatch)=>({
+    handleUpdateUserInput:function(searchText){
+        dispatch(fetchTags(searchText));
+    }
+})
+export default connect(mapStateToProps,mapDispatchToProps)(UserDetails);

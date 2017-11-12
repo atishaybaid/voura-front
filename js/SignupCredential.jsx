@@ -1,24 +1,17 @@
 import React,{Component} from 'react';
 import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
+import  {connect} from 'react-redux';
+import {signupSetEmail,
+        signupSetPassword} from './actionCreators.js';
 class SignUpCredentail extends Component {
     constructor(props){
         super();
-        this.state ={
-             email:'',
-             pass:''
-        }
+       this.handleContinue = this.handleContinue.bind(this);
 
-
-    };
-    handleEmailChange(event,newValue){
-        this.setState({email:newValue});
-    };
-    handlePasswordChange(event,newValue){
-        this.setState({pass:newValue});
     };
     handleContinue(){
-        this.props.onSubmit(this.state);
+        this.props.onSubmit({email:this.props.email,pass:this.props.pass});
     }
     render(){
         return(    
@@ -30,19 +23,19 @@ class SignUpCredentail extends Component {
                     errorText="Email is required"
                     floatingLabelText="Email"
                     type="email"
-                    onChange={this.handleEmailChange.bind(this)}
-                    value={this.state.email}
+                    onChange={this.props.handleEmailChange}
+                    value={this.props.email}
                 /><br />
                 <TextField
                     hintText="Password"
                     errorText="Password is required"
                     floatingLabelText="Password"
                     type="password"
-                    onChange={this.handlePasswordChange.bind(this)}
-                    value={this.state.pass}
+                    onChange={this.props.handlePasswordChange}
+                    value={this.props.pass}
                 /><br />
                 <FlatButton className="landing-btn" label="CONTINUE" primary={true}  backgroundColor={'#4ebcd5'}  style={{color:'#ffffff'}} 
-                    onClick={this.handleContinue.bind(this)} />
+                    onClick={this.handleContinue} />
             </div>
             )
          
@@ -51,4 +44,16 @@ class SignUpCredentail extends Component {
 }
 
 
-export default SignUpCredentail;
+
+const mapStateToProps = (state) =>({email:state.signup.email,password:state.signup.pass});
+const mapDispatchToProps = (dispatch)=>({
+    handleEmailChange:function(event,newValue){
+        dispatch(signupSetEmail(newValue))
+    },
+    handlePasswordChange:function(event,newValue){
+        dispatch(signupSetPassword(newValue))
+    }
+
+})
+
+export default connect(mapStateToProps,mapDispatchToProps)(SignUpCredentail)

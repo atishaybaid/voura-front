@@ -6,24 +6,23 @@ import axios from 'axios';
 import VrHeader from './VrHeader.jsx';
 import SignupCredential from './SignupCredential.jsx';
 import UserDetails from './UserDetails.jsx';
+import {PostReq} from './utils/apiRequest.jsx'
 import '../less/signup.less'
 
 
 class Signup extends Component {
     constructor(props){
         super();
-        this.state ={
-            finished: false,
-             stepIndex: 0
-        }
+         this.credentialsSubmit = this.credentialsSubmit.bind(this);
+         
          this.utilSpace = null;
-         console.log(props);
+         this.stepIndex=0;
          if(props.match.params.page === 'newuser'){
-            this.utilSpace = <SignupCredential   onSubmit={this.credentialsSubmit.bind(this)}/>
+            this.utilSpace = <SignupCredential   onSubmit={this.credentialsSubmit} />
          }
 
          if(props.match.params.page === 'userdetails'){
-
+            this.stepIndex = 1;
             this.utilSpace = <UserDetails />
          }
 
@@ -38,19 +37,13 @@ class Signup extends Component {
             'name':'',
             'image':''
         }
-        console.log(data);
 
-        console.log("on onSubmit called");
-
-        var axiosInstance = axios.create({
-            baseURL: 'http://api.intelverse.com/',
-            timeout: 5000,
-            headers: {'Access-Control-Allow-Origin': '*'}
-            });
-
-        axiosInstance.post('users/signup',data)
+        PostReq('users/signup',data)
             .then(function (response) {
-                console.log(response);
+               if(response.status == 200){
+                window.location.href = '/signup/userdetails';
+
+               }
            
         })
         .catch(function (error) {
@@ -64,7 +57,7 @@ class Signup extends Component {
                 <VrHeader />
                 <div className="main-container">             
                   <div className="steeper">
-                    <Stepper activeStep={this.state.stepIndex}>
+                    <Stepper activeStep={this.stepIndex}>
                         <Step>
                             <StepLabel>Signup</StepLabel>
                         </Step>
@@ -73,8 +66,6 @@ class Signup extends Component {
                         </Step>
                     </Stepper>
                   </div>
-                
-
                {this.utilSpace}   
                 </div>
 
