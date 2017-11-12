@@ -1,4 +1,5 @@
-import {SHOW_LOGIN_DIALOG,SET_EMAIL,SET_PASSWORD,SIGNUP_SET_EMAIL,SIGNUP_SET_PASSWORD,REQUEST_TAGS,RECEIVE_TAGS} from './actions';
+import {SHOW_LOGIN_DIALOG,SET_EMAIL,SET_PASSWORD,SIGNUP_SET_EMAIL,
+    SIGNUP_SET_PASSWORD,REQUEST_TAGS,RECEIVE_TAGS,RECEIVE_SCHEDULE_DATA} from './actions';
 
 
 const DEFAULT_STATE ={
@@ -12,6 +13,9 @@ const DEFAULT_STATE ={
        pass:''
     },
     tagList:[],
+    VrScheduleGrid:{
+        data:[]
+    }
 }
 
 
@@ -39,6 +43,10 @@ const receiveTags = (state,action)=>{
     return Object.assign({},state,{tagList:action.payload});
 }
 
+const receiveSheduleData = (state,action)=>{
+    return Object.assign({},state,{VrScheduleGrid:{data:action.payload}});
+}
+
 const rootReducer = (state = DEFAULT_STATE,action)=>{
     switch(action.type){
         case SHOW_LOGIN_DIALOG:
@@ -55,6 +63,8 @@ const rootReducer = (state = DEFAULT_STATE,action)=>{
             return requestTags(state,action);
         case RECEIVE_TAGS:
             return receiveTags(state,action);
+        case RECEIVE_SCHEDULE_DATA:
+            return receiveSheduleData(state,action)
         default:
             return state;
 

@@ -1,5 +1,5 @@
 import{SHOW_LOGIN_DIALOG,SET_EMAIL,SET_PASSWORD,SIGNUP_SET_EMAIL,SIGNUP_SET_PASSWORD,
-    REQUEST_TAGS,RECEIVE_TAGS} from './actions';
+    REQUEST_TAGS,RECEIVE_TAGS,FETCH_SCHEDULE_DATA,RECEIVE_SCHEDULE_DATA} from './actions';
 import {PostReq,GetReq} from './utils/apiRequest.jsx';
 //login methods
 export function showLoginDialog(){
@@ -56,6 +56,29 @@ export function fetchTags(searchText){
    }
 }
 
+//Schedule Data Function
+
+
+export function fetchSheduleData(apiurl){
+    return function(dispatch){
+        return GetReq(apiurl,null,'https://my-json-server.typicode.com/atishaybaid/dummyApi')
+            .then((res)=>{
+                console.log(res.data);
+                dispatch(receiveScheduleData(res.data))
+            })
+            .catch((err)=>{
+                console.log(err);
+            })
+
+    }
+}
+
+
+
+
+export function receiveScheduleData(data){
+    return {type:RECEIVE_SCHEDULE_DATA,payload:data};
+}
 
 
 

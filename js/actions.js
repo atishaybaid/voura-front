@@ -15,4 +15,8 @@ export const REQUEST_TAGS = 'REQUEST_TAGS';
 export const RECEIVE_TAGS = 'RECEIVE_TAGS';
 
 
+//VrScheduleGrid
+export const FETCH_SCHEDULE_DATA = 'FETCH_SCHEDULE_DATA';
+export const RECEIVE_SCHEDULE_DATA = 'RECEIVE_SCHEDULE_DATA';
+
 
