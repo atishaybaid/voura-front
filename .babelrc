@@ -7,11 +7,6 @@
       },
       "loose": true,
       "modules": false
-    },
-    "server": {
-      "plugins": [
-        "transform-es2015-modules-commonjs"
-      ]
     }]
   ]
 }
