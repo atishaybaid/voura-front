@@ -9,6 +9,8 @@ import Subheader from 'material-ui/Subheader';
 import Divider from 'material-ui/Divider';
 import '../less/SeminarSM.less';
 import SocialPlusOne from 'material-ui/svg-icons/social/plus-one';
+import io from "socket.io-client";
+import iVConfigs from '../Configs/local.json';
 
 //@todo fetch sem data on load itself
 //@todo identify states
@@ -18,8 +20,8 @@ class SeminarSM extends Component {
         super();
         this.state = {
             seminarId: 'MNt_-XqOkOI',
-            videoId: 'S1eMeX8TR-',
-            question: '',
+                videoId: 'S1eMeX8TR-',
+                question: '',
             questionList : []
         }
         this.askQuestionChange = this.askQuestionChange.bind(this);
@@ -28,11 +30,33 @@ class SeminarSM extends Component {
         this.generateQuesList = this.generateQuesList.bind(this);
         this.voteQuestion = this.voteQuestion.bind(this);
         this.getVoteCounts = this.getVoteCounts.bind(this);
+        this.socketHandling = this.socketHandling.bind( this );
+
     };
+
+    socketHandling(){
+
+        var sockConfigs = iVConfigs.seminar.socketData;
+        sockConfigs['query'] = "userId=2";
+        var notiSocket = io.connect( iVConfigs.seminar.socketUrl, sockConfigs );
+
+        this.notiSocket = notiSocket;
+        notiSocket.on('connect', function(){
+            // call the server-side function 'adduser' and send one parameter (value of prompt)
+            var user = {};
+            notiSocket.emit('adduser', user);
+        });
+
+        notiSocket.on('questionAdded', function(data){
+            // call the server-side function 'adduser' and send one parameter (value of prompt)
+            console.log( data );
+        });
+    }
 
     componentDidMount(){
         this.getQuestions();
         this.getVoteCounts();
+        this.socketHandling();
     }
 
     voteQuestion( qId, vote ){
@@ -109,6 +133,8 @@ class SeminarSM extends Component {
             question: this.state.question,
             user: 'dpk22dev@gmail.com'
         }
+        this.notiSocket.emit('questionAdded', data.question);
+
         var path ='questions/save';
         var that = this;
         PostReq( path, data )
@@ -132,8 +158,8 @@ class SeminarSM extends Component {
         console.log( this.state.questionList );
         var that = this;
         var quesList = this.state.questionList.map( function( item ){
-            return <div>
-                <ListItem key ={item._id} primaryText={item.question} />
+            return <div key ={item._id}>
+                <ListItem primaryText={item.question} />
                 <FlatButton className="control-btn" label='upvote' primary={true} backgroundColor={'#4ebcd5'}  style={{color:'#ffffff'}} onClick={that.voteQuestion.bind( this, item._id, 'upvote' ) } target="_blank"/>
                 <FlatButton className="control-btn" label='downvote' primary={true} backgroundColor={'#4ebcd5'}  style={{color:'#ffffff'}} onClick={that.voteQuestion.bind( this, item._id, 'downvote' ) } target="_blank"/>
             </div>

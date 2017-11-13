@@ -5,7 +5,12 @@
         "headers" : { "Access-Control-Allow-Origin": "*" }
     },
     "seminar" : {
-        "createSeminarEndpoint" : "timeline/seminar/create"
+        "createSeminarEndpoint" : "timeline/seminar/create",
+        "socketUrl" : "http://local.intelverse.com:3000",
+        "socketData" : {
+            "path" : "/chatNsp",
+            "transports": ["websocket"]
+        }
     },
     "users" : {
         "signup" : "users/signup"
