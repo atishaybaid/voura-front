@@ -5,35 +5,21 @@ import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
 import axios from 'axios';
 import {PostReq} from './utils/apiRequest.jsx';
+import {showLoginDialog,
+        setEmail,
+        setPassword} from './actionCreators.js';
 import '../less/common.less'
-
+import  {connect} from 'react-redux';
 class LoginPopup extends Component {
     constructor(props){
+        console.log(props);
         super(props);
-        this.state={
-            showDialog:false,
-            email:'',
-            password:''
-        }
-        this.handleLoginOnClick = this.handleLoginOnClick.bind(this);
-        this.handleEmailChange = this.handleEmailChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.handlePasswordChange = this.handlePasswordChange.bind(this);
     }
-    handleLoginOnClick(){
-         this.setState({showDialog:true})
-        
-    }
-    handleEmailChange(event,newValue){
-        this.setState({email:newValue});
-    };
-    handlePasswordChange(event,newValue){
-        this.setState({password:newValue});
-    };
     handleSubmit(){
         let data = {
-            "id":this.state.email,
-            "password":this.state.password
+            "id":this.props.email,
+            "password":this.props.password
         }
 
         PostReq('users/signin',data)
@@ -53,14 +39,14 @@ class LoginPopup extends Component {
     render(){
         return(<div className="login-popup">
                 <FlatButton className="login-btn" label="Login" primary={true} 
-                    backgroundColor={'#4ebcd5'}  style={{color:'#ffffff'}}  onClick={this.handleLoginOnClick}
+                    backgroundColor={'#4ebcd5'}  style={{color:'#ffffff'}}  onClick={this.props.handleLoginOnClick}
                 />
 
              <Dialog
                 title=""
                 actions={null}
                 modal={true}
-                open={this.state.showDialog}
+                open={this.props.showDialog}
                
                 >
                 <div className="login-container">
@@ -70,8 +56,8 @@ class LoginPopup extends Component {
                         floatingLabelText="Email"
                         floatingLabelFixed={true}
                         type="email"
-                        onChange={this.handleEmailChange}
-                        value={this.state.email}
+                        onChange={this.props.handleEmailChange}
+                        value={this.props.email}
                     /><br />
         
                     <TextField
@@ -79,8 +65,8 @@ class LoginPopup extends Component {
                     floatingLabelText="Password"
                     floatingLabelFixed={true}
                     type="password"
-                    onChange={this.handlePasswordChange}
-                    value={this.state.pass}
+                    onChange={this.props.handlePasswordChange}
+                    value={this.props.password}
 
                     /><br />
                     <FlatButton label="Submit" onClick={this.handleSubmit}/>
@@ -95,4 +81,20 @@ class LoginPopup extends Component {
     }
 }
 
-export default LoginPopup;
+const mapStateToProps = (state) =>({showDialog:state.login.showDialog,email:state.login.email,password:state.login.password});
+const mapDispatchToProps = (dispatch)=>({
+    handleLoginOnClick:function(){
+        dispatch(showLoginDialog());
+    },
+    handleEmailChange:function(event,newValue){
+        dispatch(setEmail(newValue))
+    },
+    handlePasswordChange:function(event,newValue){
+        dispatch(setPassword(newValue))
+    }
+
+})
+
+export default connect(mapStateToProps,mapDispatchToProps)(LoginPopup)
+
+

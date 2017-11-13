@@ -2,7 +2,8 @@ import React,{Component} from 'react';
 import AutoComplete from 'material-ui/AutoComplete';
 import Chip from 'material-ui/Chip';
 import FlatButton from 'material-ui/FlatButton';
-import {PostReq,GetReq} from './utils/apiRequest.jsx';
+import {fetchTags} from './actionCreators.js'
+import {connect} from 'react-redux';
 
 class UserDetails extends Component{
     constructor(props){
@@ -27,21 +28,6 @@ class UserDetails extends Component{
         tagList.push(tagObj);
         this.setState({selectedTag:tagList})
        
-    }
-    handleUpdateUserInput(searchText){
-        let that = this;
-        if(searchText.length >= 3){
-            GetReq(`users/suggestions/tag?t=${searchText}`,' http://api.intelverse.com:3000')
-            .then((res)=>{
-                let tags = JSON.parse(res.data.data);
-                that.setState({tags:tags})
-
-            })
-            .catch((err)=>{
-                console.log(err);
-            })
-        }        
-
     }
     handleRequestDelete(tag,index){
         let selectedTag = this.state.selectedTag;
@@ -78,11 +64,11 @@ class UserDetails extends Component{
                 <p className="main-line">Last step and you land to home</p>
                     <AutoComplete
                         hintText="Search Tags"
-                        dataSource={this.state.tags}
+                        dataSource={this.props.tags}
                         dataSourceConfig={{text:"Name",value:"Name"}}
                         maxSearchResults={10}
                         onNewRequest={this.handleTagSelected.bind(this)}
-                        onUpdateInput={this.handleUpdateUserInput.bind(this)}
+                        onUpdateInput={this.props.handleUpdateUserInput}
                     />
                 <div className="selected-tags">
                   {this.renderChips()}
@@ -95,5 +81,11 @@ class UserDetails extends Component{
        
     }
 }
+const mapStateToProps = (state) =>({tags:state.tagList})
 
-export default UserDetails;
+const mapDispatchToProps = (dispatch)=>({
+    handleUpdateUserInput:function(searchText){
+        dispatch(fetchTags(searchText));
+    }
+})
+export default connect(mapStateToProps,mapDispatchToProps)(UserDetails);
