@@ -8,6 +8,7 @@ import Landing from './Landing.jsx';
 import Signup from './Signup.jsx';
 import Seminar from './Seminar.jsx';
 import UserHome from './UserHome.jsx';
+import Profile from './Profile.jsx';
 
 const App = ()=>(
        <Provider store={store}>
@@ -21,6 +22,7 @@ const App = ()=>(
                         }} />
                         <Route  exact path="/seminar/" component={Seminar} />
                         <Route path="/home" component={UserHome} />
+                        <Route path="/profile" component={Profile} />
                     </Switch>
                 </div>
             </MuiThemeProvider>

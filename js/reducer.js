@@ -15,6 +15,9 @@ const DEFAULT_STATE ={
     tagList:[],
     VrScheduleGrid:{
         data:[]
+    },
+    home:{
+        videoData:[]
     }
 }
 
