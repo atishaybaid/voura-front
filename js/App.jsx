@@ -10,6 +10,7 @@ import Signup from './Signup.jsx';
 import Seminar from './Seminar.jsx';
 import UserHome from './UserHome.jsx';
 
+
 /*import SeminarP from './SeminarP.jsx';*/
 import SeminarPM from './SeminarPM.jsx';
 /*import SeminarS from './SeminarS.jsx';*/
@@ -18,6 +19,7 @@ import SeminarSM from './SeminarSM.jsx';
 /*<Route  exact path="/seminar/P/:semId" component={SeminarP} />
  <Route  exact path="/seminar/S/:semId" component={SeminarS} />*/
 const App = ()=>(
+
        <Provider store={store}>
             <MuiThemeProvider>
                 <div className="app">

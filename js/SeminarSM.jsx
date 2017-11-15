@@ -12,6 +12,8 @@ import SocialPlusOne from 'material-ui/svg-icons/social/plus-one';
 import io from "socket.io-client";
 import iVConfigs from '../Configs/local.json';
 
+import { withCookies, Cookies } from 'react-cookie';
+
 //@todo fetch sem data on load itself
 //@todo identify states
 class SeminarSM extends Component {
@@ -36,24 +38,41 @@ class SeminarSM extends Component {
 
     socketHandling(){
 
+        const { cookies } = this.props;
+
+        const userId = cookies.get('userId');
+        //console.log( 'userId:' + userId );
+
+        var that = this;
         var sockConfigs = iVConfigs.seminar.socketData;
-        sockConfigs['query'] = "userId=2";
+
+        sockConfigs['query'] = "userId="+userId;
         var notiSocket = io.connect( iVConfigs.seminar.socketUrl, sockConfigs );
 
         this.notiSocket = notiSocket;
         notiSocket.on('connect', function(){
             // call the server-side function 'adduser' and send one parameter (value of prompt)
             var user = {};
+            user.username = userId;
+            user.conf = that.state.videoId;
             notiSocket.emit('adduser', user);
         });
 
         notiSocket.on('questionAdded', function(data){
             // call the server-side function 'adduser' and send one parameter (value of prompt)
+            console.log('got questiosn');
             console.log( data );
+        });
+
+        notiSocket.on('questionAddedAjaxNow', function(){
+            // call the server-side function 'adduser' and send one parameter (value of prompt)
+            console.log('got questiosn ajax');
+            that.getQuestions();
         });
     }
 
     componentDidMount(){
+        
         this.getQuestions();
         this.getVoteCounts();
         this.socketHandling();
@@ -65,7 +84,7 @@ class SeminarSM extends Component {
             qId: qId,
             vote: vote
         }
-        console.log( data );
+        //console.log( data );
         var that = this;
         var path ='questions/vote/';
         PostReq( path, data )
@@ -105,10 +124,12 @@ class SeminarSM extends Component {
     }
 
     getQuestions(){
+        const { cookies } = this.props
+        const userId = cookies.get('userId');
 
         let data = {
             videoId: this.state.videoId,
-            user: 'dpk22dev@gmail.com'
+            user: userId
         }
         var that = this;
         var path ='questions/questions/?videoid='+data.videoId;
@@ -117,7 +138,7 @@ class SeminarSM extends Component {
                 console.log(response.status);
                 if(response.status == 200){
                     that.setState( { questionList: response.data.data } ) ;
-                    //console.log( that.state.questionList );
+                    console.log( that.state.questionList );
                 }
 
             })
@@ -128,12 +149,14 @@ class SeminarSM extends Component {
     }
 
     handleAskQuestion(){
+        const { cookies } = this.props
+        const userId = cookies.get('userId');
+
         let data = {
             videoId: this.state.videoId,
             question: this.state.question,
-            user: 'dpk22dev@gmail.com'
+            user: userId
         }
-        this.notiSocket.emit('questionAdded', data.question);
 
         var path ='questions/save';
         var that = this;
@@ -141,7 +164,15 @@ class SeminarSM extends Component {
             .then(function (response) {
                 console.log(response.status);
                 if(response.status == 200){
+                    if( response.data.status != 'ERROR' ){
+
+                        var qData = response.data.data;
+                        qData.question = data.question;
+                        //that.notiSocket.emit('questionAdded', qData);
+                        that.notiSocket.emit('questionAddedAjaxNow');
+                    }
                     console.log( response );
+
                 }
 
             })
@@ -155,7 +186,7 @@ class SeminarSM extends Component {
     };
 
     generateQuesList(){
-        console.log( this.state.questionList );
+        //console.log( this.state.questionList );
         var that = this;
         var quesList = this.state.questionList.map( function( item ){
             return <div key ={item._id}>
@@ -164,7 +195,7 @@ class SeminarSM extends Component {
                 <FlatButton className="control-btn" label='downvote' primary={true} backgroundColor={'#4ebcd5'}  style={{color:'#ffffff'}} onClick={that.voteQuestion.bind( this, item._id, 'downvote' ) } target="_blank"/>
             </div>
         } )
-        console.log( quesList );
+        //console.log( quesList );
         return quesList;
     }
     render(){
@@ -207,4 +238,4 @@ class SeminarSM extends Component {
 
 }
 
-export default SeminarSM;
+export default withCookies( SeminarSM );
