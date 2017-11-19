@@ -13,17 +13,18 @@ import io from "socket.io-client";
 import iVConfigs from '../Configs/local.json';
 
 import { withCookies, Cookies } from 'react-cookie';
+import  {connect} from 'react-redux';
 
 //@todo fetch sem data on load itself
 //@todo identify states
 class SeminarSM extends Component {
 
     constructor(props) {
-        super();
+        super( props );
         this.state = {
             seminarId: 'MNt_-XqOkOI',
-                videoId: 'S1eMeX8TR-',
-                question: '',
+            videoId: 'S1eMeX8TR-',
+            question: '',
             questionList : []
         }
         this.askQuestionChange = this.askQuestionChange.bind(this);
@@ -71,11 +72,73 @@ class SeminarSM extends Component {
         });
     }
 
+    getVoteCounts(){
+        let data = {
+            id: this.state.videoId,
+            type: 'video'
+        }
+        console.log( data );
+        var that = this;
+        var path ='questions/votecount/';
+
+        var promise = new Promise( function ( resolve, reject ) {
+            PostReq( path, data )
+                .then(function (response) {
+                    console.log(response.status);
+                    if(response.status == 200){
+                        //that.setState( { questionList: response.data.data } ) ;
+                        resolve( response.data.data );
+                    } else {
+                        reject( response );
+                    }
+
+                })
+                .catch(function (error) {
+                    reject( error );
+                    console.log(error);
+                });
+        });
+        return promise;
+    }
+
+    getQuestions(){
+        const { cookies } = this.props
+        const userId = cookies.get('userId');
+
+        let data = {
+            videoId: this.state.videoId,
+            user: userId
+        }
+        var that = this;
+        var path ='questions/questions/?videoid='+data.videoId;
+        var promise = new Promise( function ( resolve, reject ) {
+            GetReq( path )
+                .then(function (response) {
+                    console.log(response.status);
+                    if(response.status == 200){
+                        //that.setState( { questionList: response.data.data } ) ;
+                        resolve( response.data.data );
+                        console.log( that.state.questionList );
+                    } else {
+                        reject( response );
+                    }
+                })
+                .catch(function (error) {
+                    reject(error);
+                });
+        } );
+        return promise;
+    }
+
     componentDidMount(){
-        
-        this.getQuestions();
-        this.getVoteCounts();
-        this.socketHandling();
+        var that = this;
+        Promise.all( [ that.getQuestions(), that.getVoteCounts() ] )
+            .then(  function ( allData ) {
+                console.log( allData );
+                that.socketHandling();
+            })
+
+
     }
 
     voteQuestion( qId, vote ){
@@ -93,52 +156,6 @@ class SeminarSM extends Component {
                 if(response.status == 200){
                     //that.setState( { questionList: response.data.data } ) ;
                     console.log( response );
-                }
-
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-
-    }
-    getVoteCounts(){
-        let data = {
-            id: this.state.videoId,
-            type: 'video'
-        }
-        console.log( data );
-        var that = this;
-        var path ='questions/votecount/';
-        PostReq( path, data )
-            .then(function (response) {
-                console.log(response.status);
-                if(response.status == 200){
-                    //that.setState( { questionList: response.data.data } ) ;
-                    console.log( response );
-                }
-
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-    }
-
-    getQuestions(){
-        const { cookies } = this.props
-        const userId = cookies.get('userId');
-
-        let data = {
-            videoId: this.state.videoId,
-            user: userId
-        }
-        var that = this;
-        var path ='questions/questions/?videoid='+data.videoId;
-        GetReq( path )
-            .then(function (response) {
-                console.log(response.status);
-                if(response.status == 200){
-                    that.setState( { questionList: response.data.data } ) ;
-                    console.log( that.state.questionList );
                 }
 
             })
@@ -238,4 +255,18 @@ class SeminarSM extends Component {
 
 }
 
-export default withCookies( SeminarSM );
+const mapStateToProps = (state) =>({showDialog:state.login.showDialog,email:state.login.email,password:state.login.password});
+const mapDispatchToProps = (dispatch)=>({
+    handleLoginOnClick:function(){
+        dispatch(showLoginDialog());
+    },
+    handleEmailChange:function(event,newValue){
+        dispatch(setEmail(newValue))
+    },
+    handlePasswordChange:function(event,newValue){
+        dispatch(setPassword(newValue))
+    }
+
+})
+
+export default connect(mapStateToProps,mapDispatchToProps)( withCookies( SeminarSM ) )
