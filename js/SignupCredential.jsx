@@ -11,7 +11,7 @@ class SignUpCredentail extends Component {
 
     };
     handleContinue(){
-        this.props.onSubmit({email:this.props.email,pass:this.props.pass});
+        this.props.onSubmit({email:this.props.email,pass:this.props.password});
     }
     render(){
         return(    

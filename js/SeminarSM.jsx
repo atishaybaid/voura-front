@@ -22,7 +22,6 @@ class SeminarSM extends Component {
     constructor(props) {
         super( props );
         this.state = {
-            seminarId: 'MNt_-XqOkOI',
             videoId: 'S1eMeX8TR-',
             question: '',
             questionList : []
@@ -63,6 +62,9 @@ class SeminarSM extends Component {
             // call the server-side function 'adduser' and send one parameter (value of prompt)
             console.log('got questiosn');
             console.log( data );
+            var questions = that.state.questionList;
+            questions.push( data );
+            that.setState({ questionList:questions });
         });
 
         notiSocket.on('questionAddedAjaxNow', function(){
@@ -70,36 +72,57 @@ class SeminarSM extends Component {
             console.log('got questiosn ajax');
             that.getQuestions();
         });
-    }
 
-    getVoteCounts(){
-        let data = {
-            id: this.state.videoId,
-            type: 'video'
-        }
-        console.log( data );
-        var that = this;
-        var path ='questions/votecount/';
-
-        var promise = new Promise( function ( resolve, reject ) {
-            PostReq( path, data )
-                .then(function (response) {
-                    console.log(response.status);
-                    if(response.status == 200){
-                        //that.setState( { questionList: response.data.data } ) ;
-                        resolve( response.data.data );
-                    } else {
-                        reject( response );
-                    }
-
-                })
-                .catch(function (error) {
-                    reject( error );
-                    console.log(error);
-                });
+        notiSocket.on('removeQuestion', function( qIds ){
+            // call the server-side function 'adduser' and send one parameter (value of prompt)
+            console.log('remove question');
+            var questions = that.deleteQuestions( that.state.questionList, qIds );
+            that.setState({ questionList:questions });
         });
-        return promise;
     }
+
+    deleteQuestions( qArray, qIds ){
+        for( var j = 0; j < qIds.length; j++ ){
+            for(var i = 0; i < qArray.length; i++) {
+                if(qArray[i]._id == qIds[j] ) {
+                    qArray.splice(i, 1);
+                    break;
+                }
+            }
+        }
+        return qArray;
+    }
+
+
+
+        getVoteCounts(){
+            let data = {
+                id: this.state.videoId,
+                type: 'video'
+            }
+            console.log( data );
+            var that = this;
+            var path ='questions/votecount/';
+
+            var promise = new Promise( function ( resolve, reject ) {
+                PostReq( path, data )
+                    .then(function (response) {
+                        console.log(response.status);
+                        if(response.status == 200){
+                            //that.setState( { questionList: response.data.data } ) ;
+                            resolve( response.data.data );
+                        } else {
+                            reject( response );
+                        }
+
+                    })
+                    .catch(function (error) {
+                        reject( error );
+                        console.log(error);
+                    });
+            });
+            return promise;
+        }
 
     getQuestions(){
         const { cookies } = this.props
@@ -130,11 +153,25 @@ class SeminarSM extends Component {
         return promise;
     }
 
+    getQuestionList( qArray, vArray ){
+        var rArray = [];
+        qArray.forEach( function ( qObj ) {
+            qObj.score = 0;
+            let obj = vArray.find( function( vObj ){ if( vObj.qId == qObj["_id"] ) return vObj.qId; else return {}; } );
+
+            if( obj )
+                qObj.score = obj.score;
+            rArray.push( qObj );
+        })
+        return rArray;
+    }
+
     componentDidMount(){
         var that = this;
         Promise.all( [ that.getQuestions(), that.getVoteCounts() ] )
             .then(  function ( allData ) {
-                console.log( allData );
+                var questions = that.getQuestionList( allData[0], allData[1] )
+                that.setState({ questionList:questions });
                 that.socketHandling();
             })
 
@@ -186,9 +223,13 @@ class SeminarSM extends Component {
                         var qData = response.data.data;
                         qData.question = data.question;
                         //that.notiSocket.emit('questionAdded', qData);
-                        that.notiSocket.emit('questionAddedAjaxNow');
+                        that.notiSocket.emit('questionAdded', qData);
                     }
-                    console.log( response );
+//                    console.log( response );
+                    console.log( qData );
+                    var questions = that.state.questionList;
+                    questions.push( qData );
+                    that.setState({ questionList:questions });
 
                 }
 

@@ -8,6 +8,8 @@ import axios from 'axios';
 import iVCommonUtils from '../Utils/common';
 //import {iVConfigs} from '../Configs/local.js';
 import iVConfigs from '../Configs/local.json';
+import {PostReq} from './utils/apiRequest.jsx';
+import { withCookies, Cookies } from 'react-cookie';
 
 class Seminar extends Component {
     constructor(props){
@@ -49,34 +51,33 @@ class Seminar extends Component {
 
     handleSubmit(event,newValue){
 
+        const { cookies } = this.props
+        const userId = cookies.get('userId');
+
         let data = {
-            "requestee":"101",
+            "requestee": userId,
             "bTags": iVCommonUtils.getArrFromStr( this.state.tags ),
             "bTitle": this.state.title,
             "bDescription" : this.state.description,
             "bStartDateTime": iVCommonUtils.mergeDateTime( this.state.startDate, this.state.startTime ),
             "bEndDateTime": iVCommonUtils.mergeDateTime( this.state.endDate, this.state.endTime )
         };
-        
-        /*console.log(data);
-        console.log(iVConfigs);*/
-        var tempObj = {
-            baseURL: iVConfigs.common.baseUrl,
-                timeout: iVConfigs.common.timeout,
-            headers: iVConfigs.common.headers
-        };
-        var axiosInstance = axios.create( tempObj );
-        /*console.log('asdfasdfasdfasdfasd');
-        console.log( iVConfigs.seminar );*/
-        axiosInstance.post( iVConfigs.seminar.createSeminarEndpoint ,data)
+
+        var path = iVConfigs.seminar.createSeminarEndpoint;
+        PostReq( path, data )
             .then(function (response) {
-                console.log(response);
+                console.log(response.status);
+                if(response.status == 200){
+                    //that.setState( { questionList: response.data.data } ) ;
+                    console.log( response.data.data );
+                } else {
+                    console.log( response );
+                }
+
             })
             .catch(function (error) {
                 console.log(error);
             });
-
-
     };
 
 
@@ -128,4 +129,4 @@ class Seminar extends Component {
 
 }
 
-export default Seminar;
+export default withCookies( Seminar );
