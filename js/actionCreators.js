@@ -82,7 +82,24 @@ export function receiveScheduleData(data){
 
 
 
+//Home Page Methods
+ export function fetchVideoData(){
+    return function(dispatch){
+        return GetReq('getrecommendation?user=vinaysahuhbti@gmail.com',null,'http://13.58.172.179:8080/')
+            .then((res)=>{
+                let videoData = JSON.parse(res.data.data);
+                console.log(res);
+                //dispatch(receiveTags(tagList));
 
+            })
+            .catch((err)=>{
+                console.log(err);
+            })
+              
+
+   }
+
+ }
 
 
 

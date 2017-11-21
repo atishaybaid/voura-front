@@ -9,6 +9,7 @@ import Landing from './Landing.jsx';
 import Signup from './Signup.jsx';
 import Seminar from './Seminar.jsx';
 import UserHome from './UserHome.jsx';
+import Profile from './Profile.jsx';
 
 
 /*import SeminarP from './SeminarP.jsx';*/
@@ -33,6 +34,7 @@ const App = ()=>(
 <Route  exact path="/seminar/PM/:semId" component={SeminarPM} />
 <Route  exact path="/seminar/SM/:semId" component={SeminarSM} />
                         <Route path="/home" component={UserHome} />
+                        <Route path="/profile" component={Profile} />
                     </Switch>
                 </div>
             </MuiThemeProvider>
