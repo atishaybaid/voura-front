@@ -10,7 +10,8 @@ import Signup from './Signup.jsx';
 import Seminar from './Seminar.jsx';
 import UserHome from './UserHome.jsx';
 import Profile from './Profile.jsx';
-
+import FreeQuestion from './FreeQuestion.jsx';
+import QuestionList from './QuestionList.jsx';
 
 /*import SeminarP from './SeminarP.jsx';*/
 import SeminarPM from './SeminarPM.jsx';
@@ -33,6 +34,8 @@ const App = ()=>(
 <Route  exact path="/seminar/create" component={Seminar} />
 <Route  exact path="/seminar/PM/:semId" component={SeminarPM} />
 <Route  exact path="/seminar/SM/:semId" component={SeminarSM} />
+<Route  exact path="/add-question" component={FreeQuestion} />
+<Route path="/question-list" component={QuestionList} />
                         <Route path="/home" component={UserHome} />
                         <Route path="/profile" component={Profile} />
                     </Switch>

@@ -35,7 +35,7 @@ class SeminarSM extends Component {
         this.socketHandling = this.socketHandling.bind( this );
 
     };
-
+    
     socketHandling(){
 
         const { cookies } = this.props;
