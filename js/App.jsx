@@ -17,6 +17,7 @@ import QuestionList from './QuestionList.jsx';
 import SeminarPM from './SeminarPM.jsx';
 /*import SeminarS from './SeminarS.jsx';*/
 import SeminarSM from './SeminarSM.jsx';
+import VideoShow from './VideoShow.jsx';
 
 /*<Route  exact path="/seminar/P/:semId" component={SeminarP} />
  <Route  exact path="/seminar/S/:semId" component={SeminarS} />*/
@@ -36,6 +37,7 @@ const App = ()=>(
 <Route  exact path="/seminar/SM/:semId" component={SeminarSM} />
 <Route  exact path="/add-question" component={FreeQuestion} />
 <Route path="/question-list" component={QuestionList} />
+<Route exact path="/videoshow/:videoId" component={VideoShow} />
                         <Route path="/home" component={UserHome} />
                         <Route path="/profile" component={Profile} />
                     </Switch>

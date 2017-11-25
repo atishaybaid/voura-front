@@ -10,6 +10,8 @@ import iVCommonUtils from '../Utils/common';
 import iVConfigs from '../Configs/local.json';
 import {PostReq} from './utils/apiRequest.jsx';
 import { withCookies, Cookies } from 'react-cookie';
+import Dialog from 'material-ui/Dialog';
+import QuestionList from './QuestionList.jsx';
 
 class Seminar extends Component {
     constructor(props){
@@ -22,9 +24,25 @@ class Seminar extends Component {
             startTime: new Date(),
             endDate: new Date(),
             endTime: new Date(),
-            thumbnail:''
+            thumbnail:'',
+            freeQuests: [],
+            showPickQuestDialog: false
         }
+        this.showPickQuestionsDialog = this.showPickQuestionsDialog.bind(this);
+        this.hidePickQuestionsDialog = this.hidePickQuestionsDialog.bind(this);
+        this.pickQuestions = this.pickQuestions.bind(this);
     };
+
+    pickQuestions( qIds ){
+
+        var questions = this.state.freeQuests;
+        if( qIds.length > 0 ){
+            qIds.forEach( function( q ){
+                questions.push( q );
+            } );
+        }
+        this.setState({ showPickQuestDialog: false, freeQuests:questions });
+    }
 
     handleTitleChange(event,newValue){
         this.setState({title:newValue});
@@ -60,7 +78,8 @@ class Seminar extends Component {
             "bTitle": this.state.title,
             "bDescription" : this.state.description,
             "bStartDateTime": iVCommonUtils.mergeDateTime( this.state.startDate, this.state.startTime ),
-            "bEndDateTime": iVCommonUtils.mergeDateTime( this.state.endDate, this.state.endTime )
+            "bEndDateTime": iVCommonUtils.mergeDateTime( this.state.endDate, this.state.endTime ),
+            "qIds" : this.state.freeQuests
         };
 
         var path = iVConfigs.seminar.createSeminarEndpoint;
@@ -80,6 +99,13 @@ class Seminar extends Component {
             });
     };
 
+    showPickQuestionsDialog(){
+        this.setState({ showPickQuestDialog: true });
+    }
+
+    hidePickQuestionsDialog(){
+        this.setState({ showPickQuestDialog: false });
+    }
 
     render(){
         return(
@@ -117,9 +143,24 @@ class Seminar extends Component {
                         <DatePicker onChange={this.handleEndDate.bind(this)} value ={this.state.endDate} hintText="Seminar end date" />
                         <TimePicker onChange={this.handleEndTime.bind(this)} value={this.state.endTime} hintText="Seminar end time" /><br />
 
+                        <FlatButton className="landing-btn" label="Pick questions for seminar" primary={true}
+                                    backgroundColor={'#4ebcd5'}  style={{color:'#ffffff'}} onClick={this.showPickQuestionsDialog}
+                                    target="_blank"/>
                         <FlatButton className="landing-btn" label="Create Seminar" primary={true}
                                     backgroundColor={'#4ebcd5'}  style={{color:'#ffffff'}} onClick={this.handleSubmit.bind(this)}
                                     target="_blank"/>
+
+
+                        <Dialog
+                            title=""
+                            actions={null}
+                            modal={true}
+                            open={this.state.showPickQuestDialog}
+                            onRequestClose={this.hidePickQuestionsDialog}
+                        >
+                        <QuestionList pickQuestion={(q)=>this.pickQuestions(q)}></QuestionList>
+                        </Dialog>
+
                     </div>
                 </div>
 

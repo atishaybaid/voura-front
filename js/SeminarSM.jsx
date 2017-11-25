@@ -175,7 +175,6 @@ class SeminarSM extends Component {
                 that.socketHandling();
             })
 
-
     }
 
     voteQuestion( qId, vote ){

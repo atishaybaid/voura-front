@@ -27,7 +27,8 @@ class SeminarPM extends Component {
             question: '',
             questionList: [],
             showSnackBar: false,
-            snackBarMessage : ""
+            snackBarMessage : "",
+            streamIdText: ""
         }
         this.skipQuestion = this.skipQuestion.bind(this);
         this.answeredQuestion = this.answeredQuestion.bind(this);
@@ -91,7 +92,7 @@ class SeminarPM extends Component {
 
     getTopQuestions( limit=1){
 
-        var path ='questions/topquestion/?videoid='+this.state.videoId+'&limit='+limit;
+        var path ='questions/topquestion/?videoid='+this.state.videoId+'&n='+limit;
         var that = this;
         var promise = new Promise( function ( resolve, reject ) {
             GetReq( path )
@@ -121,6 +122,33 @@ class SeminarPM extends Component {
     }
 
     decideStateBasedOnSeminarData( semData ){
+
+        try{
+            var lifeCycleStatus = semData.binding.status.lifeCycleStatus;
+        }catch(e){
+            var lifeCycleStatus = 'PREVIEW_SEMINAR';
+        }
+
+        switch( lifeCycleStatus ){
+            case 'ready':
+                return 'PREVIEW_SEMINAR';
+                break;
+            case 'testing':
+            case 'testStarting':
+                return 'LIVE_SEMINAR';
+                break;
+            case 'live':
+            case 'liveStarting':
+                return 'COMPLETE_SEMINAR';
+                break;
+            case 'complete':
+                return 'THANKS_SEMINAR';
+                break;
+            default:
+                return 'FETCH_DATA';
+                break;
+        }
+
         return 'PREVIEW_SEMINAR';
     }
 
@@ -131,16 +159,16 @@ class SeminarPM extends Component {
                 var newSemState = that.decideStateBasedOnSeminarData( allData[0] );
 
                 //var questions = that.getQuestionList( allData[0], allData[1] )
-                var arr =[];
-                if( typeof allData[1] == 'object' ){
-                    arr.push( allData[1] ) ;
-                } else if( allData[1] instanceof Array ){
-                    arr = allData[1];
-                }
+                var streamIdText ="";
+                try{
+                    streamIdText = "Your stream id/name for OBS is :" + allData[0].stream.resource.cdn.ingestionInfo.streamName;
+                }catch (  e ){
+                    streamIdText = "Could not find stream id for your broadcast";
+                };
 
-                that.setState( { semState: newSemState, seminarData: allData[0], questionList: arr } );
+                that.setState( { semState: newSemState, seminarData: allData[0], questionList: allData[1], streamIdText : streamIdText  } );
                 that.socketHandling();
-                that.notiSocket.emit('removeQuestion', that.getQidArrFromQuestions( arr ) );
+                that.notiSocket.emit('removeQuestion', that.getQidArrFromQuestions( allData[1] ) );
             }).catch( function (error) {
             console.log('caught errror in comp mount');
             console.log( error );
@@ -172,8 +200,10 @@ class SeminarPM extends Component {
         questions = this.removeQuestion( questions, qId );
         var that = this;
         this.getTopQuestions(1).then( function ( resolve ) {
-            questions.push( resolve );
-            that.setState({ questionList: questions});
+            if( resolve.length > 0 ){
+                questions.push( resolve[0] );
+                that.setState({ questionList: questions});
+            }
         });
     }
 
@@ -183,8 +213,10 @@ class SeminarPM extends Component {
         questions = this.removeQuestion( questions, qId );
         var that = this;
         this.getTopQuestions(1).then( function ( resolve ) {
-            questions.push( resolve );
-            that.setState({ questionList: questions});
+            if( resolve.length > 0 ){
+                questions.push( resolve[0] );
+                that.setState({ questionList: questions});
+            }
         });
     }
 
@@ -214,8 +246,8 @@ class SeminarPM extends Component {
         const userId = cookies.get('userId');
         let data = {
             "userID": userId,
-            "broadcast": {
-                "id": this.state.seminarData.broadcast.id
+            "stream": {
+                "id": this.state.seminarData.stream.id
             }
         }
         return data;
@@ -270,11 +302,19 @@ class SeminarPM extends Component {
 
     processStreamData( streamObj ){
         var retObj = {};
+        retObj.status = 'SUCCESS';
+        return retObj;
+
         var streamStatus = streamObj.status.healthStatus.status;
         switch ( streamStatus ){
             case 'noData':
                 retObj.status = 'FAILED';
                 retObj.snackBarMessage = 'Not getting data from your stream';
+                retObj.showSnackBar = true;
+                break;
+            case 'good':
+                retObj.status = 'SUCCESS';
+                retObj.snackBarMessage = 'Stream status is good';
                 retObj.showSnackBar = true;
                 break;
             default:
@@ -312,8 +352,6 @@ class SeminarPM extends Component {
                             var msg = 'network error: preview failed';
 
                         that.setState({ snackBarMessage: msg, showSnackBar:true });
-
-                        console.log(error);
                     }
                 })
                 .catch(function (error) {
@@ -345,7 +383,7 @@ class SeminarPM extends Component {
                         var msg = 'network error: live failed';
 
                     that.setState({ snackBarMessage: msg, showSnackBar:true });
-                    console.log(error);
+                    console.log(msg);
                 }
             })
             .catch(function (error) {
@@ -358,6 +396,7 @@ class SeminarPM extends Component {
         console.log('close');
         var path = 'seminar/complete';
         var data = this.getTransitionData();
+        var that = this;
         PostReq( path, data )
             .then(function (response) {
                 console.log(response.status);
@@ -440,6 +479,9 @@ class SeminarPM extends Component {
             <div className="seminarP-page">
                 <VrHeader />
                 <div className="main-container">
+                    <div className="topMsg">
+                        {this.state.streamIdText}
+                    </div>
                     <div className="seminar-left-coloumn">
                         {this.generateSemControls()}
                         <div className="youtube-embed">
@@ -456,7 +498,7 @@ class SeminarPM extends Component {
                 <Snackbar
                     open={this.state.showSnackBar}
                     message={this.state.snackBarMessage}
-                    autoHideDuration={1000}
+                    autoHideDuration={2000}
                 />
             </div>
         )
