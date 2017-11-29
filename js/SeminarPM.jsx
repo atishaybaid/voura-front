@@ -83,8 +83,8 @@ class SeminarPM extends Component {
 
                 })
                 .catch(function (error) {
-                    reject( error );
                     console.log(error);
+                    return error;
                 });
         });
         return promise;
@@ -168,7 +168,7 @@ class SeminarPM extends Component {
 
                 that.setState( { semState: newSemState, seminarData: allData[0], questionList: allData[1], streamIdText : streamIdText  } );
                 that.socketHandling();
-                that.notiSocket.emit('removeQuestion', that.getQidArrFromQuestions( allData[1] ) );
+                //that.notiSocket.emit('removeQuestion', that.getQidArrFromQuestions( allData[1] ) );
             }).catch( function (error) {
             console.log('caught errror in comp mount');
             console.log( error );

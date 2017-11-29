@@ -21,8 +21,9 @@ class SeminarSM extends Component {
 
     constructor(props) {
         super( props );
+        var videoId = window.location.pathname.match(/([^\/]*)\/*$/)[1];
         this.state = {
-            videoId: 'S1eMeX8TR-',
+            videoId: videoId,
             question: '',
             questionList : []
         }
@@ -107,7 +108,6 @@ class SeminarSM extends Component {
             var promise = new Promise( function ( resolve, reject ) {
                 PostReq( path, data )
                     .then(function (response) {
-                        console.log(response.status);
                         if(response.status == 200){
                             //that.setState( { questionList: response.data.data } ) ;
                             resolve( response.data.data );
@@ -117,10 +117,10 @@ class SeminarSM extends Component {
 
                     })
                     .catch(function (error) {
-                        reject( error );
-                        console.log(error);
+                        return error;
                     });
-            });
+            })
+
             return promise;
         }
 
@@ -137,19 +137,18 @@ class SeminarSM extends Component {
         var promise = new Promise( function ( resolve, reject ) {
             GetReq( path )
                 .then(function (response) {
-                    console.log(response.status);
                     if(response.status == 200){
                         //that.setState( { questionList: response.data.data } ) ;
                         resolve( response.data.data );
-                        console.log( that.state.questionList );
                     } else {
                         reject( response );
                     }
                 })
                 .catch(function (error) {
-                    reject(error);
+                    return error;
                 });
-        } );
+        } )
+
         return promise;
     }
 
@@ -157,10 +156,13 @@ class SeminarSM extends Component {
         var rArray = [];
         qArray.forEach( function ( qObj ) {
             qObj.score = 0;
-            let obj = vArray.find( function( vObj ){ if( vObj.qId == qObj["_id"] ) return vObj.qId; else return {}; } );
+            if( vArray && vArray.length > 0 ){
+                let obj = vArray.find( function( vObj ){ if( vObj.qId == qObj["_id"] ) return vObj.qId; else return {}; } );
+                if( obj )
+                    qObj.score = obj.score;
+            }
 
-            if( obj )
-                qObj.score = obj.score;
+
             rArray.push( qObj );
         })
         return rArray;
@@ -174,6 +176,9 @@ class SeminarSM extends Component {
                 that.setState({ questionList:questions });
                 that.socketHandling();
             })
+            .catch(function (error) {
+                console.log(error);
+            });
 
     }
 
@@ -245,15 +250,22 @@ class SeminarSM extends Component {
     generateQuesList(){
         //console.log( this.state.questionList );
         var that = this;
-        var quesList = this.state.questionList.map( function( item ){
-            return <div key ={item._id}>
-                <ListItem primaryText={item.question} />
-                <FlatButton className="control-btn" label='upvote' primary={true} backgroundColor={'#4ebcd5'}  style={{color:'#ffffff'}} onClick={that.voteQuestion.bind( this, item._id, 'upvote' ) } target="_blank"/>
-                <FlatButton className="control-btn" label='downvote' primary={true} backgroundColor={'#4ebcd5'}  style={{color:'#ffffff'}} onClick={that.voteQuestion.bind( this, item._id, 'downvote' ) } target="_blank"/>
-            </div>
-        } )
-        //console.log( quesList );
-        return quesList;
+
+        if( this.state.questionList.length > 0 ) {
+            var quesList = this.state.questionList.map(function (item) {
+                return <div key={item._id}>
+                    <ListItem primaryText={item.question}/>
+                    <FlatButton className="control-btn" label='upvote' primary={true} backgroundColor={'#4ebcd5'}
+                                style={{color:'#ffffff'}} onClick={that.voteQuestion.bind( this, item._id, 'upvote' ) }
+                                target="_blank"/>
+                    <FlatButton className="control-btn" label='downvote' primary={true} backgroundColor={'#4ebcd5'}
+                                style={{color:'#ffffff'}}
+                                onClick={that.voteQuestion.bind( this, item._id, 'downvote' ) } target="_blank"/>
+                </div>
+            })
+            //console.log( quesList );
+            return quesList;
+        }
     }
     render(){
         return (
@@ -281,7 +293,7 @@ class SeminarSM extends Component {
 
                         <div className="sQuestion-list">
                             <List>
-                                <Subheader>Recent chats</Subheader>
+                                <Subheader>Question List</Subheader>
                                 {this.generateQuesList()}
                             </List>
                         </div>
