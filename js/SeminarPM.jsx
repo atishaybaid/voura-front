@@ -18,6 +18,7 @@ class SeminarPM extends Component {
     constructor(props) {
         super();
         var videoId = window.location.pathname.match(/([^\/]*)\/*$/)[1];
+        var epoch = Math.round((new Date()).getTime() / 1000);
         this.state = {
             semState: 'FETCH_DATA',
             streamState: '',
@@ -28,8 +29,10 @@ class SeminarPM extends Component {
             questionList: [],
             showSnackBar: false,
             snackBarMessage : "",
-            streamIdText: ""
-        }
+            streamIdText: "",
+            liveSeminarEpoch: epoch
+        };
+
         this.skipQuestion = this.skipQuestion.bind(this);
         this.answeredQuestion = this.answeredQuestion.bind(this);
         this.generateQuesList = this.generateQuesList.bind(this);
@@ -207,15 +210,53 @@ class SeminarPM extends Component {
         });
     }
 
+    setAnswered( qId, timeDiff ){
+
+        const { cookies } = this.props
+        const userId = cookies.get('userId');
+
+        let data = {
+            videoId: this.state.videoId,
+            qId: qId,
+            answered: true,
+            time: timeDiff
+        }
+
+        var path ='questions/status';
+        var that = this;
+
+        PostReq( path, data )
+            .then(function (response) {
+                console.log(response.status);
+                if(response.status == 200){
+                    if( response.data.status != 'ERROR' ){
+                        console.log( response );
+                    }
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+
+
     answeredQuestion( qId ){
         //@todo api hit that question si answered
         var questions = this.state.questionList;
+        var epoch = this.state.liveSeminarEpoch;
+        if( !epoch ){
+            var epoch = Math.round((new Date()).getTime() / 1000);
+        }
+        var nowEpoch = Math.round((new Date()).getTime() / 1000);;
+
         questions = this.removeQuestion( questions, qId );
         var that = this;
         this.getTopQuestions(1).then( function ( resolve ) {
             if( resolve.length > 0 ){
                 questions.push( resolve[0] );
                 that.setState({ questionList: questions});
+                var timeDiff = nowEpoch - epoch;
+                that.setAnswered( qId, timeDiff );
             }
         });
     }
@@ -375,7 +416,8 @@ class SeminarPM extends Component {
                 console.log(response.status);
                 if(response.status == 200 && response.data.status != 'ERROR' ){
                     //that.setState( { questionList: response.data.data } ) ;
-                    that.setState({ semState: 'COMPLETE_SEMINAR', snackBarMessage: 'live successful', showSnackBar:true });
+                    var epoch = Math.round((new Date()).getTime() / 1000);
+                    that.setState({ semState: 'COMPLETE_SEMINAR', snackBarMessage: 'live successful', showSnackBar:true, liveSeminarEpoch: epoch });
                 }else{
                     if( response.data.status == 'ERROR' )
                         var msg = response.data.message;

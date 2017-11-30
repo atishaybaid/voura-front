@@ -1,7 +1,7 @@
 import React,{Component} from 'react';
 import AppBar from 'material-ui/AppBar';
 import Login from './Login.jsx';
-const appTitle = 'Voura'
+const appTitle = 'intelverse'
 
 
 const VrHeader = (props)=>{

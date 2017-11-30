@@ -9,6 +9,8 @@ import {List, ListItem} from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
 import {GetReq,PostReq} from './utils/apiRequest.jsx';
 import iVConfigs from '../Configs/local.json';
+import YouTube from 'react-youtube';
+import '../less/SeminarPM.less';
 
 class VideoShow extends Component {
 
@@ -24,8 +26,28 @@ class VideoShow extends Component {
 
         this.getVideoData = this.getVideoData.bind( this );
         this.generateQuesList = this.generateQuesList.bind(this);
+        this.youtubeOpts = {
+            height: '390',
+            width: '640',
+            playerVars: {
+                autoplay: 1
+            }
+
+        }
+        var youtubePlayer = null;
     };
 
+
+
+    getAnsweredQuestions( arr ){
+        var res=[];
+        arr.forEach( function ( qObj ) {
+            if( qObj.answered == true ){
+                res.push( qObj );
+            }
+        })
+        return res;
+    }
     componentDidMount(){
         //inititlly show loading message
 
@@ -39,8 +61,11 @@ class VideoShow extends Component {
                     var userInfo, qList, vidData = [];
                     if( allData[0] )
                         userInfo = allData[0];
-                    if( allData[1] )
-                        qList = allData[1];
+
+                    if( allData[1] ){
+                        qList = that.getAnsweredQuestions( allData[1] );
+                    }
+
                     if( allData[2] )
                         vidData = allData[2];
                     console.log( allData );
@@ -130,32 +155,45 @@ class VideoShow extends Component {
         return promise;
     }
 
-    handleQuestClick(){
+    handleQuestClick( timeOffset , b){
 //move to particular position in video
+        if( this.youtubePlayer ){
+            this.youtubePlayer.seekTo( timeOffset );
+        }
     }
 
     generateProfileDesc(){
         var that = this;
 
-            return <div>
+        if( this.state.userInfo ) {
+            return (<div>
                 In below video Mr {this.state.userInfo.name} describes about {this.state.userInfo.title}.
-            </div>
-
+            </div>)
+        } else {
+            return ( <div></div> )
+        }
 
     }
 
     generateQuesList(){
         var that = this;
         var quesList = this.state.questList.map( function( item, index ){
+            console.log( item);
             return <div key ={`selectedQuest.quest_${index}`}>
-                <ListItem primaryText={item.question} onClick={that.handleQuestClick} />
+                <ListItem primaryText={item.question} onClick={that.handleQuestClick.bind( that, item.time )} />
             </div>
         } )
         //console.log( quesList );
         return quesList;
     }
+
     generateVideosList(){
 
+    }
+
+    _onReady(event) {
+        // access to player in all event handlers via event.target
+        this.youtubePlayer = event.target;
     }
 
     render(){
@@ -168,19 +206,19 @@ class VideoShow extends Component {
                 <div className="prof-desc">
                     {this.generateProfileDesc()}
                 </div>
-                <div className="left-col">
-                    <iframe width="560" height="315" src="https://www.youtube.com/embed/WOoJh6oYAXE" frameBorder="0" gesture="media" allowFullScreen></iframe>
+                <div className="seminar-left-coloumn">
+                    <div id="player">
+                        <YouTube
+                            videoId="yv5i0oTHubc"
+                            opts={this.youtubeOpts}
+                            onReady={this._onReady}
+                        />
+                    </div>
                 </div>
-                <div className="right-col">
+                <div className="seminar-right-coloumn">
                     <List>
                         <Subheader>Questions answered</Subheader>
                         {this.generateQuesList()}
-                    </List>
-                </div>
-                <div className="related-videos">
-                    <List>
-                        <Subheader>Questions answered</Subheader>
-                        {this.generateVideosList()}
                     </List>
                 </div>
             </div>

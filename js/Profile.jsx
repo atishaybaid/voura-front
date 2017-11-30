@@ -5,7 +5,7 @@ import Chip from 'material-ui/Chip';
 import VrHeader from './VrHeader.jsx'
 import Subheader from 'material-ui/Subheader';
 import '../less/Profile.less';
-
+import FollowButton from './FollowButton.jsx';
 
 class Profile extends Component{
     constructor(props){
@@ -26,7 +26,7 @@ class Profile extends Component{
                 <div className="profile-card-header">
                     <img src="images/profile.jpg" className="profile-image" alt=""  width="150px" height="150px" />
                     <div className="user-info">
-                        <div className="user-name base-pitch">Atishay Baid</div>
+                        <div className="user-name base-pitch">APlha romeo</div>
                         <div className="user-tagline sub-pitch">React.js Developer</div>
                          {/*<Divider style={{margin:'auto',width:'50%'}}/>*/}
                          <hr className="sep"/>
@@ -48,8 +48,8 @@ class Profile extends Component{
                              {this.renderChips()}
                         </div>
                     </div>
-                
-               
+
+                    <FollowButton />
                 
         
                 </Card>
