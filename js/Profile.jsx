@@ -3,13 +3,22 @@ import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'mat
 import Divider from 'material-ui/Divider';
 import Chip from 'material-ui/Chip';
 import VrHeader from './VrHeader.jsx'
+import VrModal from './common/VrModal.jsx';
 import Subheader from 'material-ui/Subheader';
+import TextField from 'material-ui/TextField';
+import {toggleEditProfile,getProfileData} from './actionCreators.js';
+import {connect}  from 'react-redux';
 import '../less/Profile.less';
+
 
 
 class Profile extends Component{
     constructor(props){
         super(props);
+        this.handleEdit = this.handleEdit.bind(this);
+        this.modalChildActions = {handleNameChange:()=>{
+          this.handleNameChange();
+        }}
     }
     renderChips(){
      let dummyTags = ['React.js','Redux','Node.js','Html','Css','Less']
@@ -17,13 +26,30 @@ class Profile extends Component{
                         
                     )  
     }
+    handleEdit(){
+
+    }
+
+    componentDidMount(){
+      let userEmail = this.props.userEmail;
+        this.props.getProfileData(userEmail);
+    }
+
+    //edit profile methods
+    handleNameChange(){
+      console.log("called");
+    }
+
     render(){
         return(
             <div className="profile-page">
               <div className="profile-card">
                 <VrHeader/>
+                
+               <VrModal title="Edit Profile"></VrModal>
                 <Card style={{'backgroundColor':'aliceblue','padding':'10px'}}>
                 <div className="profile-card-header">
+                     <i className="fa fa-pencil edit-icon" onClick={this.props.handleEdit} aria-hidden="true"></i>
                     <img src="images/profile.jpg" className="profile-image" alt=""  width="150px" height="150px" />
                     <div className="user-info">
                         <div className="user-name base-pitch">Atishay Baid</div>
@@ -58,9 +84,25 @@ class Profile extends Component{
             </div>
             )
     }
-        
+
+
         
 }
+const mapDispatchToProps = (dispatch)=>({
+  handleEdit:function(){
+    dispatch(toggleEditProfile)
+  },
+  getProfileData:function(userEmail){
+    dispatch(getProfileData(userEmail));
+  }
 
+})
+const mapStateToProps = (state)=>{
+  console.log(state);
+  return {editStatus:state.profile.editStatus,userEmail:state.login.email||state.signup.email}
+}
 
-export default Profile;
+export default connect(mapStateToProps,mapDispatchToProps)(Profile);
+
+/*
+export default Profile;*/

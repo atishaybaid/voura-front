@@ -39,9 +39,15 @@ module.exports = {
             }, {
                 loader: "less-loader" // compiles Less to CSS 
             }]
-          }
+          },
+            {
+         test: /.(ttf|otf|eot|svg|woff(2)?)(\?[a-z0-9]+)?$/,
+         use: [{
+           loader: 'file-loader'
+         }]
+       }
         ]
-    }
+    } 
 
 
 }

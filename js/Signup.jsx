@@ -34,14 +34,14 @@ class Signup extends Component {
         let data = {
             'id':idata.email,
             'password':idata.pass,
-            'name':'',
+            'name':idata.name,
             'image':''
         }
-
+        console.log(data);
         PostReq('users/signup',data)
-            .then(function (response) {
+            .then((response) =>{
                if(response.status == 200){
-                window.location.href = '/signup/userdetails';
+                this.context.history.push('/signup/userdetails');
 
                }
            

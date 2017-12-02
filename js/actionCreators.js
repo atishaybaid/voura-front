@@ -1,5 +1,7 @@
-import{SHOW_LOGIN_DIALOG,SET_EMAIL,SET_PASSWORD,SIGNUP_SET_EMAIL,SIGNUP_SET_PASSWORD,
-    REQUEST_TAGS,RECEIVE_TAGS,FETCH_SCHEDULE_DATA,RECEIVE_SCHEDULE_DATA} from './actions';
+import{SHOW_LOGIN_DIALOG,SET_EMAIL,SET_PASSWORD,SIGNUP_SET_EMAIL,SIGNUP_SET_PASSWORD,SIGNUP_SET_NAME,
+    REQUEST_TAGS,RECEIVE_TAGS,FETCH_SCHEDULE_DATA,RECEIVE_SCHEDULE_DATA,TOGGLE_EDIT_PROFILE,
+    PROFILE_NAME_CHANGE,PROFILE_TITLE_CHANGE,PROFILE_DESC_CHANGE,PROFILE_INST_CHANGE,PROFILE_FIELD_CHANGE,
+    RECEIVE_PROFILE_DATA,RECEIVE_VIDEO_DATA} from './actions';
 import {PostReq,GetReq} from './utils/apiRequest.jsx';
 //login methods
 export function showLoginDialog(){
@@ -13,6 +15,7 @@ export function setEmail(value){
 
 
 export function setPassword(value){
+    console.log(value);
     return {type:SET_PASSWORD,payload:value}
 }
 
@@ -29,7 +32,9 @@ export function signupSetPassword(value){
     return {type:SIGNUP_SET_PASSWORD,payload:value}
 }
 
-
+export function signupSetName(value){
+     return {type:SIGNUP_SET_NAME,payload:value}
+}
 //User Details Methods
 
 export function requestTags(searchText){
@@ -63,8 +68,8 @@ export function fetchSheduleData(apiurl){
     return function(dispatch){
         return GetReq(apiurl,null,'https://my-json-server.typicode.com/atishaybaid/dummyApi')
             .then((res)=>{
-                console.log(res.data);
-                dispatch(receiveScheduleData(res.data))
+                console.log(res.data.data);
+                dispatch(receiveScheduleData(res.data.data))
             })
             .catch((err)=>{
                 console.log(err);
@@ -84,12 +89,14 @@ export function receiveScheduleData(data){
 
 //Home Page Methods
  export function fetchVideoData(){
+    console.log("fetchVideoData called");
     return function(dispatch){
-        return GetReq('getrecommendation?user=vinaysahuhbti@gmail.com',null,'http://13.58.172.179:8080/')
+        return GetReq('/k9i0j',null,'https://api.myjson.com/bins',true)
             .then((res)=>{
-                let videoData = JSON.parse(res.data.data);
                 console.log(res);
-                //dispatch(receiveTags(tagList));
+                let videoData = res.data.reco;
+                console.log(videoData);
+                dispatch(receiveVideoData(videoData));
 
             })
             .catch((err)=>{
@@ -100,6 +107,64 @@ export function receiveScheduleData(data){
    }
 
  }
+
+
+ export function receiveVideoData(videoData){
+    console.log(videoData);
+    return {type:RECEIVE_VIDEO_DATA,payload:videoData}
+ }
+
+
+
+//propfile page actions
+export function toggleEditProfile(){
+    return {type:TOGGLE_EDIT_PROFILE}
+}
+
+export function getProfileData(userId){
+    return function(dispatch){
+        return GetReq(`/users/getuser?id=${userId}`)
+            .then((res)=>{
+                let profileData = JSON.parse(res.data.data);
+                console.log(res);
+                dispatch(receiveProfileData(profileData));
+
+            })
+            .catch((err)=>{
+                console.log(err);
+            })
+              
+
+   }
+}
+
+
+export function receiveProfileData(profleData){
+    console.log(profleData);
+    return {type:RECEIVE_PROFILE_DATA,payload:profileData};
+}
+
+//edit profile methods
+export function profileNameChange(value){
+    return {type:PROFILE_NAME_CHANGE,payload:value}
+}
+
+export function profileTitleChange(value){
+    return {type:PROFILE_TITLE_CHANGE,payload:value}
+}
+
+
+export function profileDescChange(value){
+    return {type:PROFILE_DESC_CHANGE,payload:value}
+}
+
+export function profileInstChange(value){
+    return {type:PROFILE_INST_CHANGE,payload:value}
+}
+
+export function profileFieldChange(value){
+    return {type:PROFILE_FIELD_CHANGE,payload:value}
+}
 
 
 

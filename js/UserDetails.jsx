@@ -45,6 +45,7 @@ class UserDetails extends Component{
         PostReq('/users/tags',data)
         .then((res)=>{
             console.log(res);
+            this.context.history.push('/profile');
         })
         .catch((err)=>{
             console.log(error);
