@@ -1,5 +1,5 @@
 import{SHOW_LOGIN_DIALOG,SET_EMAIL,SET_PASSWORD,SIGNUP_SET_EMAIL,SIGNUP_SET_PASSWORD,
-    REQUEST_TAGS,RECEIVE_TAGS,FETCH_SCHEDULE_DATA,RECEIVE_SCHEDULE_DATA} from './actions';
+    REQUEST_TAGS,RECEIVE_TAGS,FETCH_SCHEDULE_DATA,RECEIVE_SCHEDULE_DATA, RECEIVE_NOTIS} from './actions';
 import {PostReq,GetReq} from './utils/apiRequest.jsx';
 //login methods
 export function showLoginDialog(){
@@ -73,7 +73,37 @@ export function fetchSheduleData(apiurl){
     }
 }
 
+export function receiveNotifications( data ){
+    return{type:RECEIVE_NOTIS,payload:data}
+}
 
+export function fetchNotifications() {
+    return function(dispatch){
+        return GetReq('/notification')
+                .then((res)=>{
+                console.log(res.data);
+        var dummy =  [
+                {
+                    "_id": "5a204de18bb966d200bd97b8",
+                    "notId": "rJc1RpagG",
+                    "from": 1,
+                    "to": 4,
+                    "status": "NEW",
+                    "type": "SEMINAR_CREATED",
+                    "data": "fghETe",
+                    "valid": 1518287400000,
+                    "text": "1 has created seminar "
+                }
+            ];
+        //dispatch(receiveNotifications(res.data))
+        dispatch(receiveNotifications(dummy))
+    })
+        .catch((err)=>{
+            console.log(err);
+    })
+
+    }
+}
 
 
 export function receiveScheduleData(data){

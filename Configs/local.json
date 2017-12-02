@@ -17,6 +17,13 @@
     },
     "tags" :{
         "url" : "http://api.intelverse.com:3000"
+    },
+    "notifications" :{
+        "socketUrl" : "http://lapis.intelverse.com:3000",
+        "socketData" : {
+            "path" : "/notiNsp",
+            "transports": ["websocket"]
+        }
     }
 
 }

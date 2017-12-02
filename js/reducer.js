@@ -1,5 +1,5 @@
 import {SHOW_LOGIN_DIALOG,SET_EMAIL,SET_PASSWORD,SIGNUP_SET_EMAIL,
-    SIGNUP_SET_PASSWORD,REQUEST_TAGS,RECEIVE_TAGS,RECEIVE_SCHEDULE_DATA} from './actions';
+    SIGNUP_SET_PASSWORD,REQUEST_TAGS,RECEIVE_TAGS,RECEIVE_SCHEDULE_DATA, RECEIVE_NOTIS} from './actions';
 
 
 const DEFAULT_STATE ={
@@ -18,6 +18,9 @@ const DEFAULT_STATE ={
     },
     home:{
         videoData:[]
+    },
+    notifications:{
+        notiList: []
     }
 }
 
@@ -46,6 +49,10 @@ const receiveTags = (state,action)=>{
     return Object.assign({},state,{tagList:action.payload});
 }
 
+const receiveNotifications = (state,action)=>{
+    return Object.assign({},state,{notifications:{ notiList:action.payload} });
+}
+
 const receiveSheduleData = (state,action)=>{
     return Object.assign({},state,{VrScheduleGrid:{data:action.payload}});
 }
@@ -68,6 +75,8 @@ const rootReducer = (state = DEFAULT_STATE,action)=>{
             return receiveTags(state,action);
         case RECEIVE_SCHEDULE_DATA:
             return receiveSheduleData(state,action)
+        case RECEIVE_NOTIS:
+            return receiveNotifications(state,action)
         default:
             return state;
 

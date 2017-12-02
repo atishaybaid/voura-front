@@ -10,13 +10,16 @@ import {showLoginDialog,
         setPassword} from './actionCreators.js';
 import '../less/common.less'
 import  {connect} from 'react-redux';
+
 class LoginPopup extends Component {
     constructor(props){
         console.log(props);
         super(props);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
+
     handleSubmit(){
+        var that = this;
         let data = {
             "id":this.props.email,
             "password":this.props.password
@@ -27,15 +30,15 @@ class LoginPopup extends Component {
                 console.log(response.status);
                if(response.status == 200){
                 window.location.href = '/signup/newuser';
-
+                   that.props.handleGetNotifications();
                }
-           
+
         })
         .catch(function (error) {
             console.log(error);
         });
     }
-    
+
     render(){
         return(<div className="login-popup">
                 <FlatButton className="login-btn" label="Login" primary={true} 
@@ -91,8 +94,10 @@ const mapDispatchToProps = (dispatch)=>({
     },
     handlePasswordChange:function(event,newValue){
         dispatch(setPassword(newValue))
+    },
+    handleGetNotifications:function () {
+        dispatch(fetchNotifications())
     }
-
 })
 
 export default connect(mapStateToProps,mapDispatchToProps)(LoginPopup)

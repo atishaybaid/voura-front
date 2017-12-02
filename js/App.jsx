@@ -40,6 +40,7 @@ const App = ()=>(
 <Route exact path="/videoshow/:videoId" component={VideoShow} />
                         <Route path="/home" component={UserHome} />
                         <Route path="/profile" component={Profile} />
+                        <Route path="/notifications" component={Profile} />
                     </Switch>
                 </div>
             </MuiThemeProvider>
