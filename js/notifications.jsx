@@ -33,10 +33,10 @@ class Notifications extends Component {
 
         this.notiSocket = notiSocket;
         notiSocket.on('connect', function(){
-        });;
+        });
         notiSocket.on('getNoti', function() {
 
-        }
+        });
 
     }
 
@@ -73,4 +73,4 @@ class Notifications extends Component {
     }
 }
 
-export default Notifications;
+export default withCookies( Notifications );

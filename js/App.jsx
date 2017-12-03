@@ -12,6 +12,7 @@ import UserHome from './UserHome.jsx';
 import Profile from './Profile.jsx';
 import FreeQuestion from './FreeQuestion.jsx';
 import QuestionList from './QuestionList.jsx';
+import Notifications from './notifications.jsx';
 
 /*import SeminarP from './SeminarP.jsx';*/
 import SeminarPM from './SeminarPM.jsx';
@@ -40,7 +41,7 @@ const App = ()=>(
 <Route exact path="/videoshow/:videoId" component={VideoShow} />
                         <Route path="/home" component={UserHome} />
                         <Route path="/profile" component={Profile} />
-                        <Route path="/notifications" component={Profile} />
+                        <Route path="/notifications" component={Notifications} />
                     </Switch>
                 </div>
             </MuiThemeProvider>

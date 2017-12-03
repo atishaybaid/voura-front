@@ -1,6 +1,8 @@
 import React,{Component} from 'react';
 import AppBar from 'material-ui/AppBar';
 import Login from './Login.jsx';
+import HorNav from './Menu.jsx';
+
 const appTitle = 'intelverse'
 
 
@@ -16,7 +18,8 @@ const VrHeader = (props)=>{
                 iconClassNameRight=""
                 showMenuIconButton={false}
                  iconElementRight={this.utilSpace}
-                /> 
+                />
+            <HorNav {...props}/>
             </div>
             )
 
