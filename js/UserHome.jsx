@@ -20,7 +20,9 @@ class UserHome extends Component{
            let videoList = this.props.videoData.videos.mongo.map((videoItem)=>(
             <div className="video-item" key={videoItem.videoId}> 
            
-            <Link to={`/videoDetail/${videoItem.videoId}`}>
+            <Link to={{pathname:`/videoDetail/${videoItem.videoId}`,
+                       state:{videoData:videoItem} 
+                   }}>
                 <img src={videoItem.thumbImage} alt="" width="200px" height="200px"/>
                 <span className="video-title">{videoItem.description}</span>
             </Link>
@@ -39,7 +41,7 @@ class UserHome extends Component{
     render(){
         return(
             <div className="User-Home-page">
-                <VrHeader/>
+                
                 <h1>Hi Atishay</h1>
                 <h1>Recommended videos for you</h1>
                 <div className="video-list-container">
