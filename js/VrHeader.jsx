@@ -2,6 +2,7 @@ import React,{Component} from 'react';
 import AppBar from 'material-ui/AppBar';
 import Login from './Login.jsx';
 import HorNav from './Menu.jsx';
+import '../less/common.less';
 
 const appTitle = 'intelverse'
 
@@ -13,13 +14,8 @@ const VrHeader = (props)=>{
         }
 
     return(<div className="app-header">
-                <AppBar
-                title={appTitle}
-                iconClassNameRight=""
-                showMenuIconButton={false}
-                 iconElementRight={this.utilSpace}
-                />
-            <HorNav {...props}/>
+            {this.utilSpace}
+            <HorNav/>
             </div>
             )
 

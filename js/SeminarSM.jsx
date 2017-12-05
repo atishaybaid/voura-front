@@ -2,6 +2,7 @@ import React ,{ Component } from 'react';
 import VrHeader from './VrHeader.jsx';
 import axios from 'axios';
 import FlatButton from 'material-ui/FlatButton';
+import IconButton from 'material-ui/IconButton';
 import TextField from 'material-ui/TextField';
 import {GetReq,PostReq} from './utils/apiRequest.jsx';
 import {List, ListItem} from 'material-ui/List';
@@ -11,12 +12,18 @@ import '../less/SeminarSM.less';
 import SocialPlusOne from 'material-ui/svg-icons/social/plus-one';
 import io from "socket.io-client";
 import iVConfigs from '../Configs/local.json';
+import ThumbsUpIcon from 'material-ui/svg-icons/action/thumb-up';
+import ThumbsDownIcon from 'material-ui/svg-icons/action/thumb-down';
 
 import { withCookies, Cookies } from 'react-cookie';
 import  {connect} from 'react-redux';
 
-//@todo fetch sem data on load itself
-//@todo identify states
+const VOTE_TYPES = {
+    UPVOTE: 'upvote',
+    DOWNVOTE: 'downvote'
+}
+
+
 class SeminarSM extends Component {
 
     constructor(props) {
@@ -80,6 +87,12 @@ class SeminarSM extends Component {
             var questions = that.deleteQuestions( that.state.questionList, qIds );
             that.setState({ questionList:questions });
         });
+        notiSocket.on('questionVoteUpdated', function( sockData ){
+            //based on voting tupe change respective question count
+            //don't fire event again
+            that.onVoteQuestionSuccess( sockData.qId, sockData.vote, false );
+        });
+
     }
 
     deleteQuestions( qArray, qIds ){
@@ -182,6 +195,41 @@ class SeminarSM extends Component {
 
     }
 
+    getQuestionInxWithQid( questions, qId ){
+        var inx = -1;
+        if( questions && questions.length > 0 ){
+            questions.forEach( function ( item, inx ) {
+                if( item._id == qId ){
+                    return inx;
+                }
+            } )
+        }
+        return inx;
+    }
+
+    onVoteQuestionSuccess( qId, vote, fireSocketEvent = true ){
+//inc count on particular question
+        var questions = this.state.questionList;
+        var inx = this.getQuestionInxWithQid( questions, qId );
+        if( inx > 0 ){
+            if( vote == VOTE_TYPES.UPVOTE ){
+                questions[inx].upvote = ++questions[inx].upvote;
+            } else {
+                questions[inx].downvote = ++questions[inx].downvote;
+            }
+            that.setState({ questionList:questions });
+            if( fireSocketEvent ){
+                // to avoid missing upvotes/downvotes, send inc/dec event only
+                sockData = {
+                    qId: qId, vote : vote
+                }
+                that.notiSocket.emit('questionVoteUpdated', sockData );
+            }
+        }
+
+
+    }
+
     voteQuestion( qId, vote ){
         let data = {
             videoId: this.state.videoId,
@@ -194,9 +242,10 @@ class SeminarSM extends Component {
         PostReq( path, data )
             .then(function (response) {
                 console.log(response.status);
-                if(response.status == 200){
+                if(response.status == 200 && response.data.status == 'SUCCESS' ){
                     //that.setState( { questionList: response.data.data } ) ;
                     console.log( response );
+                    that.onVoteQuestionSuccess( qId, vote );
                 }
 
             })
@@ -222,18 +271,22 @@ class SeminarSM extends Component {
             .then(function (response) {
                 console.log(response.status);
                 if(response.status == 200){
-                    if( response.data.status != 'ERROR' ){
+                    //if( response.data.status != 'ERROR' ){
 
                         var qData = response.data.data;
                         qData.question = data.question;
                         //that.notiSocket.emit('questionAdded', qData);
+                        console.log( qData );
+                        var questions = that.state.questionList;
+                        console.log(questions);
+                        questions.push( qData );
+
+                        console.log(questions);
+                        that.setState({ questionList:questions });
                         that.notiSocket.emit('questionAdded', qData);
-                    }
+                  //  }
 //                    console.log( response );
-                    console.log( qData );
-                    var questions = that.state.questionList;
-                    questions.push( qData );
-                    that.setState({ questionList:questions });
+
 
                 }
 
@@ -252,15 +305,18 @@ class SeminarSM extends Component {
         var that = this;
 
         if( this.state.questionList.length > 0 ) {
-            var quesList = this.state.questionList.map(function (item) {
-                return <div key={item._id}>
+            var quesList = this.state.questionList.map(function (item,index) {
+                return <div key={item._id || index}>
                     <ListItem primaryText={item.question}/>
-                    <FlatButton className="control-btn" label='upvote' primary={true} backgroundColor={'#4ebcd5'}
-                                style={{color:'#ffffff'}} onClick={that.voteQuestion.bind( this, item._id, 'upvote' ) }
-                                target="_blank"/>
-                    <FlatButton className="control-btn" label='downvote' primary={true} backgroundColor={'#4ebcd5'}
-                                style={{color:'#ffffff'}}
-                                onClick={that.voteQuestion.bind( this, item._id, 'downvote' ) } target="_blank"/>
+                    <IconButton tooltip={VOTE_TYPES.UPVOTE} onClick={that.voteQuestion.bind( this, item._id, VOTE_TYPES.UPVOTE )} >
+                        <ThumbsUpIcon />
+                    </IconButton >
+                    {item.upvote}
+                    <IconButton tooltip={VOTE_TYPES.DOWNVOTE} onClick={that.voteQuestion.bind( this, item._id, VOTE_TYPES.DOWNVOTE ) } >
+                        <ThumbsDownIcon />
+                    </IconButton >
+                    {item.downvote}
+
                 </div>
             })
             //console.log( quesList );

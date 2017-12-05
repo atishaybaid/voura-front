@@ -23,21 +23,39 @@ class HorNav extends Component {
     }
 
     handleHomeClick(){
-
+        window.location.href = '/';
         //this.history.push('/my-new-location');
     }
 
     handleCreateSemClick(){
         //this.props.history.push('/seminar/create');
         //browserHistory.push( '/seminar/create' );
-        this.props.history.push('/seminar/create');
-        this.context.router.transitionTo( '/seminar/create' );
+        window.location.href = '/seminar/create';
+        //this.context.router.transitionTo( '/seminar/create' );
         //transitionTo('/seminar/create');
+    }
+
+    handleSearchClick(){
+        window.location.href = '/search';
+    }
+
+    handleQAListClick(){
+        window.location.href = '/qna-list';
+    }
+
+    handleNotiClick(){
+        window.location.href = '/notifications';
+    }
+
+    handlePofileClick(){
+        window.location.href = '/profile';
     }
 
     render() {
         return (
-            <div>
+            <div className="menu-wrapper">
+                <div className="left-content">
+                intelverse-logo
                 <FlatButton
                     label="Home"
                     secondary={true}
@@ -56,6 +74,7 @@ class HorNav extends Component {
                     label="Search"
                     secondary={true}
                     icon={<SearchIcon />}
+                    onClick={this.handleSearchClick}
                 />
                 <FlatButton
                     href="#"
@@ -63,13 +82,17 @@ class HorNav extends Component {
                     label="Questions List"
                     secondary={true}
                     icon={<QAIcon />}
+                    onClick={this.handleQAListClick}
                 />
+                </div>
+                <div className="right-content">
                 <FlatButton
                     href="#"
                     target="_blank"
                     label=""
                     secondary={true}
                     icon={<NotiIcon />}
+                    onClick={this.handleNotiClick}
                 />
                 <FlatButton
                     href="#"
@@ -77,7 +100,9 @@ class HorNav extends Component {
                     label="Profile"
                     secondary={true}
                     icon={<AccountIcon />}
+                    onClick={this.handlePofileClick}
                 />
+                </div>
             </div>
         )
     };

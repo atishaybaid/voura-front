@@ -4,6 +4,7 @@ import FlatButton from 'material-ui/FlatButton';
 import DatePicker from 'material-ui/DatePicker';
 import TimePicker from 'material-ui/TimePicker';
 import VrHeader from './VrHeader.jsx';
+import VrFooter from './VrFooter.jsx';
 import axios from 'axios';
 import iVCommonUtils from '../Utils/common';
 //import {iVConfigs} from '../Configs/local.js';
@@ -163,7 +164,7 @@ class Seminar extends Component {
 
                     </div>
                 </div>
-
+                <VrFooter/>
             </div>
         )
     }

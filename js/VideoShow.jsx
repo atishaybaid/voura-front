@@ -12,6 +12,8 @@ import iVConfigs from '../Configs/local.json';
 import YouTube from 'react-youtube';
 import '../less/SeminarPM.less';
 
+//@todo show only answered questions
+
 class VideoShow extends Component {
 
     constructor(props) {
@@ -35,6 +37,7 @@ class VideoShow extends Component {
 
         }
         var youtubePlayer = null;
+        this._onReady = this._onReady.bind(this);
     };
 
 
