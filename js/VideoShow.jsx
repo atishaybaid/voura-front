@@ -1,5 +1,4 @@
 import React ,{ Component } from 'react';
-import VrHeader from './VrHeader.jsx';
 import axios from 'axios';
 import AutoComplete from 'material-ui/AutoComplete';
 import Chip from 'material-ui/Chip';
@@ -202,7 +201,6 @@ class VideoShow extends Component {
     render(){
         return (
             <div className="video-show-page">
-                <VrHeader />
                 <p>
                     {this.state.message}
                 </p>

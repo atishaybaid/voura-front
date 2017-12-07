@@ -3,8 +3,6 @@ import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 import DatePicker from 'material-ui/DatePicker';
 import TimePicker from 'material-ui/TimePicker';
-import VrHeader from './VrHeader.jsx';
-import VrFooter from './VrFooter.jsx';
 import axios from 'axios';
 import iVCommonUtils from '../Utils/common';
 //import {iVConfigs} from '../Configs/local.js';
@@ -111,7 +109,6 @@ class Seminar extends Component {
     render(){
         return(
             <div className="seminar-create-page">
-                <VrHeader />
                 <div className="main-container">
 
                     <div className="seminar-create-container">
@@ -164,7 +161,6 @@ class Seminar extends Component {
 
                     </div>
                 </div>
-                <VrFooter/>
             </div>
         )
     }

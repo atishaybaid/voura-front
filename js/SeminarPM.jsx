@@ -1,5 +1,4 @@
 import React ,{ Component } from 'react';
-import VrHeader from './VrHeader.jsx';
 import axios from 'axios';
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
@@ -519,7 +518,6 @@ class SeminarPM extends Component {
     render(){
         return (
             <div className="seminarP-page">
-                <VrHeader />
                 <div className="main-container">
                     <div className="topMsg">
                         {this.state.streamIdText}

@@ -19,6 +19,8 @@ import SeminarPM from './SeminarPM.jsx';
 /*import SeminarS from './SeminarS.jsx';*/
 import SeminarSM from './SeminarSM.jsx';
 import VideoShow from './VideoShow.jsx';
+import VrHeader from './VrHeader.jsx';
+import VrFooter from './VrFooter.jsx';
 
 /*<Route  exact path="/seminar/P/:semId" component={SeminarP} />
  <Route  exact path="/seminar/S/:semId" component={SeminarS} />*/
@@ -27,6 +29,7 @@ const App = ()=>(
        <Provider store={store}>
             <MuiThemeProvider>
                 <div className="app">
+                    <VrHeader />
                     <Switch>
                         <Route  exact path="/" component={Landing} />
                         <Route   path="/signup/:page"  component={(props)=>{
@@ -43,6 +46,7 @@ const App = ()=>(
                         <Route path="/profile" component={Profile} />
                         <Route path="/notifications" component={Notifications} />
                     </Switch>
+                    <VrFooter />
                 </div>
             </MuiThemeProvider>
         </Provider>

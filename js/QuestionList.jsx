@@ -1,5 +1,4 @@
 import React ,{ Component } from 'react';
-import VrHeader from './VrHeader.jsx';
 import axios from 'axios';
 import AutoComplete from 'material-ui/AutoComplete';
 import Chip from 'material-ui/Chip';

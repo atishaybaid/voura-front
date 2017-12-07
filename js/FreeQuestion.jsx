@@ -1,5 +1,4 @@
 import React ,{ Component } from 'react';
-import VrHeader from './VrHeader.jsx';
 import AutoComplete from 'material-ui/AutoComplete';
 import Chip from 'material-ui/Chip';
 import FlatButton from 'material-ui/FlatButton';

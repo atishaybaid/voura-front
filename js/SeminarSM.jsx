@@ -1,5 +1,4 @@
 import React ,{ Component } from 'react';
-import VrHeader from './VrHeader.jsx';
 import axios from 'axios';
 import FlatButton from 'material-ui/FlatButton';
 import IconButton from 'material-ui/IconButton';
@@ -326,7 +325,6 @@ class SeminarSM extends Component {
     render(){
         return (
             <div className="seminarSM-page">
-                <VrHeader />
                 <div className="main-container">
                     <div className="seminar-left-coloumn">
                             <p>

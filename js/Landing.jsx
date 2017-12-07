@@ -1,12 +1,9 @@
 import React from 'react';
 import FlatButton from 'material-ui/FlatButton';
 import '../less/landing.less';
-import VrHeader from './VrHeader.jsx';
-
 
 const Landing = ()=>(
     <div className="landing-page">
-        <VrHeader showLogin={true}/>
         <div className="main">
             <div className="info">
                 <h1 className="pitch">A video community to share knowledge!</h1>
@@ -15,10 +12,7 @@ const Landing = ()=>(
                 backgroundColor={'#4ebcd5'}  style={{color:'#ffffff'}}  href="/signup/newuser"
                  target="_blank"/>
             </div>
-            
-
         </div>
-
     </div>
     
     );

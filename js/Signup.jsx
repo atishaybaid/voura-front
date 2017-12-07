@@ -3,7 +3,6 @@ import TextField from 'material-ui/TextField';
 import {Step,Stepper,StepLabel} from 'material-ui/Stepper';
 import FlatButton from 'material-ui/FlatButton';
 import axios from 'axios';
-import VrHeader from './VrHeader.jsx';
 import SignupCredential from './SignupCredential.jsx';
 import UserDetails from './UserDetails.jsx';
 import {PostReq} from './utils/apiRequest.jsx'
@@ -54,7 +53,6 @@ class Signup extends Component {
     render(){
         return(
             <div className="signup-page">
-                <VrHeader />
                 <div className="main-container">             
                   <div className="steeper">
                     <Stepper activeStep={this.stepIndex}>
@@ -68,8 +66,6 @@ class Signup extends Component {
                   </div>
                {this.utilSpace}   
                 </div>
-
-                
             </div>
             )
     }

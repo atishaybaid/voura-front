@@ -2,7 +2,6 @@ import React,{Component} from 'react';
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 import Divider from 'material-ui/Divider';
 import Chip from 'material-ui/Chip';
-import VrHeader from './VrHeader.jsx'
 import Subheader from 'material-ui/Subheader';
 import '../less/Profile.less';
 import FollowButton from './FollowButton.jsx';
@@ -21,7 +20,6 @@ class Profile extends Component{
         return(
             <div className="profile-page">
               <div className="profile-card">
-                <VrHeader/>
                 <Card style={{'backgroundColor':'aliceblue','padding':'10px'}}>
                 <div className="profile-card-header">
                     <img src="images/profile.jpg" className="profile-image" alt=""  width="150px" height="150px" />

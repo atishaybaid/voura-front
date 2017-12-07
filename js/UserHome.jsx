@@ -1,5 +1,4 @@
 import React,{Component} from 'react';
-import VrHeader from './VrHeader.jsx'
 import VrScheduleGrid from './VrScheduleGrid.jsx';
 import {connect} from 'react-redux';
 import {fetchVideoData} from './actionCreators.js';
@@ -19,7 +18,6 @@ class UserHome extends Component{
     render(){
         return(
             <div className="User-Home-page">
-                <VrHeader/>
                 <h1>hi user</h1>
                 <VrScheduleGrid apiurl={this.schApi} fillClr={null} avlClr={null}/>
 
