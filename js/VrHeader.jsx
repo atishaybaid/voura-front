@@ -17,6 +17,7 @@ class VrHeader extends Component {
         } else {
             this.utilSpace = <Login />
         }
+        this.utilSpace = <HorNav />
     }
 
     componentDidMount() {
@@ -28,6 +29,7 @@ class VrHeader extends Component {
         } else {
             this.utilSpace = <HorNav />
         }
+        this.utilSpace = <HorNav />
     }
 
     render(){

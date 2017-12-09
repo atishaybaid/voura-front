@@ -145,7 +145,8 @@ class SeminarSM extends Component {
             user: userId
         }
         var that = this;
-        var path ='questions/questions/?videoid='+data.videoId;
+        //var path ='questions/questions/?videoid='+data.videoId;
+        var path ='questions/find/?videoid='+data.videoId;
         var promise = new Promise( function ( resolve, reject ) {
             GetReq( path )
                 .then(function (response) {

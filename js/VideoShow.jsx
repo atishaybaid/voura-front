@@ -11,6 +11,8 @@ import iVConfigs from '../Configs/local.json';
 import YouTube from 'react-youtube';
 import '../less/SeminarPM.less';
 
+import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
+
 //@todo show only answered questions
 
 class VideoShow extends Component {
@@ -110,7 +112,8 @@ class VideoShow extends Component {
 
     getQuestions( videoId ){
         var that = this;
-        var path ='questions/questions/?videoid='+videoId;
+        //var path ='questions/questions/?videoid='+videoId;
+        var path ='questions/find/?videoid='+videoId;
         var promise = new Promise( function ( resolve, reject ) {
             GetReq( path, iVConfigs.common.baseUrl )
                 .then(function (response) {
@@ -182,6 +185,13 @@ class VideoShow extends Component {
         var quesList = this.state.questList.map( function( item, index ){
             console.log( item);
             return <div key ={`selectedQuest.quest_${index}`}>
+                <Card expanded={true}>
+                    <CardHeader
+                        title={<a href="/profile/1">alpha</a>}
+                        subtitle="Subtitle"
+                        avatar="images/ok-128.jpg"
+                    />
+                </Card>
                 <ListItem primaryText={item.question} onClick={that.handleQuestClick.bind( that, item.time )} />
             </div>
         } )
@@ -204,10 +214,10 @@ class VideoShow extends Component {
                 <p>
                     {this.state.message}
                 </p>
-                <div className="prof-desc">
+                <div className="prof-desc col-sm-12">
                     {this.generateProfileDesc()}
                 </div>
-                <div className="seminar-left-coloumn">
+                <div className="seminar-left-coloumn col-sm-12 col-md-8">
                     <div id="player">
                         <YouTube
                             videoId="yv5i0oTHubc"
@@ -216,7 +226,7 @@ class VideoShow extends Component {
                         />
                     </div>
                 </div>
-                <div className="seminar-right-coloumn">
+                <div className="seminar-right-coloumn col-sm-8 col-md-4 pre-scrollable">
                     <List>
                         <Subheader>Questions answered</Subheader>
                         {this.generateQuesList()}

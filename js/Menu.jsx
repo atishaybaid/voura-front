@@ -8,8 +8,14 @@ import QAIcon from 'material-ui/svg-icons/action/question-answer';
 import NotiIcon from 'material-ui/svg-icons/social/notifications';
 import AccountIcon from 'material-ui/svg-icons/action/account-circle';
 
+import IconMenu from 'material-ui/IconMenu';
+import MenuItem from 'material-ui/MenuItem';
+import IconButton from 'material-ui/IconButton';
+
 import { Link } from 'react-router'
 import { browserHistory } from 'react-router'
+
+import { withCookies, Cookies } from 'react-cookie';
 
 const homeIconStyle = {
     marginLeft: 24
@@ -20,6 +26,7 @@ class HorNav extends Component {
         super(props);
         this.state = {open: false};
         this.handleCreateSemClick = this.handleCreateSemClick.bind(this);
+        this.logout = this.logout.bind(this);
     }
 
     handleHomeClick(){
@@ -47,27 +54,47 @@ class HorNav extends Component {
         window.location.href = '/notifications';
     }
 
-    handlePofileClick(){
+    logout(){
+        const { cookies } = this.props;
+        cookies.remove('user');
+        cookies.remove('userId');
+    }
+
+    showProfile(){
         window.location.href = '/profile';
+    }
+
+    logOut(){
+        this.logout();
     }
 
     render() {
         return (
             <div className="menu-wrapper">
-                <div className="left-content">
-                intelverse-logo
+                <nav className= "navbar navbar-default navbar-static-top" role = "navigation">
+                    <ul className= "nav navbar-nav navbar-left">
+
+                    <div className= "navbar-header">
+                        <a className= "navbar-brand" href = "#">intelverse-logo</a>
+                    </div>
+
+                    <li className= "active">
                 <FlatButton
                     label="Home"
                     secondary={true}
                     icon={<HomeIcon style={homeIconStyle}/>}
                     onClick={this.handleHomeClick.bind(this)}
                 />
+                    </li>
+                 <li>
                 <FlatButton
                     label="Create Seminar"
                     secondary={true}
                     icon={<ContentAdd />}
                     onClick={this.handleCreateSemClick}
                 />
+                     </li>
+                        <li>
                 <FlatButton
                     href="#"
                     target="_blank"
@@ -76,6 +103,8 @@ class HorNav extends Component {
                     icon={<SearchIcon />}
                     onClick={this.handleSearchClick}
                 />
+                            </li>
+                        <li>
                 <FlatButton
                     href="#"
                     target="_blank"
@@ -84,8 +113,10 @@ class HorNav extends Component {
                     icon={<QAIcon />}
                     onClick={this.handleQAListClick}
                 />
-                </div>
-                <div className="right-content">
+                    </li>
+                    </ul>
+                    <ul className = "nav navbar-nav navbar-right">
+                        <li>
                 <FlatButton
                     href="#"
                     target="_blank"
@@ -94,18 +125,22 @@ class HorNav extends Component {
                     icon={<NotiIcon />}
                     onClick={this.handleNotiClick}
                 />
-                <FlatButton
-                    href="#"
-                    target="_blank"
-                    label="Profile"
-                    secondary={true}
-                    icon={<AccountIcon />}
-                    onClick={this.handlePofileClick}
-                />
-                </div>
+                            </li>
+                        <li>
+
+                            <IconMenu
+                                iconButtonElement={<IconButton><AccountIcon /></IconButton>}
+                            >
+                                <MenuItem value="profile" primaryText="Profile" onClick={this.showProfile}/>
+                                <MenuItem value="logout" primaryText="Logout" onClick={this.logout}/>
+                            </IconMenu>
+
+                        </li>
+                </ul>
+            </nav>
             </div>
         )
     };
 
 }
-export default HorNav;
+export default withCookies( HorNav );
