@@ -9,9 +9,10 @@ import Subheader from 'material-ui/Subheader';
 import {GetReq,PostReq} from './utils/apiRequest.jsx';
 import iVConfigs from '../Configs/local.json';
 import YouTube from 'react-youtube';
+import '../less/common.less';
 import '../less/SeminarPM.less';
-
-import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
+import Utils from './utils/common.js';
+import UserCard from './UserCard';
 
 //@todo show only answered questions
 
@@ -22,6 +23,7 @@ class VideoShow extends Component {
         var videoId = window.location.pathname.match(/([^\/]*)\/*$/)[1];
         this.state = {
             videoId: videoId,
+            videoData: {},
             userInfo: {},
             questList: [],
             recVids: []
@@ -58,7 +60,8 @@ class VideoShow extends Component {
     //get infor about videoid
         var that = this;
         this.getVideoData( this.state.videoId ).then( function ( resolve ) {
-            console.log( resolve );
+
+            that.setState( { videoData: resolve } );
             var userId = resolve.userID;
             Promise.all( [ that.getUserInfo( userId ), that.getQuestions( that.state.videoId ), that.getRecommendVideos( that.state.videoId )] )
                 .then( function( allData ){
@@ -170,10 +173,10 @@ class VideoShow extends Component {
     generateProfileDesc(){
         var that = this;
 
-        if( this.state.userInfo ) {
-            return (<div>
-                In below video Mr {this.state.userInfo.name} describes about {this.state.userInfo.title}.
-            </div>)
+        if( Utils.isNonEmptyObject(this.state.userInfo) && Utils.isNonEmptyObject(this.state.videoData) ) {
+            return (
+                <UserCard userInfo={this.state.userInfo} videoData={this.state.videoData}/>
+            )
         } else {
             return ( <div></div> )
         }
@@ -184,16 +187,12 @@ class VideoShow extends Component {
         var that = this;
         var quesList = this.state.questList.map( function( item, index ){
             console.log( item);
-            return <div key ={`selectedQuest.quest_${index}`}>
-                <Card expanded={true}>
-                    <CardHeader
-                        title={<a href="/profile/1">alpha</a>}
-                        subtitle="Subtitle"
-                        avatar="images/ok-128.jpg"
-                    />
-                </Card>
+            var userInfo = { name : "dummy", title : "dummyTitle" };
+            return ( <div key ={`selectedQuest.quest_${index}`}>
+                {Utils.isNonEmptyObject(userInfo) ? <UserCard userInfo={userInfo}/> : "" }
                 <ListItem primaryText={item.question} onClick={that.handleQuestClick.bind( that, item.time )} />
-            </div>
+                <hr class="hr-primary" />
+            </div> )
         } )
         //console.log( quesList );
         return quesList;

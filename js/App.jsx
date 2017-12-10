@@ -46,7 +46,7 @@ const App = ()=>(
                         <Route path="/profile" component={Profile} />
                         <Route path="/notifications" component={Notifications} />
                     </Switch>
-                    <VrFooter />
+
                 </div>
             </MuiThemeProvider>
         </Provider>

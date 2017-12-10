@@ -13,6 +13,9 @@ import io from "socket.io-client";
 import iVConfigs from '../Configs/local.json';
 import ThumbsUpIcon from 'material-ui/svg-icons/action/thumb-up';
 import ThumbsDownIcon from 'material-ui/svg-icons/action/thumb-down';
+import Utils from './utils/common.js';
+import UserCard from './UserCard';
+import requests from './utils/requests';
 
 import { withCookies, Cookies } from 'react-cookie';
 import  {connect} from 'react-redux';
@@ -31,7 +34,8 @@ class SeminarSM extends Component {
         this.state = {
             videoId: videoId,
             question: '',
-            questionList : []
+            questionList : [],
+            seminarData: {}
         }
         this.askQuestionChange = this.askQuestionChange.bind(this);
         this.handleAskQuestion = this.handleAskQuestion.bind(this);
@@ -183,10 +187,20 @@ class SeminarSM extends Component {
 
     componentDidMount(){
         var that = this;
-        Promise.all( [ that.getQuestions(), that.getVoteCounts() ] )
+        var semObj = { videoId: this.state.videoId };
+        Promise.all( [ that.getQuestions(), that.getVoteCounts(), requests.fetchSeminarData( semObj ) ] )
             .then(  function ( allData ) {
-                var questions = that.getQuestionList( allData[0], allData[1] )
-                that.setState({ questionList:questions });
+                var questions = that.getQuestionList( allData[0], allData[1] );
+                that.setState({ questionList:questions, seminarData : allData[2] });
+                if( allData[2] ){
+                    var ownerId = allData[2].userID;
+                    requests.getUserInfo( ownerId ).then(function ( resolve ) {
+                        that.setState({ userInfo: resolve } );
+                    }, function ( reject ) {
+
+                    });
+                }
+
                 that.socketHandling();
             })
             .catch(function (error) {
@@ -306,8 +320,8 @@ class SeminarSM extends Component {
 
         if( this.state.questionList.length > 0 ) {
             var quesList = this.state.questionList.map(function (item,index) {
-                return <div key={item._id || index}>
-                    <ListItem primaryText={item.question}/>
+                return <div key={item._id}>
+                    <ListItem primaryText={item.question} disabled={true}/>
                     <IconButton tooltip={VOTE_TYPES.UPVOTE} onClick={that.voteQuestion.bind( this, item._id, VOTE_TYPES.UPVOTE )} >
                         <ThumbsUpIcon />
                     </IconButton >
@@ -316,18 +330,32 @@ class SeminarSM extends Component {
                         <ThumbsDownIcon />
                     </IconButton >
                     {item.downvote}
-
+                    <hr class="hr-primary" />
                 </div>
             })
             //console.log( quesList );
             return quesList;
         }
     }
+
+    generateProfileDesc() {
+        var that = this;
+
+        if (Utils.isNonEmptyObject(this.state.userInfo) ) {
+            return ( <UserCard userInfo={this.state.userInfo} videoData={this.state.seminarData}/> )
+        } else {
+            return ( <div></div> )
+        }
+    }
+
     render(){
         return (
             <div className="seminarSM-page">
                 <div className="main-container">
-                    <div className="seminar-left-coloumn">
+                    <div className="prof-desc col-sm-12">
+                        {this.generateProfileDesc()}
+                    </div>
+                    <div className="seminar-left-coloumn col-sm-12 col-md-8">
                             <p>
                                 {this.state.message}
                             </p>
@@ -339,16 +367,17 @@ class SeminarSM extends Component {
                             floatingLabelText="Question"
                             floatingLabelFixed={true}
                             type="text"
+                            multiLine={true}
                             onChange={this.askQuestionChange}
                             value={this.state.question}
                         />
                         <FlatButton className="control-btn" label='ask' primary={true} backgroundColor={'#4ebcd5'}  style={{color:'#ffffff'}} onClick={this.handleAskQuestion.bind(this)} target="_blank"/>
                     </div>
-                    <div className="seminar-right-coloumn">
+                    <div className="seminar-right-coloumn  col-sm-8 col-md-4 pre-scrollable">
 
                         <div className="sQuestion-list">
                             <List>
-                                <Subheader>Question List</Subheader>
+                                <Subheader>Question asked by community</Subheader>
                                 {this.generateQuesList()}
                             </List>
                         </div>

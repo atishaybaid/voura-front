@@ -4,7 +4,7 @@ import FlatButton from 'material-ui/FlatButton';
 import DatePicker from 'material-ui/DatePicker';
 import TimePicker from 'material-ui/TimePicker';
 import axios from 'axios';
-import iVCommonUtils from '../Utils/common';
+import iVCommonUtils from './utils/common';
 //import {iVConfigs} from '../Configs/local.js';
 import iVConfigs from '../Configs/local.json';
 import {PostReq} from './utils/apiRequest.jsx';

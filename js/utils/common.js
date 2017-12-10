@@ -24,3 +24,12 @@ exports.getArrFromStr = function( str ){
         });
         return arr;
 }
+
+exports.isEmptyObject = function ( obj ) {
+        return Object.keys(obj).length === 0 && obj.constructor === Object
+}
+
+exports.isNonEmptyObject = function ( obj ) {
+        //if its null undefined etc.. return false
+        return obj && Object.keys(obj).length > 0  && obj.constructor === Object
+}

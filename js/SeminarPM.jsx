@@ -10,6 +10,12 @@ import { withCookies, Cookies } from 'react-cookie';
 import iVConfigs from '../Configs/local.json';
 import io from "socket.io-client";
 import Snackbar from 'material-ui/Snackbar';
+import Utils from './utils/common.js';
+import UserCard from './UserCard';
+import requests from './utils/requests';
+import IconButton from 'material-ui/IconButton';
+import DoneIcon from 'material-ui/svg-icons/action/check-circle';
+import SkipIcon from 'material-ui/svg-icons/action/visibility-off';
 
 //@todo fetch sem data on load itself
 //@todo identify states
@@ -22,6 +28,7 @@ class SeminarPM extends Component {
             semState: 'FETCH_DATA',
             streamState: '',
             videoId: videoId,
+            userInfo: {},
             seminarData: {},
             ctrlMessage: 'Press to fetch data',
             question: '',
@@ -156,7 +163,7 @@ class SeminarPM extends Component {
 
     componentDidMount(){
         var that = this;
-        Promise.all( [ that.fetchSeminarData(), that.getTopQuestions( 3 ) ] )
+        Promise.all( [ that.fetchSeminarData(), that.getTopQuestions( 3 ), requests.getUserInfo() ] )
             .then(  function ( allData ) {
                 var newSemState = that.decideStateBasedOnSeminarData( allData[0] );
 
@@ -168,7 +175,7 @@ class SeminarPM extends Component {
                     streamIdText = "Could not find stream id for your broadcast";
                 };
 
-                that.setState( { semState: newSemState, seminarData: allData[0], questionList: allData[1], streamIdText : streamIdText  } );
+                that.setState( { semState: newSemState, seminarData: allData[0], questionList: allData[1], streamIdText : streamIdText, userInfo: allData[2]  } );
                 that.socketHandling();
                 //that.notiSocket.emit('removeQuestion', that.getQidArrFromQuestions( allData[1] ) );
             }).catch( function (error) {
@@ -266,13 +273,14 @@ class SeminarPM extends Component {
         if( this.state.questionList.length > 0 ) {
             var quesList = this.state.questionList.map(function (item) {
                 return <div key={item._id}>
-                    <ListItem primaryText={item.question}/>
-                    <FlatButton className="control-btn" label='answered' primary={true} backgroundColor={'#4ebcd5'}
-                                style={{color:'#ffffff'}} onClick={that.answeredQuestion.bind( this, item._id ) }
-                                target="_blank"/>
-                    <FlatButton className="control-btn" label='skip' primary={true} backgroundColor={'#4ebcd5'}
-                                style={{color:'#ffffff'}} onClick={that.skipQuestion.bind( this, item._id ) }
-                                target="_blank"/>
+                    <ListItem primaryText={item.question} disabled={true}/>
+                    <IconButton tooltip='answered' onClick={that.answeredQuestion.bind( this, item._id )} >
+                        <DoneIcon />
+                    </IconButton >
+                        <IconButton tooltip='skip' onClick={that.skipQuestion.bind( this, item._id )} >
+                            <SkipIcon />
+                        </IconButton >
+                    <hr class="hr-primary" />
                 </div>
             })
             //console.log( quesList );
@@ -500,37 +508,51 @@ class SeminarPM extends Component {
     generateSemControls(){
 
         var semData = this.getDataForSemControls( this.state );
-        return <div className="sem-controller">
-            <p>
+        return <div className="sem-controller panel panel-default">
+
+                <div class = "panel-body">
+                    <p>{this.state.streamIdText}</p>
                 { semData.msg }
-            </p>
             { semData.btnLabel ?
                 ( <FlatButton className="control-btn" label={semData.btnLabel} primary={true}
                         backgroundColor={'#4ebcd5'} style={{color:'#ffffff'}}
                         onClick={ semData.fn.bind(this) } target="_blank"/> )
                 : null
             }
+                    </div>
         </div>
 
     }
-    
+
+    generateProfileDesc() {
+        var that = this;
+
+        if (Utils.isNonEmptyObject(this.state.userInfo) && Utils.isNonEmptyObject(this.state.seminarData)) {
+            return ( <UserCard userInfo={this.state.userInfo} videoData={this.state.seminarData}/> )
+        } else {
+            return ( <div></div> )
+        }
+    }
 
     render(){
         return (
             <div className="seminarP-page">
                 <div className="main-container">
-                    <div className="topMsg">
-                        {this.state.streamIdText}
+                    <div className="prof-desc col-sm-12">
+                        {this.generateProfileDesc()}
                     </div>
-                    <div className="seminar-left-coloumn">
+                    <div className="topMsg col-sm-12">
                         {this.generateSemControls()}
+                    </div>
+
+                    <div className="seminar-left-coloumn col-sm-12 col-md-8">
                         <div className="youtube-embed">
                             <iframe width="560" height="315" src="https://www.youtube.com/embed/WOoJh6oYAXE" frameBorder="0" gesture="media" allowFullScreen></iframe>
                         </div>
                     </div>
-                    <div className="seminar-right-coloumn">
+                    <div className="seminar-right-coloumn col-sm-8 col-md-4 pre-scrollable">
                         <div className="pQuestion-list">
-                            <Subheader>Your questions</Subheader>
+                            <Subheader>Pick your questions</Subheader>
                             {this.generateQuesList()}
                         </div>
                     </div>
