@@ -10,7 +10,7 @@ import Signup from './Signup.jsx';
 import Seminar from './Seminar.jsx';
 import UserHome from './UserHome.jsx';
 import Profile from './Profile.jsx';
-import videoDetail from './videoDetail.jsx';
+import videoDetail from './VideoDetail.jsx';
 import FreeQuestion from './FreeQuestion.jsx';
 import QuestionList from './QuestionList.jsx';
 import Notifications from './notifications.jsx';
@@ -46,7 +46,7 @@ const App = ()=>(
                         <Route path="/profile" component={Profile} />
                         <Route path="/notifications" component={Notifications} />
                     </Switch>
-<VrFooter/>
+
                 </div>
             </MuiThemeProvider>
         </Provider>

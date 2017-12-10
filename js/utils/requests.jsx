@@ -66,7 +66,7 @@ function searchQuestionsByTag( data ){
     return promise;
 }
 
-function _responseHandler( response, resolve, reject ) {
+function _responseHandler( resolve, reject ) {
     var f = function(response) {
         if (response.status == 200 && response.data.status == 'SUCCESS') {
             resolve(response.data.data);
@@ -91,7 +91,7 @@ function signout() {
     var promise = new Promise( function ( resolve, reject ) {
         GetReq( path )
             .then( _responseHandler( resolve, reject ) )
-            .catch( _catchHandler );
+            .catch( _catchHandler() );
     });
     return promise;
 }

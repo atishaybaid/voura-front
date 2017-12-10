@@ -1,8 +1,8 @@
+
 import {SHOW_LOGIN_DIALOG,SET_EMAIL,SET_PASSWORD,SIGNUP_SET_EMAIL,SIGNUP_SET_NAME,
     SIGNUP_SET_PASSWORD,REQUEST_TAGS,RECEIVE_TAGS,RECEIVE_SCHEDULE_DATA, RECEIVE_NOTIS,
 TOGGLE_EDIT_PROFILE,PROFILE_NAME_CHANGE,PROFILE_TITLE_CHANGE,PROFILE_DESC_CHANGE,
-PROFILE_INST_CHANGE,PROFILE_FIELD_CHANGE,RECEIVE_VIDEO_DATA} from './actions';
-
+PROFILE_INST_CHANGE,PROFILE_FIELD_CHANGE} from './actions';
 
 const DEFAULT_STATE ={
     login :{
@@ -66,8 +66,7 @@ const receiveNotifications = (state,action)=>{
     return Object.assign({},state,{notifications:{ notiList:action.payload} });
 }
 
-const receiveSheduleData = (state,action)=>{
-    return Object.assign({},state,{VrScheduleGrid:{data:action.payload}});
+
 
 const toggleEditProfile = (state)=>{
     return Object.assign({},state,{profile:{editStatus:!state.profile.editStatus}});
@@ -113,8 +112,7 @@ const rootReducer = (state = DEFAULT_STATE,action)=>{
             return requestTags(state,action);
         case RECEIVE_TAGS:
             return receiveTags(state,action);
-        case RECEIVE_SCHEDULE_DATA:
-            return receiveSheduleData(state,action);
+
         case TOGGLE_EDIT_PROFILE:
             return toggleEditProfile(state);
         case PROFILE_NAME_CHANGE:
@@ -125,15 +123,13 @@ const rootReducer = (state = DEFAULT_STATE,action)=>{
             return profileInstChange(state,action);
         case PROFILE_FIELD_CHANGE:
             return profileFieldChange(state,action);
-        case RECEIVE_VIDEO_DATA:
-            return receiveVideoData(state,action);
         case RECEIVE_NOTIS:
-            return receiveNotifications(state,action)
+            return receiveNotifications(state,action);
         default:
             return state;
 
     }
 }
 
-
+// const rootReducer = {};
 export default rootReducer;
