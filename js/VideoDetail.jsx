@@ -1,5 +1,7 @@
 import React,{Component} from 'react';
 import VrHeader from './VrHeader.jsx'
+import {connect} from 'react-redux';
+import {fetchQuestions} from './actionCreators.js';
 
 class VideoDetail extends Component{
     constructor(props){
@@ -7,9 +9,11 @@ class VideoDetail extends Component{
        
         this.videoId = props.match.params.id||'';
     }
+    componentDidMount(){
+        //this.props.fetchQuestions(this.videoId);
+    }
     render(){
-         const {description,title} = this.props.location.state.videoData;
-         console.log(this.props.location.state.videoData);
+    const {description,title} = this.props.location.state.videoData;
         return (
             <div className="VideoDetail">
             <VrHeader/>
@@ -19,10 +23,22 @@ class VideoDetail extends Component{
               frameBorder="0" allowFullScreen>
               </iframe> 
             </div>
+
+            <div className="quest-container">
+               
+            </div>
                
             </div>
             )
     }
-}
+};
+
+/*const mapStateToProps = (state)=>({videoQuestion:state.video.questionData,videoData:state.home.videoData})
+const mapDispatchToProps = (dispatch)=>({
+    fetchQuestions:function(videoId){
+        dispatch(fetchQuestions(videoId));
+    }
+})
+export default connect(mapStateToProps,mapDispatchToProps)(VideoDetail);*/
 
 export default VideoDetail;

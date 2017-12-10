@@ -41,7 +41,7 @@ class UserHome extends Component{
     render(){
         return(
             <div className="User-Home-page">
-                
+                <VrHeader />
                 <h1>Hi Atishay</h1>
                 <h1>Recommended videos for you</h1>
                 <div className="video-list-container">

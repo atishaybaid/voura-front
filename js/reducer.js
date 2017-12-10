@@ -22,6 +22,9 @@ const DEFAULT_STATE ={
     home:{
         videoData:[]
     },
+    video:{
+        questionData:[]
+    },
     profile:{
         editStatus:false,
         name:'',

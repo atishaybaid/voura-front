@@ -115,6 +115,26 @@ export function receiveScheduleData(data){
  }
 
 
+//video detail methods
+export function fetchQuestions(videoId){
+    return function(dispatch){
+        return GetReq('/be91b',null,'https://api.myjson.com/bins',true)
+            .then((res)=>{
+                console.log(res);
+                let questionData = res.data;
+                console.log(questionData);
+                //dispatch(receiveVideoData(videoData));
+
+            })
+            .catch((err)=>{
+                console.log(err);
+            })
+              
+
+   }
+
+}
+
 
 //propfile page actions
 export function toggleEditProfile(){
