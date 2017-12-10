@@ -7,15 +7,13 @@ import SearchIcon from 'material-ui/svg-icons/action/search';
 import QAIcon from 'material-ui/svg-icons/action/question-answer';
 import NotiIcon from 'material-ui/svg-icons/social/notifications';
 import AccountIcon from 'material-ui/svg-icons/action/account-circle';
-
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton';
-
 import { Link } from 'react-router'
 import { browserHistory } from 'react-router'
-
 import { withCookies, Cookies } from 'react-cookie';
+import requests from './utils/requests';
 
 const homeIconStyle = {
     marginLeft: 24
@@ -58,6 +56,10 @@ class HorNav extends Component {
         const { cookies } = this.props;
         cookies.remove('user');
         cookies.remove('userId');
+
+        requests.signout().then( function ( resolve ) {
+            window.location.href = '/';
+        });
     }
 
     showProfile(){

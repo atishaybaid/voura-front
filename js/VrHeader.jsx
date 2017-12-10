@@ -11,13 +11,15 @@ class VrHeader extends Component {
 
     constructor(props) {
         super(props);
-        this.utilSpace = null;
-        if(this.utilSpace){
+        console.log(props);
+        const { cookies } = this.props;
+        const userId = cookies.get('userId');
+        if( userId ){
             this.utilSpace = <HorNav />
         } else {
             this.utilSpace = <Login />
         }
-        this.utilSpace = <HorNav />
+
     }
 
     componentDidMount() {
@@ -25,11 +27,10 @@ class VrHeader extends Component {
         const userId = cookies.get('userId');
         // check logged in status
         if(userId){
-            this.utilSpace = <Login />
-        } else {
             this.utilSpace = <HorNav />
+        } else {
+            this.utilSpace = <Login />
         }
-        this.utilSpace = <HorNav />
     }
 
     render(){

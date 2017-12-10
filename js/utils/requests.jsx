@@ -66,5 +66,34 @@ function searchQuestionsByTag( data ){
     return promise;
 }
 
+function _responseHandler( response, resolve, reject ) {
+    var f = function(response) {
+        if (response.status == 200 && response.data.status == 'SUCCESS') {
+            resolve(response.data.data);
+        } else {
+            reject(response);
+        }
+    }
+    return f;
+}
 
-export default { getUserInfo, fetchSeminarData, searchQuestionsByTag }
+function _catchHandler() {
+    var f = function (error) {
+        console.log(error);
+        return error;
+    }
+    return f;
+}
+function signout() {
+
+    var path ='/users/signout';
+    var that = this;
+    var promise = new Promise( function ( resolve, reject ) {
+        GetReq( path )
+            .then( _responseHandler( resolve, reject ) )
+            .catch( _catchHandler );
+    });
+    return promise;
+}
+
+export default { getUserInfo, fetchSeminarData, searchQuestionsByTag, signout }
