@@ -4,6 +4,7 @@ import Chip from 'material-ui/Chip';
 import FlatButton from 'material-ui/FlatButton';
 import {fetchTags} from './actionCreators.js'
 import {connect} from 'react-redux';
+import {GetReq,PostReq} from './utils/apiRequest.jsx';
 
 class UserDetails extends Component{
     constructor(props){

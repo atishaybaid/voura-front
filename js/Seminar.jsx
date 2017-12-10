@@ -3,11 +3,18 @@ import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 import DatePicker from 'material-ui/DatePicker';
 import TimePicker from 'material-ui/TimePicker';
-import VrHeader from './VrHeader.jsx';
 import axios from 'axios';
-import iVCommonUtils from '../Utils/common';
+import iVCommonUtils from './utils/common';
 //import {iVConfigs} from '../Configs/local.js';
 import iVConfigs from '../Configs/local.json';
+import {PostReq} from './utils/apiRequest.jsx';
+import { withCookies, Cookies } from 'react-cookie';
+import Dialog from 'material-ui/Dialog';
+import QuestionList from './QuestionList.jsx';
+import Utils from './utils/common.js';
+import {List, ListItem} from 'material-ui/List';
+import Checkbox from 'material-ui/Checkbox';
+import Subheader from 'material-ui/Subheader';
 
 class Seminar extends Component {
     constructor(props){
@@ -20,9 +27,26 @@ class Seminar extends Component {
             startTime: new Date(),
             endDate: new Date(),
             endTime: new Date(),
-            thumbnail:''
+            thumbnail:'',
+            freeQuests: [],
+            showPickQuestDialog: false
         }
+        this.showPickQuestionsDialog = this.showPickQuestionsDialog.bind(this);
+        this.hidePickQuestionsDialog = this.hidePickQuestionsDialog.bind(this);
+        this.showSelectedQuesList = this.showSelectedQuesList.bind(this);
+        this.pickQuestions = this.pickQuestions.bind(this);
     };
+
+    pickQuestions( quests ){
+
+        var questions = this.state.freeQuests;
+        if( quests.length > 0 ){
+            quests.forEach( function( q ){
+                questions.push( q );
+            } );
+        }
+        this.setState({ showPickQuestDialog: false, freeQuests:questions });
+    }
 
     handleTitleChange(event,newValue){
         this.setState({title:newValue});
@@ -49,41 +73,86 @@ class Seminar extends Component {
 
     handleSubmit(event,newValue){
 
+        const { cookies } = this.props
+        const userId = cookies.get('userId');
+
+        var selectedFreeQuestsIds = Utils.getSelectedQuestionsIds( this.state.freeQuests );
         let data = {
-            "requestee":"101",
+            "requestee": userId,
             "bTags": iVCommonUtils.getArrFromStr( this.state.tags ),
             "bTitle": this.state.title,
             "bDescription" : this.state.description,
             "bStartDateTime": iVCommonUtils.mergeDateTime( this.state.startDate, this.state.startTime ),
-            "bEndDateTime": iVCommonUtils.mergeDateTime( this.state.endDate, this.state.endTime )
+            "bEndDateTime": iVCommonUtils.mergeDateTime( this.state.endDate, this.state.endTime ),
+            "qIds" : selectedFreeQuestsIds
         };
-        
-        /*console.log(data);
-        console.log(iVConfigs);*/
-        var tempObj = {
-            baseURL: iVConfigs.common.baseUrl,
-                timeout: iVConfigs.common.timeout,
-            headers: iVConfigs.common.headers
-        };
-        var axiosInstance = axios.create( tempObj );
-        /*console.log('asdfasdfasdfasdfasd');
-        console.log( iVConfigs.seminar );*/
-        axiosInstance.post( iVConfigs.seminar.createSeminarEndpoint ,data)
+
+        var path = iVConfigs.seminar.createSeminarEndpoint;
+        PostReq( path, data )
             .then(function (response) {
-                console.log(response);
+                console.log(response.status);
+                if(response.status == 200){
+                    //that.setState( { questionList: response.data.data } ) ;
+                    console.log( response.data.data );
+                } else {
+                    console.log( response );
+                }
+
             })
             .catch(function (error) {
                 console.log(error);
             });
-
-
     };
 
+    showPickQuestionsDialog(){
+        this.setState({ showPickQuestDialog: true });
+    }
+
+    hidePickQuestionsDialog(){
+        this.setState({ showPickQuestDialog: false });
+    }
+
+    addRemoveQuestion( index, event, checked ){
+        let qList = this.state.freeQuests;
+        qList[index].selected = checked;
+        this.setState({freeQuests:qList});
+    }
+
+    showSelectedQuesList(){
+        //console.log( this.state.questionList );
+        var that = this;
+        var quesList = '';
+        if( Utils.isNonEmptyArray( this.state.freeQuests )  ) {
+            var quesList = this.state.freeQuests.map(function (item, index) {
+                return <div key={`selectedQuest.quest_${index}`}>
+                    <ListItem primaryText={item.question}/>
+                    <Checkbox
+                        label="Add to seminar"
+                        checked={ item.selected }
+                        onCheck={that.addRemoveQuestion.bind(that, index)}
+                        style={{marginBottom: 16}}
+                    />
+                    <hr class="hr-primary"/>
+                </div>
+            })
+        }
+        //console.log( quesList );
+        return quesList;
+    }
+
+    getSubheaderText(){
+        var text = '';
+        if( Utils.isNonEmptyArray( this.state.freeQuests ) ){
+            text = 'Questions selected by you for seminar'
+        } else {
+            text = "You haven't selected questions for seminar. It's better to have initial set of questions to start with, which you can select by clicking 'pick questions for seminar button'."
+        }
+        return text;
+    }
 
     render(){
         return(
             <div className="seminar-create-page">
-                <VrHeader />
                 <div className="main-container">
 
                     <div className="seminar-create-container">
@@ -116,16 +185,34 @@ class Seminar extends Component {
                         <DatePicker onChange={this.handleEndDate.bind(this)} value ={this.state.endDate} hintText="Seminar end date" />
                         <TimePicker onChange={this.handleEndTime.bind(this)} value={this.state.endTime} hintText="Seminar end time" /><br />
 
+                        <FlatButton className="landing-btn" label="Pick questions for seminar" primary={true}
+                                    backgroundColor={'#4ebcd5'}  style={{color:'#ffffff'}} onClick={this.showPickQuestionsDialog}
+                                    target="_blank"/>
+
+                        <Dialog
+                            title=""
+                            actions={null}
+                            modal={true}
+                            open={this.state.showPickQuestDialog}
+                            onRequestClose={this.hidePickQuestionsDialog}
+                            autoScrollBodyContent={true}
+                        >
+                        <QuestionList pickQuestion={(q)=>this.pickQuestions(q)}></QuestionList>
+                        </Dialog>
+                        <List>
+                            <Subheader>{this.getSubheaderText()}</Subheader>
+                            {this.showSelectedQuesList()}
+                        </List>
+
                         <FlatButton className="landing-btn" label="Create Seminar" primary={true}
                                     backgroundColor={'#4ebcd5'}  style={{color:'#ffffff'}} onClick={this.handleSubmit.bind(this)}
                                     target="_blank"/>
                     </div>
                 </div>
-
             </div>
         )
     }
 
 }
 
-export default Seminar;
+export default withCookies( Seminar );

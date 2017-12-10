@@ -1,5 +1,5 @@
 import{SHOW_LOGIN_DIALOG,SET_EMAIL,SET_PASSWORD,SIGNUP_SET_EMAIL,SIGNUP_SET_PASSWORD,SIGNUP_SET_NAME,
-    REQUEST_TAGS,RECEIVE_TAGS,FETCH_SCHEDULE_DATA,RECEIVE_SCHEDULE_DATA,TOGGLE_EDIT_PROFILE,
+    REQUEST_TAGS,RECEIVE_TAGS,FETCH_SCHEDULE_DATA,RECEIVE_SCHEDULE_DATA,RECEIVE_NOTIS,TOGGLE_EDIT_PROFILE,
     PROFILE_NAME_CHANGE,PROFILE_TITLE_CHANGE,PROFILE_DESC_CHANGE,PROFILE_INST_CHANGE,PROFILE_FIELD_CHANGE,
     RECEIVE_PROFILE_DATA,RECEIVE_VIDEO_DATA} from './actions';
 import {PostReq,GetReq} from './utils/apiRequest.jsx';
@@ -15,7 +15,6 @@ export function setEmail(value){
 
 
 export function setPassword(value){
-    console.log(value);
     return {type:SET_PASSWORD,payload:value}
 }
 
@@ -31,6 +30,7 @@ export function signupSetEmail(value){
 export function signupSetPassword(value){
     return {type:SIGNUP_SET_PASSWORD,payload:value}
 }
+
 
 export function signupSetName(value){
      return {type:SIGNUP_SET_NAME,payload:value}
@@ -78,6 +78,9 @@ export function fetchSheduleData(apiurl){
     }
 }
 
+export function receiveNotifications( data ){
+    return{type:RECEIVE_NOTIS,payload:data}
+}
 
 
 
@@ -91,10 +94,10 @@ export function receiveScheduleData(data){
  export function fetchVideoData(){
     console.log("fetchVideoData called");
     return function(dispatch){
-        return GetReq('/k9i0j',null,'https://api.myjson.com/bins',true)
+        return GetReq('getrecommendation?user=vinaysahuhbti@gmail.com',null,'http://13.58.172.179:8080/')
             .then((res)=>{
                 console.log(res);
-                let videoData = res.data.reco;
+                let videoData = JSON.parse(res.data.data);
                 console.log(videoData);
                 dispatch(receiveVideoData(videoData));
 

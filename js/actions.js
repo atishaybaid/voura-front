@@ -11,7 +11,6 @@ export const SIGNUP_SET_PASSWORD = 'SIGNUP_SET_PASSWORD';
 export const SIGNUP_SET_NAME = 'SIGNUP_SET_NAME';
 
 
-
 //userDetails methods
 export const REQUEST_TAGS = 'REQUEST_TAGS';
 export const RECEIVE_TAGS = 'RECEIVE_TAGS';
@@ -30,7 +29,5 @@ export const PROFILE_DESC_CHANGE = 'PROFILE_DESC_CHANGE';
 export const PROFILE_INST_CHANGE = 'PROFILE_INST_CHANGE';
 export const PROFILE_FIELD_CHANGE ='PROFILE_FIELD_CHANGE';
 
-//Home page Methods
-export const RECEIVE_VIDEO_DATA = 'RECEIVE_VIDEO_DATA';
-
+export const RECEIVE_NOTIS = 'RECEIVE_NOTIS';
 

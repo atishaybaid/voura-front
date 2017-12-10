@@ -2,7 +2,6 @@ import React,{Component} from 'react';
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 import Divider from 'material-ui/Divider';
 import Chip from 'material-ui/Chip';
-import VrHeader from './VrHeader.jsx'
 import VrModal from './common/VrModal.jsx';
 import Subheader from 'material-ui/Subheader';
 import TextField from 'material-ui/TextField';
@@ -11,6 +10,7 @@ import {connect}  from 'react-redux';
 import '../less/Profile.less';
 
 
+import FollowButton from './FollowButton.jsx';
 
 class Profile extends Component{
     constructor(props){
@@ -44,7 +44,6 @@ class Profile extends Component{
         return(
             <div className="profile-page">
               <div className="profile-card">
-                <VrHeader/>
                 
                <VrModal title="Edit Profile"></VrModal>
                 <Card style={{'backgroundColor':'aliceblue','padding':'10px'}}>
@@ -52,7 +51,7 @@ class Profile extends Component{
                      <i className="fa fa-pencil edit-icon" onClick={this.props.handleEdit} aria-hidden="true"></i>
                     <img src="images/profile.jpg" className="profile-image" alt=""  width="150px" height="150px" />
                     <div className="user-info">
-                        <div className="user-name base-pitch">Atishay Baid</div>
+                        <div className="user-name base-pitch">APlha romeo</div>
                         <div className="user-tagline sub-pitch">React.js Developer</div>
                          {/*<Divider style={{margin:'auto',width:'50%'}}/>*/}
                          <hr className="sep"/>
@@ -74,8 +73,7 @@ class Profile extends Component{
                              {this.renderChips()}
                         </div>
                     </div>
-                
-               
+                    <FollowButton />
                 
         
                 </Card>
@@ -86,6 +84,7 @@ class Profile extends Component{
     }
 
 
+        
         
 }
 const mapDispatchToProps = (dispatch)=>({

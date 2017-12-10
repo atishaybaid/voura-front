@@ -1,9 +1,11 @@
 import React,{Component} from 'react';
+
 import { Link } from 'react-router-dom';
-import VrHeader from './VrHeader.jsx'
+
 import VrScheduleGrid from './VrScheduleGrid.jsx';
 import {connect} from 'react-redux';
 import {fetchVideoData} from './actionCreators.js';
+
 import '../less/home.less';
 
 
@@ -49,7 +51,6 @@ class UserHome extends Component{
                    
                 </div>
                 <VrScheduleGrid apiurl={this.schApi} fillClr={null} avlClr={null}/>
-                
 
 
             </div>

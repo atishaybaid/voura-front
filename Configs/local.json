@@ -1,14 +1,29 @@
 {
     "common" :{
-        "baseUrl" : "http://local.intelverse.com:3000/",
+        "baseUrl" : "http://lapis.intelverse.com:3000/",
         "timeout" : 5000,
         "headers" : { "Access-Control-Allow-Origin": "*" }
     },
     "seminar" : {
-        "createSeminarEndpoint" : "timeline/seminar/create"
+        "createSeminarEndpoint" : "event/seminar/create",
+        "socketUrl" : "http://lapis.intelverse.com:3000",
+        "socketData" : {
+            "path" : "/chatNsp",
+            "transports": ["websocket"]
+        }
     },
     "users" : {
         "signup" : "users/signup"
+    },
+    "tags" :{
+        "url" : "http://api.intelverse.com:3000"
+    },
+    "notifications" :{
+        "socketUrl" : "http://lapis.intelverse.com:3000",
+        "socketData" : {
+            "path" : "/notiNsp",
+            "transports": ["websocket"]
+        }
     }
 
 }
