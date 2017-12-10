@@ -33,3 +33,30 @@ exports.isNonEmptyObject = function ( obj ) {
         //if its null undefined etc.. return false
         return obj && Object.keys(obj).length > 0  && obj.constructor === Object
 }
+
+exports.isNonEmptyArray = function ( obj ) {
+        //if its null undefined etc.. return false
+        return obj && obj.constructor === Array  && obj.length > 0
+}
+
+//questids list with item.selected = true
+exports.getSelectedQuestionsIds = function( qList ){
+        var res = [ ];
+        qList.map( function( item, index ){
+                if( item.selected == true ){
+                        res.push( item._id );
+                }
+        });
+        return res;
+}
+
+//quest list with item.selected = true
+exports.getSelectedQuestions = function( qList ){
+        var res = [ ];
+        qList.map( function( item, index ){
+                if( item.selected == true ){
+                        res.push( item );
+                }
+        });
+        return res;
+}

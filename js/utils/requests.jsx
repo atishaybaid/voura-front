@@ -48,4 +48,23 @@ function fetchSeminarData( data ){
     return promise;
 }
 
-export default { getUserInfo, fetchSeminarData }
+function searchQuestionsByTag( data ){
+
+    var promise = new Promise( function ( resolve, reject ) {
+        GetReq(`questions/questionbytag?tags=${data.searchedTag}&page=${data.page}&limit=${data.limitPerPage}`, iVConfigs.tags.url)
+            .then(function (response) {
+                if (response.status == 200 && response.data.status == 'SUCCESS') {
+                    resolve(response.data.data);
+                } else {
+                    reject(response);
+                }
+            })
+            .catch(function (error) {
+                return error;
+            });
+    });
+    return promise;
+}
+
+
+export default { getUserInfo, fetchSeminarData, searchQuestionsByTag }
