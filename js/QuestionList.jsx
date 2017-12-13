@@ -96,7 +96,7 @@ class QuestionList extends Component {
                         onCheck={that.addQuestion.bind(that, index)}
                         style={{marginBottom: 16}}
                     />
-                    <hr class="hr-primary"/>
+                    <hr className="hr-primary"/>
                 </div>
             })
         }

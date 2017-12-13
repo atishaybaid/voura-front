@@ -22,6 +22,7 @@ import SeminarSM from './SeminarSM.jsx';
 import VideoShow from './VideoShow.jsx';
 import VrHeader from './VrHeader.jsx';
 import VrFooter from './VrFooter.jsx';
+import SearchPage from './SearchPage';
 
 const App = ()=>(
 
@@ -45,6 +46,7 @@ const App = ()=>(
                         <Route path="/videoDetail/:id" component={videoDetail} />
                         <Route path="/profile" component={Profile} />
                         <Route path="/notifications" component={Notifications} />
+                        <Route path="/search" component={SearchPage} />
                     </Switch>
 
                 </div>

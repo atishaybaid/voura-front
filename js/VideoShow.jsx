@@ -187,11 +187,11 @@ class VideoShow extends Component {
         var that = this;
         var quesList = this.state.questList.map( function( item, index ){
             console.log( item);
-            var userInfo = { name : "dummy", title : "dummyTitle" };
+            var userInfo = { name : 'Ethan hunt', title : "MI4", avatar: '/images/jsa-128.jpg', profileUrl : '/profile/1' };
             return ( <div key ={`selectedQuest.quest_${index}`}>
                 {Utils.isNonEmptyObject(userInfo) ? <UserCard userInfo={userInfo}/> : "" }
                 <ListItem primaryText={item.question} onClick={that.handleQuestClick.bind( that, item.time )} />
-                <hr class="hr-primary" />
+                <hr className="hr-primary" />
             </div> )
         } )
         //console.log( quesList );

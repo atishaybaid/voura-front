@@ -280,7 +280,7 @@ class SeminarPM extends Component {
                         <IconButton tooltip='skip' onClick={that.skipQuestion.bind( this, item._id )} >
                             <SkipIcon />
                         </IconButton >
-                    <hr class="hr-primary" />
+                    <hr className="hr-primary" />
                 </div>
             })
             //console.log( quesList );
@@ -528,6 +528,7 @@ class SeminarPM extends Component {
         var that = this;
 
         if (Utils.isNonEmptyObject(this.state.userInfo) && Utils.isNonEmptyObject(this.state.seminarData)) {
+            
             return ( <UserCard userInfo={this.state.userInfo} videoData={this.state.seminarData}/> )
         } else {
             return ( <div></div> )

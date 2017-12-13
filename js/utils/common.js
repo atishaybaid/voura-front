@@ -60,3 +60,7 @@ exports.getSelectedQuestions = function( qList ){
         });
         return res;
 }
+
+exports.getProfileUrlFromId = function ( id ) {
+        return '/profile/'+id;
+}

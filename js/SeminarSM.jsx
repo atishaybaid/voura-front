@@ -330,7 +330,7 @@ class SeminarSM extends Component {
                         <ThumbsDownIcon />
                     </IconButton >
                     {item.downvote}
-                    <hr class="hr-primary" />
+                    <hr className="hr-primary" />
                 </div>
             })
             //console.log( quesList );

@@ -87,7 +87,6 @@ function _catchHandler() {
 function signout() {
 
     var path ='/users/signout';
-    var that = this;
     var promise = new Promise( function ( resolve, reject ) {
         GetReq( path )
             .then( _responseHandler( resolve, reject ) )
@@ -96,4 +95,27 @@ function signout() {
     return promise;
 }
 
-export default { getUserInfo, fetchSeminarData, searchQuestionsByTag, signout }
+function fetchTags( searchText ) {
+
+    var path = `users/suggestions/tag?t=${searchText}`;
+    var promise = new Promise( function ( resolve, reject ) {
+        GetReq( path, iVConfigs.tags.url )
+            .then( _responseHandler( resolve, reject ) )
+            .catch( _catchHandler() );
+    });
+    return promise;
+
+}
+
+function getPersonSearch( data ) {
+    var path = 'users/search';
+    var promise = new Promise( function ( resolve, reject ) {
+        PostReq(path, data)
+            .then( _responseHandler( resolve, reject ) )
+            .catch( _catchHandler() );
+    });
+    return promise;
+
+}
+
+export default { getUserInfo, fetchSeminarData, searchQuestionsByTag, signout, fetchTags, getPersonSearch }

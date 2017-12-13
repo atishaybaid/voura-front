@@ -3,11 +3,15 @@ import Utils from './utils/common.js';
 
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 
+/*
+ used for videoshow, requires video-data as well
+ */
 class UserCard extends Component {
 
     constructor(props) {
         super(props);
         this.showVideoData = this.showVideoData.bind(this);
+        this.linkClick = this.linkClick.bind(this);
     }
 
     showVideoData(){
@@ -24,13 +28,20 @@ class UserCard extends Component {
             return '';
         }
     }
+
+    linkClick( profileUrl ){
+        //@todo route to profile
+        window.location.href = profileUrl;
+    }
+
     render(){
         return(
             <Card>
                 <CardHeader
                     title={this.props.userInfo.name}
                     subtitle={this.props.userInfo.title}
-                    avatar="images/jsa-128.jpg"
+                    avatar={this.props.userInfo.avatar}
+                    onClick={this.linkClick.bind( null, this.props.userInfo.profileUrl )}
                 />
                 {this.showVideoData()}
             </Card>

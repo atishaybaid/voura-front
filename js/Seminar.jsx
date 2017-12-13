@@ -132,7 +132,7 @@ class Seminar extends Component {
                         onCheck={that.addRemoveQuestion.bind(that, index)}
                         style={{marginBottom: 16}}
                     />
-                    <hr class="hr-primary"/>
+                    <hr className="hr-primary"/>
                 </div>
             })
         }
