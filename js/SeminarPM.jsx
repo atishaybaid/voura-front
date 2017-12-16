@@ -23,6 +23,7 @@ class SeminarPM extends Component {
     constructor(props) {
         super();
         var videoId = window.location.pathname.match(/([^\/]*)\/*$/)[1];
+        var youtubeUrl = "https://www.youtube.com/embed/WOoJh6oYAXE";
         var epoch = Math.round((new Date()).getTime() / 1000);
         this.state = {
             semState: 'FETCH_DATA',
@@ -36,7 +37,12 @@ class SeminarPM extends Component {
             showSnackBar: false,
             snackBarMessage : "",
             streamIdText: "",
-            liveSeminarEpoch: epoch
+            liveSeminarEpoch: epoch,
+            youtubeOpts : {
+                height: '390',
+                width: '640',
+                url: youtubeUrl
+            }
         };
 
         this.skipQuestion = this.skipQuestion.bind(this);
@@ -343,7 +349,8 @@ class SeminarPM extends Component {
             "userID": userId,
             "broadcast": {
                 "id": this.state.seminarData.broadcast.id
-            }
+            },
+            "videoId": this.state.videoId
         }
         return data;
     }
@@ -510,7 +517,7 @@ class SeminarPM extends Component {
         var semData = this.getDataForSemControls( this.state );
         return <div className="sem-controller panel panel-default">
 
-                <div class = "panel-body">
+                <div className = "panel-body">
                     <p>{this.state.streamIdText}</p>
                 { semData.msg }
             { semData.btnLabel ?
@@ -548,12 +555,12 @@ class SeminarPM extends Component {
 
                     <div className="seminar-left-coloumn col-sm-12 col-md-8">
                         <div className="youtube-embed">
-                            <iframe width="560" height="315" src="https://www.youtube.com/embed/WOoJh6oYAXE" frameBorder="0" gesture="media" allowFullScreen></iframe>
+                            <iframe width={this.state.youtubeOpts.width} height={this.state.youtubeOpts.height} src={this.state.youtubeOpts.url} frameBorder="0" gesture="media" allowFullScreen></iframe>
                         </div>
                     </div>
                     <div className="seminar-right-coloumn col-sm-8 col-md-4 pre-scrollable">
                         <div className="pQuestion-list">
-                            <Subheader>Pick your questions</Subheader>
+                            <Subheader>Please pick your questions</Subheader>
                             {this.generateQuesList()}
                         </div>
                     </div>

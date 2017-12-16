@@ -21,6 +21,7 @@ class VideoShow extends Component {
     constructor(props) {
         super(props);
         var videoId = window.location.pathname.match(/([^\/]*)\/*$/)[1];
+        videoId = "yv5i0oTHubc";
         this.state = {
             videoId: videoId,
             videoData: {},
@@ -219,7 +220,7 @@ class VideoShow extends Component {
                 <div className="seminar-left-coloumn col-sm-12 col-md-8">
                     <div id="player">
                         <YouTube
-                            videoId="yv5i0oTHubc"
+                            videoId={this.state.videoId}
                             opts={this.youtubeOpts}
                             onReady={this._onReady}
                         />

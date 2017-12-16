@@ -1,7 +1,7 @@
 import React ,{ Component } from 'react';
 import FlatButton from 'material-ui/FlatButton';
 import '../less/SeminarPM.less';
-import {GetReq, PostReq} from './utils/apiRequest.jsx';
+import requests from './utils/requests';
 
 const FOLLOWING = 'UNFOLLOW';
 const NOT_FOLLOWING = 'FOLLOW';
@@ -19,34 +19,12 @@ class FollowButton extends Component {
         //const FOLLOWING = 'FOLLOWING';
     }
 
-    getFollowStatus(){
-        var path ='users/isfollows?id='+this.state.userId;
-        var that = this;
-        var promise = new Promise( function ( resolve, reject ) {
-            GetReq( path )
-                .then(function (response) {
-                    console.log(response.status);
-                    if(response.status == 200){
-                        resolve( response.data.data );
-                    } else {
-                        reject( response );
-                    }
-
-                })
-                .catch(function (error) {
-                    console.log(error);
-                    return error;
-                });
-        });
-        return promise;
-    }
-
     componentDidMount() {
         //inititlly show loading message
 
         //get infor about videoid
         var that = this;
-        this.getFollowStatus()
+        requests.getFollowStatus( this.state.userId )
             .then( function ( resolve ) {
                 if( resolve.follows == false ){
                     that.setState({ followStatus: FOLLOWING });
@@ -66,23 +44,8 @@ class FollowButton extends Component {
         }
 
         var that = this;
-        var promise = new Promise( function ( resolve, reject ) {
-            GetReq( path )
-                .then(function (response) {
-                    console.log(response.status);
-                    if(response.status == 200){
-                        resolve( response.data.data );
-                    } else {
-                        reject( response );
-                    }
 
-                })
-                .catch(function (error) {
-                    console.log(error);
-                    return error;
-                });
-        });
-        promise
+        requests.handleFollowUnfollow(path)
             .then( function (resolve) {
                 console.log( resolve );
                 if( that.state.followStatus == FOLLOWING )

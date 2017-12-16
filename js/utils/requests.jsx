@@ -68,7 +68,9 @@ function searchQuestionsByTag( data ){
 
 function _responseHandler( resolve, reject ) {
     var f = function(response) {
-        if (response.status == 200 && response.data.status == 'SUCCESS') {
+        if( response.status == 400 ) {
+            //redirect to login page
+        } else if (response.status == 200 && response.data.status == 'SUCCESS') {
             resolve(response.data.data);
         } else {
             reject(response);
@@ -156,4 +158,33 @@ function getUsersInfo( userIds ){
 }
 
 
-export default { getUserInfo, fetchSeminarData, searchQuestionsByTag, signout, fetchTags, getPersonSearch, getSeminarSearch, getVideoSearch, getUsersInfo }
+function getFollowStatus( userId ){
+    var path ='users/isfollows?id='+userId;
+
+    var promise = new Promise( function ( resolve, reject ) {
+        GetReq( path, iVConfigs.common.baseUrl )
+            .then( _responseHandler( resolve, reject ) )
+            .catch( _catchHandler() );
+    });
+    return promise;
+}
+
+function handleFollowUnfollow( path ){
+    var promise = new Promise( function ( resolve, reject ) {
+        GetReq( path, iVConfigs.common.baseUrl )
+            .then( _responseHandler( resolve, reject ) )
+            .catch( _catchHandler() );
+    });
+    return promise;
+}
+
+function saveQuestion( data ) {
+    var path ='questions/save';
+    var promise = new Promise( function ( resolve, reject ) {
+        PostReq(path, data)
+            .then( _responseHandler( resolve, reject ) )
+            .catch( _catchHandler() );
+    });
+    return promise;
+}
+export default { getUserInfo, fetchSeminarData, searchQuestionsByTag, signout, fetchTags, getPersonSearch, getSeminarSearch, getVideoSearch, getUsersInfo, getFollowStatus, handleFollowUnfollow, saveQuestion }

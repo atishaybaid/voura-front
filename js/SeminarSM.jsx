@@ -31,11 +31,17 @@ class SeminarSM extends Component {
     constructor(props) {
         super( props );
         var videoId = window.location.pathname.match(/([^\/]*)\/*$/)[1];
+        var youtubeUrl = "https://www.youtube.com/embed/WOoJh6oYAXE";
         this.state = {
             videoId: videoId,
             question: '',
             questionList : [],
-            seminarData: {}
+            seminarData: {},
+            youtubeOpts : {
+                height: '390',
+                width: '640',
+                url: youtubeUrl
+            }
         }
         this.askQuestionChange = this.askQuestionChange.bind(this);
         this.handleAskQuestion = this.handleAskQuestion.bind(this);
@@ -360,7 +366,7 @@ class SeminarSM extends Component {
                                 {this.state.message}
                             </p>
                             <div className="youtube-embed">
-                                <iframe width="560" height="315" src="https://www.youtube.com/embed/WOoJh6oYAXE" frameBorder="0" gesture="media" allowFullScreen></iframe>
+                                <iframe width={this.state.youtubeOpts.width} height={this.state.youtubeOpts.height} src={this.state.youtubeOpts.url} frameBorder="0" gesture="media" allowFullScreen></iframe>
                             </div><br />
                         <TextField
                             hintText="Type a question"
