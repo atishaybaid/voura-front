@@ -20,11 +20,11 @@ class SearchPeople extends Component {
         this.generatePeopleList = this.generatePeopleList.bind(this);
     }
 
-    componentWillMount(){
-
+    componentDidMount(){
+/*
         var dummy = [ { "userId": 9, "fId": "sahvi06@gmail.com", "name": "sahvi05", "title": null, "desc": null, "image": "", "organisations": [], "colleges": [], "tags": [ "redis", "sah" ] } ];
         this.setState({ resultPeople: dummy } );
-
+*/
     }
 
     getSelectedTags( tags ){
@@ -35,10 +35,18 @@ class SearchPeople extends Component {
         this.setState({personName:newValue});
     }
 
+
+    getDummyData(){
+        var dummy = [ { "userId": 9, "fId": "sahvi06@gmail.com", "name": "sahvi05", "title": "9 title", "desc": "9  desc", "image": "/9.jpg", "organisations": ["nine-org"], "colleges": ["nine-college"], "tags": [ "redis", "sah" ] }, { "userId": 8, "fId": "sahvi08@gmail.com", "name": "sahvi08", "title": "8 title", "desc": "8  desc", "image": "/8.jpg", "organisations": ["8-org"], "colleges": ["8-college"], "tags": [ "redis", "8" ] } ];
+        return dummy;
+    }
+
     handleSubmit(){
+        var that = this;
         var data = { name: this.state.personName, tags: this.state.selectedTags };
         requests.getPersonSearch( data ).then(function ( resolve ) {
-            that.setState({ resultPeople: resolve } );
+            //that.setState({ resultPeople: resolve } );
+            that.setState({ resultPeople: that.getDummyData() } );
         }, function ( reject ) {
 
         });

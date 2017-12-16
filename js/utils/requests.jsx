@@ -118,4 +118,42 @@ function getPersonSearch( data ) {
 
 }
 
-export default { getUserInfo, fetchSeminarData, searchQuestionsByTag, signout, fetchTags, getPersonSearch }
+function getSeminarSearch( data ){
+    var path = 'event/search';
+    var promise = new Promise( function ( resolve, reject ) {
+        PostReq(path, data)
+            .then( _responseHandler( resolve, reject ) )
+            .catch( _catchHandler() );
+    });
+    return promise;
+
+}
+
+
+function getVideoSearch( data ){
+    var path = 'questions/search';
+    var promise = new Promise( function ( resolve, reject ) {
+        PostReq(path, data)
+            .then( _responseHandler( resolve, reject ) )
+            .catch( _catchHandler() );
+    });
+    return promise;
+
+}
+
+//comma separated userids
+function getUsersInfo( userIds ){
+    var that = this, path;
+
+    path ='users/getusers/?id='+userIds;
+
+    var promise = new Promise( function ( resolve, reject ) {
+        GetReq( path, iVConfigs.tags.url )
+            .then( _responseHandler( resolve, reject ) )
+            .catch( _catchHandler() );
+    })
+    return promise;
+}
+
+
+export default { getUserInfo, fetchSeminarData, searchQuestionsByTag, signout, fetchTags, getPersonSearch, getSeminarSearch, getVideoSearch, getUsersInfo }
