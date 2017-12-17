@@ -10,6 +10,7 @@ import {showLoginDialog,
         setPassword} from './actionCreators.js';
 import '../less/common.less'
 import  {connect} from 'react-redux';
+import requests from './utils/requests';
 
 class LoginPopup extends Component {
     constructor(props){
@@ -25,18 +26,11 @@ class LoginPopup extends Component {
             "password":this.props.password
         }
 
-        PostReq('users/signin',data)
-        .then(function (response) {
-                console.log(response.status);
-               if(response.status == 200){
-                window.location.href = '/signup/newuser';
-                   that.props.handleGetNotifications();
-               }
-
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
+        requests.signin( data )
+            .then(function (response) {
+                    window.location.href = '/signup/newuser';
+                    that.props.handleGetNotifications();
+            });
     }
 
     render(){

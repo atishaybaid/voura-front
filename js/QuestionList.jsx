@@ -31,9 +31,10 @@ class QuestionList extends Component {
     };
 
 //let him add any tagged questions to seminar
+/*
     fetchTags(searchText){
 
-        this.setState({ inputText:searchText });
+
         var that = this;
         //GetReq("users/tags", iVConfigs.common.baseUrl )
         GetReq(`users/suggestions/tag?t=${searchText}`, iVConfigs.common.baseUrl )
@@ -47,6 +48,16 @@ class QuestionList extends Component {
                 console.log(err);
             });
 
+    }
+*/
+
+    fetchTags(searchText){
+        var that = this;
+        this.setState({ inputText:searchText });
+        requests.fetchTags( searchText ).then( function ( resolve ) {
+            let tagList =  resolve;
+            that.setState({tags:tagList});
+        });
     }
 
     handleTagSelected(chosenTag){

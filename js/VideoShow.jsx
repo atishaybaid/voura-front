@@ -13,6 +13,7 @@ import '../less/common.less';
 import '../less/SeminarPM.less';
 import Utils from './utils/common.js';
 import UserCard from './UserCard';
+import requests from './utils/requests';
 
 //@todo show only answered questions
 
@@ -21,7 +22,7 @@ class VideoShow extends Component {
     constructor(props) {
         super(props);
         var videoId = window.location.pathname.match(/([^\/]*)\/*$/)[1];
-        videoId = "yv5i0oTHubc";
+        //videoId = "yv5i0oTHubc";
         this.state = {
             videoId: videoId,
             videoData: {},
@@ -30,7 +31,6 @@ class VideoShow extends Component {
             recVids: []
         }
 
-        this.getVideoData = this.getVideoData.bind( this );
         this.generateQuesList = this.generateQuesList.bind(this);
         this.youtubeOpts = {
             height: '390',
@@ -60,11 +60,11 @@ class VideoShow extends Component {
 
     //get infor about videoid
         var that = this;
-        this.getVideoData( this.state.videoId ).then( function ( resolve ) {
+        requests.getVideoData( this.state.videoId ).then( function ( resolve ) {
 
             that.setState( { videoData: resolve } );
             var userId = resolve.userID;
-            Promise.all( [ that.getUserInfo( userId ), that.getQuestions( that.state.videoId ), that.getRecommendVideos( that.state.videoId )] )
+            Promise.all( [ requests.getUserInfo( userId ), requests.getQuestionsForVideo( that.state ), that.getRecommendVideos( that.state.videoId )] )
                 .then( function( allData ){
                     var userInfo, qList, vidData = [];
                     if( allData[0] )
@@ -93,68 +93,6 @@ class VideoShow extends Component {
 
     //get relevant videos for this user, these tags
         
-    }
-
-    getUserInfo( userId ){
-        var that = this;
-        var path ='users/getuser/?id='+userId;
-        var promise = new Promise( function ( resolve, reject ) {
-            GetReq( path, iVConfigs.common.baseUrl )
-                .then(function (response) {
-                    if(response.status == 200 && response.data.status == 'SUCCESS'){
-                        resolve( response.data.data );
-                    } else {
-                        reject( response );
-                    }
-                })
-                .catch(function (error) {
-                    return error;
-                });
-        } );
-        return promise;
-    }
-
-    getQuestions( videoId ){
-        var that = this;
-        //var path ='questions/questions/?videoid='+videoId;
-        var path ='questions/find/?videoid='+videoId;
-        var promise = new Promise( function ( resolve, reject ) {
-            GetReq( path, iVConfigs.common.baseUrl )
-                .then(function (response) {
-                    console.log(response.status);
-                    if(response.status == 200){
-                        resolve( response.data.data );
-                        console.log( that.state.questionList );
-                    } else {
-                        reject( response );
-                    }
-                })
-                .catch(function (error) {
-                    return error;
-                });
-        } );
-        return promise;
-    }
-
-    getVideoData( videoId ){
-
-        var that = this;
-        var path ='video/show/'+videoId;
-        var promise = new Promise( function ( resolve, reject ) {
-            GetReq( path, iVConfigs.common.baseUrl )
-                .then(function (response) {
-                    console.log(response.status);
-                    if(response.status == 200 && response.data.status == 'SUCCESS' ){
-                        resolve( response.data.data );
-                    } else {
-                        reject( response );
-                    }
-                })
-                .catch(function (error) {
-                    return error;
-                });
-        } );
-        return promise;
     }
 
     getRecommendVideos(){

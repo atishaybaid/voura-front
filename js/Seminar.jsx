@@ -7,7 +7,6 @@ import axios from 'axios';
 import iVCommonUtils from './utils/common';
 //import {iVConfigs} from '../Configs/local.js';
 import iVConfigs from '../Configs/local.json';
-import {PostReq} from './utils/apiRequest.jsx';
 import { withCookies, Cookies } from 'react-cookie';
 import Dialog from 'material-ui/Dialog';
 import QuestionList from './QuestionList.jsx';
@@ -15,6 +14,7 @@ import Utils from './utils/common.js';
 import {List, ListItem} from 'material-ui/List';
 import Checkbox from 'material-ui/Checkbox';
 import Subheader from 'material-ui/Subheader';
+import requests from './utils/requests';
 
 class Seminar extends Component {
     constructor(props){
@@ -86,22 +86,13 @@ class Seminar extends Component {
             "bEndDateTime": iVCommonUtils.mergeDateTime( this.state.endDate, this.state.endTime ),
             "qIds" : selectedFreeQuestsIds
         };
-
-        var path = iVConfigs.seminar.createSeminarEndpoint;
-        PostReq( path, data )
-            .then(function (response) {
-                console.log(response.status);
-                if(response.status == 200){
-                    //that.setState( { questionList: response.data.data } ) ;
-                    console.log( response.data.data );
-                } else {
-                    console.log( response );
-                }
-
-            })
-            .catch(function (error) {
-                console.log(error);
+        requests.createSeminar(data)
+            .then( function ( resolve ) {
+                console.log('sem created');
+            }, function (reject) {
+                
             });
+
     };
 
     showPickQuestionsDialog(){

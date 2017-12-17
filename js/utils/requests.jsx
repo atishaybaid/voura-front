@@ -1,5 +1,6 @@
 import {GetReq, PostReq} from './apiRequest';
 import iVConfigs from '../../Configs/local.json';
+import Utils from './common.js';
 
 function getUserInfo( userId ){
     var that = this, path;
@@ -11,17 +12,9 @@ function getUserInfo( userId ){
 
     var promise = new Promise( function ( resolve, reject ) {
         GetReq( path, iVConfigs.common.baseUrl )
-            .then(function (response) {
-                if(response.status == 200 && response.data.status == 'SUCCESS'){
-                    resolve( response.data.data );
-                } else {
-                    reject( response );
-                }
-            })
-            .catch(function (error) {
-                return error;
-            });
-    } );
+            .then( _responseHandler( resolve, reject ) )
+            .catch( _catchHandler() );
+    });
     return promise;
 }
 
@@ -30,20 +23,9 @@ function fetchSeminarData( data ){
     var path ='seminar/?videoId='+videoId;
     var that = this;
     var promise = new Promise( function ( resolve, reject ) {
-        GetReq( path )
-            .then(function (response) {
-                console.log(response.status);
-                if(response.status == 200){
-                    resolve( response.data.data );
-                } else {
-                    reject( response );
-                }
-
-            })
-            .catch(function (error) {
-                console.log(error);
-                return error;
-            });
+        GetReq( path, iVConfigs.common.baseUrl )
+            .then( _responseHandler( resolve, reject ) )
+            .catch( _catchHandler() );
     });
     return promise;
 }
@@ -52,16 +34,8 @@ function searchQuestionsByTag( data ){
 
     var promise = new Promise( function ( resolve, reject ) {
         GetReq(`questions/questionbytag?tags=${data.searchedTag}&page=${data.page}&limit=${data.limitPerPage}`, iVConfigs.tags.url)
-            .then(function (response) {
-                if (response.status == 200 && response.data.status == 'SUCCESS') {
-                    resolve(response.data.data);
-                } else {
-                    reject(response);
-                }
-            })
-            .catch(function (error) {
-                return error;
-            });
+            .then( _responseHandler( resolve, reject ) )
+            .catch( _catchHandler() );
     });
     return promise;
 }
@@ -71,7 +45,11 @@ function _responseHandler( resolve, reject ) {
         if( response.status == 400 ) {
             //redirect to login page
         } else if (response.status == 200 && response.data.status == 'SUCCESS') {
-            resolve(response.data.data);
+            if( Utils.isEmpty( response.data ) ){
+                resolve( true );
+            }else {
+                resolve(response.data.data);
+            }
         } else {
             reject(response);
         }
@@ -97,6 +75,15 @@ function signout() {
     return promise;
 }
 
+function signup( data ) {
+    var path = 'users/signup';
+    var promise = new Promise( function ( resolve, reject ) {
+        PostReq(path, data)
+            .then( _responseHandler( resolve, reject ) )
+            .catch( _catchHandler() );
+    });
+    return promise;
+}
 function fetchTags( searchText ) {
 
     var path = `users/suggestions/tag?t=${searchText}`;
@@ -187,4 +174,116 @@ function saveQuestion( data ) {
     });
     return promise;
 }
-export default { getUserInfo, fetchSeminarData, searchQuestionsByTag, signout, fetchTags, getPersonSearch, getSeminarSearch, getVideoSearch, getUsersInfo, getFollowStatus, handleFollowUnfollow, saveQuestion }
+
+function signin(data) {
+    var path ='users/signin';
+    var promise = new Promise( function ( resolve, reject ) {
+        PostReq(path, data)
+            .then( _responseHandler( resolve, reject ) )
+            .catch( _catchHandler() );
+    });
+    return promise;
+
+}
+
+function createSeminar( data ) {
+    var path = iVConfigs.seminar.createSeminarEndpoint;
+    var promise = new Promise( function ( resolve, reject ) {
+        PostReq(path, data)
+            .then( _responseHandler( resolve, reject ) )
+            .catch( _catchHandler() );
+    });
+    return promise;
+}
+
+function getTopQuestionsForSeminar( data ) {
+    var path ='questions/topquestion/?videoid='+data.videoId+'&n='+data.limit;
+    var promise = new Promise( function ( resolve, reject ) {
+        GetReq( path, iVConfigs.common.baseUrl )
+            .then( _responseHandler( resolve, reject ) )
+            .catch( _catchHandler() );
+    });
+    return promise;
+}
+
+function setSeminarQuestionStatus( data ) {
+    var path ='questions/status';
+    var promise = new Promise( function ( resolve, reject ) {
+        PostReq(path, data)
+            .then( _responseHandler( resolve, reject ) )
+            .catch( _catchHandler() );
+    });
+    return promise;
+}
+
+function getStreamStatus( data ) {
+    var path = 'seminar/stream/status';
+    var promise = new Promise( function ( resolve, reject ) {
+        PostReq(path, data)
+            .then( _responseHandler( resolve, reject ) )
+            .catch( _catchHandler() );
+    });
+    return promise;
+}
+
+function liveSeminar( data ) {
+    var path = 'seminar/live';
+    var promise = new Promise( function ( resolve, reject ) {
+        PostReq(path, data)
+            .then( _responseHandler( resolve, reject ) )
+            .catch( _catchHandler() );
+    });
+    return promise;
+}
+
+function completeSeminar( data ) {
+    var path = 'seminar/complete';
+    var promise = new Promise( function ( resolve, reject ) {
+        PostReq(path, data)
+            .then( _responseHandler( resolve, reject ) )
+            .catch( _catchHandler() );
+    });
+    return promise;
+}
+
+function voteCountForQuestions( data ) {
+    var path ='questions/votecount/';
+    var promise = new Promise( function ( resolve, reject ) {
+        PostReq(path, data)
+            .then( _responseHandler( resolve, reject ) )
+            .catch( _catchHandler() );
+    });
+    return promise;    
+}
+
+function getQuestionsForVideo( data ) {
+    var path ='questions/find/?videoid='+data.videoId;
+    var promise = new Promise( function ( resolve, reject ) {
+        GetReq( path, iVConfigs.common.baseUrl )
+            .then( _responseHandler( resolve, reject ) )
+            .catch( _catchHandler() );
+    });
+    return promise;
+}
+
+function voteQuestion( data ) {
+    var path ='questions/vote/';
+    var promise = new Promise( function ( resolve, reject ) {
+        PostReq(path, data)
+            .then( _responseHandler( resolve, reject ) )
+            .catch( _catchHandler() );
+    });
+    return promise;
+}
+
+function getVideoData( videoId ) {
+    var path ='video/show/'+videoId;
+    var promise = new Promise( function ( resolve, reject ) {
+        GetReq( path, iVConfigs.common.baseUrl )
+            .then( _responseHandler( resolve, reject ) )
+            .catch( _catchHandler() );
+    });
+    return promise;
+}
+
+export default { getUserInfo, fetchSeminarData, searchQuestionsByTag, signin, signout, signup, fetchTags, getPersonSearch, getSeminarSearch, getVideoSearch, getUsersInfo, getFollowStatus, handleFollowUnfollow, saveQuestion, createSeminar,getTopQuestionsForSeminar, setSeminarQuestionStatus, getStreamStatus, liveSeminar, completeSeminar, voteCountForQuestions, getQuestionsForVideo, voteQuestion, getVideoData }

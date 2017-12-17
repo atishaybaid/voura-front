@@ -3,7 +3,7 @@ import axios from 'axios';
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
 import '../less/SeminarPM.less';
-import {GetReq, PostReq} from './utils/apiRequest.jsx';
+import {PostReq} from './utils/apiRequest.jsx';
 import Subheader from 'material-ui/Subheader';
 import {List, ListItem} from 'material-ui/List';
 import { withCookies, Cookies } from 'react-cookie';
@@ -12,10 +12,11 @@ import io from "socket.io-client";
 import Snackbar from 'material-ui/Snackbar';
 import Utils from './utils/common.js';
 import UserCard from './UserCard';
-import requests from './utils/requests';
 import IconButton from 'material-ui/IconButton';
 import DoneIcon from 'material-ui/svg-icons/action/check-circle';
 import SkipIcon from 'material-ui/svg-icons/action/visibility-off';
+import requests from './utils/requests';
+import WebCamCapture from './webcam';
 
 //@todo fetch sem data on load itself
 //@todo identify states
@@ -84,48 +85,13 @@ class SeminarPM extends Component {
     }
 
     fetchSeminarData(){
-        var path ='seminar/?videoId='+this.state.videoId;
-        var that = this;
-        var promise = new Promise( function ( resolve, reject ) {
-            GetReq( path )
-                .then(function (response) {
-                    console.log(response.status);
-                    if(response.status == 200){
-                        resolve( response.data.data );
-                    } else {
-                        reject( response );
-                    }
-
-                })
-                .catch(function (error) {
-                    console.log(error);
-                    return error;
-                });
-        });
-        return promise;
+        var data = { videoId : this.state.videoId }
+        return requests.fetchSeminarData( data );
     }
 
     getTopQuestions( limit=1){
-
-        var path ='questions/topquestion/?videoid='+this.state.videoId+'&n='+limit;
-        var that = this;
-        var promise = new Promise( function ( resolve, reject ) {
-            GetReq( path )
-                .then(function (response) {
-                    console.log(response.status);
-                    if(response.status == 200 && response.data.status != 'ERROR' ){
-                        resolve( response.data.data );
-                    } else {
-                        resolve( [] );
-                    }
-
-                })
-                .catch(function (error) {
-                    reject( error );
-                    console.log(error);
-                });
-        }); 
-        return promise;
+        var data = { videoId: this.state.videoId, limit : limit }
+        return requests.getTopQuestionsForSeminar(data);
     }
 
     getQidArrFromQuestions( qArr ){
@@ -223,10 +189,6 @@ class SeminarPM extends Component {
     }
 
     setAnswered( qId, timeDiff ){
-
-        const { cookies } = this.props
-        const userId = cookies.get('userId');
-
         let data = {
             videoId: this.state.videoId,
             qId: qId,
@@ -234,21 +196,13 @@ class SeminarPM extends Component {
             time: timeDiff
         }
 
-        var path ='questions/status';
-        var that = this;
+        requests.setSeminarQuestionStatus( data ).then(
+            function ( resolve ) {
 
-        PostReq( path, data )
-            .then(function (response) {
-                console.log(response.status);
-                if(response.status == 200){
-                    if( response.data.status != 'ERROR' ){
-                        console.log( response );
-                    }
-                }
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
+            }, function ( reject ) {
+
+            }
+        );
     }
 
 
@@ -308,37 +262,8 @@ class SeminarPM extends Component {
     }
 
     getStreamStatus(){
-        console.log('stream status');
         var data = this.getStreamStatusData();
-        var path = 'seminar/stream/status';
-        var that = this;
-
-        var promise = new Promise( function ( resolve, reject ) {
-            PostReq(path, data)
-                .then(function (response) {
-                    console.log(response.status);
-                    if (response.status == 200 && response.data.status != 'ERROR') {
-                        //that.setState( { questionList: response.data.data } ) ;
-                        //that.setState({streamState: 'OK_STREAM'});
-                        resolve( response.data.data );
-                    } else {
-                        if (response.data.status == 'ERROR')
-                            reject( response.data );
-                        else
-                            reject( response.data );
-
-                        //that.setState({streamState: 'BAD_STREAM'});
-
-                        console.log(error);
-                    }
-                })
-                .catch(function (error) {
-                    reject( error );
-                    console.log(error);
-                });
-        });
-        return promise;
-
+        return requests.getStreamStatus( data );
     }
 
     getTransitionData(){
@@ -378,6 +303,7 @@ class SeminarPM extends Component {
         return retObj;
     }
 
+    //!!!! different handling don't move to requessts
     previewSeminar(){
         console.log('preview');
         //check stream status and hit preview api
@@ -421,11 +347,8 @@ class SeminarPM extends Component {
     }
 
     liveSeminar(){
-        console.log('live');
-        var path = 'seminar/live';
         var data = this.getTransitionData();
-        var that = this;
-        PostReq( path, data )
+        requests.liveSeminar( data )
             .then(function (response) {
                 console.log(response.status);
                 if(response.status == 200 && response.data.status != 'ERROR' ){
@@ -441,19 +364,14 @@ class SeminarPM extends Component {
                     that.setState({ snackBarMessage: msg, showSnackBar:true });
                     console.log(msg);
                 }
-            })
-            .catch(function (error) {
-                console.log(error);
             });
-
     }
 
     closeSeminar(){
         console.log('close');
-        var path = 'seminar/complete';
         var data = this.getTransitionData();
         var that = this;
-        PostReq( path, data )
+        requests.completeSeminar( data )
             .then(function (response) {
                 console.log(response.status);
                 if(response.status == 200 && response.data.status != 'ERROR' ){
@@ -467,11 +385,7 @@ class SeminarPM extends Component {
 
                     that.setState({ snackBarMessage: msg, showSnackBar:true });
                 }
-            })
-            .catch(function (error) {
-                console.log(error);
             });
-
     }
 
     thanksSeminar(){
@@ -555,7 +469,7 @@ class SeminarPM extends Component {
 
                     <div className="seminar-left-coloumn col-sm-12 col-md-8">
                         <div className="youtube-embed">
-                            <iframe width={this.state.youtubeOpts.width} height={this.state.youtubeOpts.height} src={this.state.youtubeOpts.url} frameBorder="0" gesture="media" allowFullScreen></iframe>
+                            <WebCamCapture height="390" width="640"/>
                         </div>
                     </div>
                     <div className="seminar-right-coloumn col-sm-8 col-md-4 pre-scrollable">
@@ -576,4 +490,7 @@ class SeminarPM extends Component {
 
 }
 
+/*
+ <iframe width={this.state.youtubeOpts.width} height={this.state.youtubeOpts.height} src={this.state.youtubeOpts.url} frameBorder="0" gesture="media" allowFullScreen></iframe>
+ */
 export default withCookies( SeminarPM );

@@ -123,56 +123,14 @@ class SeminarSM extends Component {
                 id: this.state.videoId,
                 type: 'video'
             }
-            console.log( data );
-            var that = this;
-            var path ='questions/votecount/';
-
-            var promise = new Promise( function ( resolve, reject ) {
-                PostReq( path, data )
-                    .then(function (response) {
-                        if(response.status == 200){
-                            //that.setState( { questionList: response.data.data } ) ;
-                            resolve( response.data.data );
-                        } else {
-                            reject( response );
-                        }
-
-                    })
-                    .catch(function (error) {
-                        return error;
-                    });
-            })
-
-            return promise;
+            return requests.voteCountForQuestions( data );
         }
 
     getQuestions(){
-        const { cookies } = this.props
-        const userId = cookies.get('userId');
-
         let data = {
-            videoId: this.state.videoId,
-            user: userId
+            videoId: this.state.videoId
         }
-        var that = this;
-        //var path ='questions/questions/?videoid='+data.videoId;
-        var path ='questions/find/?videoid='+data.videoId;
-        var promise = new Promise( function ( resolve, reject ) {
-            GetReq( path )
-                .then(function (response) {
-                    if(response.status == 200){
-                        //that.setState( { questionList: response.data.data } ) ;
-                        resolve( response.data.data );
-                    } else {
-                        reject( response );
-                    }
-                })
-                .catch(function (error) {
-                    return error;
-                });
-        } )
-
-        return promise;
+        return requests.getQuestionsForVideo(data);
     }
 
     getQuestionList( qArray, vArray ){
@@ -256,64 +214,38 @@ class SeminarSM extends Component {
             qId: qId,
             vote: vote
         }
-        //console.log( data );
         var that = this;
-        var path ='questions/vote/';
-        PostReq( path, data )
-            .then(function (response) {
-                console.log(response.status);
-                if(response.status == 200 && response.data.status == 'SUCCESS' ){
-                    //that.setState( { questionList: response.data.data } ) ;
-                    console.log( response );
-                    that.onVoteQuestionSuccess( qId, vote );
-                }
+        requests.voteQuestion( data ).then( function ( resolve ) {
+            that.onVoteQuestionSuccess( qId, vote );
+        }, function ( reject ) {
 
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-
+        });
     }
 
     handleAskQuestion(){
         const { cookies } = this.props
-        const userId = cookies.get('userId');
+        var that = this;
 
         let data = {
             videoId: this.state.videoId,
-            question: this.state.question,
-            user: userId
+            question: this.state.question
         }
 
-        var path ='questions/save';
-        var that = this;
-        PostReq( path, data )
-            .then(function (response) {
-                console.log(response.status);
-                if(response.status == 200){
-                    //if( response.data.status != 'ERROR' ){
+        requests.saveQuestion(data).then(
+            function ( resolve ) {
+                var qData = resolve;
+                qData.question = data.question;
+                //that.notiSocket.emit('questionAdded', qData);
+                console.log( qData );
+                var questions = that.state.questionList;
+                console.log(questions);
+                questions.push( qData );
 
-                        var qData = response.data.data;
-                        qData.question = data.question;
-                        //that.notiSocket.emit('questionAdded', qData);
-                        console.log( qData );
-                        var questions = that.state.questionList;
-                        console.log(questions);
-                        questions.push( qData );
-
-                        console.log(questions);
-                        that.setState({ questionList:questions });
-                        that.notiSocket.emit('questionAdded', qData);
-                  //  }
-//                    console.log( response );
-
-
-                }
-
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
+                console.log(questions);
+                that.setState({ questionList:questions });
+                that.notiSocket.emit('questionAdded', qData);
+            }
+        );
     }
 
     askQuestionChange(event,newValue){

@@ -7,7 +7,7 @@ import SignupCredential from './SignupCredential.jsx';
 import UserDetails from './UserDetails.jsx';
 import {PostReq} from './utils/apiRequest.jsx'
 import '../less/signup.less'
-
+import requests from './utils/requests';
 
 class Signup extends Component {
     constructor(props){
@@ -37,17 +37,13 @@ class Signup extends Component {
             'image':''
         }
         console.log(data);
-        PostReq('users/signup',data)
-            .then((response) =>{
-               if(response.status == 200){
-                this.context.history.push('/signup/userdetails');
 
-               }
-           
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
+        requests.signup( data )
+            .then( function ( resolve ) {
+                this.context.history.push('/signup/userdetails');
+            }, function ( reject ) {
+
+            });
         
     };
     render(){

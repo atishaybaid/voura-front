@@ -22,6 +22,7 @@ class FreeQuestion extends Component {
         this.handleAskQuestion = this.handleAskQuestion.bind(this);
         this.qTitleChange = this.qTitleChange.bind(this);
         this.qDescChange = this.qDescChange.bind(this);
+        this.getSelectedTags = this.getSelectedTags.bind(this);
         /*this.renderChips = this.renderChips.bind(this);
         this.fetchTags = this.fetchTags.bind(this);
         this.handleTagSelected = this.handleTagSelected.bind(this);
