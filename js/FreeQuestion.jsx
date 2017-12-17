@@ -97,8 +97,7 @@ class FreeQuestion extends Component {
             <div className="Question-page">
                 <TextField
                     hintText="Type a question"
-                    floatingLabelText="Question"
-                    floatingLabelFixed={true}
+                    errorText="Please provide title for seminar"
                     type="text"
                     onChange={this.qTitleChange}
                     value={this.state.qTitle}
@@ -106,8 +105,6 @@ class FreeQuestion extends Component {
                 /><br/>
                 <TextField
                     hintText="Type question description"
-                    floatingLabelText="Question description"
-                    floatingLabelFixed={true}
                     type="text"
                     onChange={this.qDescChange}
                     value={this.state.qDesc}

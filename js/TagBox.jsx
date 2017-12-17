@@ -64,7 +64,7 @@ class TagBox extends Component {
 
     render(){
         return (
-            <div className="search-seminar">
+            <div className="tagbox">
                 <AutoComplete
                     hintText="Search Tags"
                     dataSource={this.state.tags}
@@ -74,7 +74,7 @@ class TagBox extends Component {
                     onUpdateInput={this.fetchTags}
                     searchText={this.state.inputText}
                 />
-                <FlatButton className="control-btn" label='Add to tag list' primary={true} backgroundColor={'#4ebcd5'}  style={{color:'#ffffff'}} onClick={this.addToChip} target="_blank"/>
+                <FlatButton className="control-btn" label='Add tag' primary={true} backgroundColor={'#4ebcd5'}  style={{color:'#ffffff'}} onClick={this.addToChip} target="_blank"/>
                 <br/>
                 <div className="selected-tags">
                     {this.renderChips()}

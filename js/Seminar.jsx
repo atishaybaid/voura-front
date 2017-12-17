@@ -15,13 +15,17 @@ import {List, ListItem} from 'material-ui/List';
 import Checkbox from 'material-ui/Checkbox';
 import Subheader from 'material-ui/Subheader';
 import requests from './utils/requests';
+import TagBox from './TagBox';
 
 class Seminar extends Component {
     constructor(props){
+
         super();
         this.state ={
             title:'',
+            titleErrorText:'',
             description: '',
+            descErrorText: '',
             tags: '',
             startDate: new Date(),
             startTime: new Date(),
@@ -29,12 +33,21 @@ class Seminar extends Component {
             endTime: new Date(),
             thumbnail:'',
             freeQuests: [],
-            showPickQuestDialog: false
-        }
+            showPickQuestDialog: false,
+            msgBarText : '',
+            semData : {}
+        };
+        this.SEM_INPUT_FIELDS_ERROR_TEXT = {
+            TITLE : "please provide title for seminar",
+            DESC: "please provide desc for seminar"
+        };
         this.showPickQuestionsDialog = this.showPickQuestionsDialog.bind(this);
         this.hidePickQuestionsDialog = this.hidePickQuestionsDialog.bind(this);
         this.showSelectedQuesList = this.showSelectedQuesList.bind(this);
         this.pickQuestions = this.pickQuestions.bind(this);
+        this.onTitleBlur = this.onTitleBlur.bind(this);
+        this.onDescBlur = this.onDescBlur.bind(this);
+        this.getMsgBarContent = this.getMsgBarContent.bind(this);
     };
 
     pickQuestions( quests ){
@@ -48,14 +61,32 @@ class Seminar extends Component {
         this.setState({ showPickQuestDialog: false, freeQuests:questions });
     }
 
+    onTitleBlur( ){
+        var errorText;
+        if( Utils.isEmpty( this.state.title ) ){
+            errorText = this.SEM_INPUT_FIELDS_ERROR_TEXT.TITLE;
+        } else {
+            errorText = ""
+        }
+        this.setState({ titleErrorText:errorText })
+    }
+
+    onDescBlur( ){
+        var errorText;
+        if( Utils.isEmpty( this.state.desc ) ){
+            errorText = this.SEM_INPUT_FIELDS_ERROR_TEXT.DESC;
+        } else {
+            errorText = ""
+        }
+        this.setState({ descErrorText:errorText })
+    }
+
     handleTitleChange(event,newValue){
         this.setState({title:newValue});
     };
+
     handleDescriptionChange(event,newValue){
         this.setState({description:newValue});
-    };
-    handleTagsChange(event,newValue){
-        this.setState({tags:newValue});
     };
 
     handleStartDate(event,newValue){
@@ -71,10 +102,15 @@ class Seminar extends Component {
         this.setState({endTime:newValue});
     };
 
+    getSelectedTags( tags ){
+        this.setState({ tags: tags });
+    }
+
     handleSubmit(event,newValue){
 
         const { cookies } = this.props
         const userId = cookies.get('userId');
+        const that = this;
 
         var selectedFreeQuestsIds = Utils.getSelectedQuestionsIds( this.state.freeQuests );
         let data = {
@@ -89,8 +125,10 @@ class Seminar extends Component {
         requests.createSeminar(data)
             .then( function ( resolve ) {
                 console.log('sem created');
+                that.setState( {semData: resolve} );
             }, function (reject) {
-                
+                console.log('sem rejected');
+                that.setState( {semData: reject} );
             });
 
     };
@@ -141,6 +179,14 @@ class Seminar extends Component {
         return text;
     }
 
+    getMsgBarContent(){
+        if( Utils.isNonEmptyObject( this.state.semData ) ){
+            return (
+                <span> Seminar created. please <a href={ Utils.getSeminarForPUrl( this.state.semData.videoId )}> visit here </a> </span>
+            )
+        }
+    }
+
     render(){
         return(
             <div className="seminar-create-page">
@@ -149,28 +195,23 @@ class Seminar extends Component {
                     <div className="seminar-create-container">
                         <TextField
                             hintText="Title"
-                            errorText="Please provide title for seminar"
-                            floatingLabelText="Title"
+                            errorText={this.state.titleErrorText}
                             type="text"
                             onChange={this.handleTitleChange.bind(this)}
                             value={this.state.title}
+                            onBlur={this.onTitleBlur}
                         /><br />
                         <TextField
                             hintText="Description"
-                            errorText="Please provide description for seminar"
-                            floatingLabelText="Description"
+                            errorText={this.state.descErrorText}
                             type="text"
                             onChange={this.handleDescriptionChange.bind(this)}
                             value={this.state.description}
+                            multiLine={true}
+                            onBlur={this.onDescBlur}
                         /><br />
-                        <TextField
-                            hintText="Tags"
-                            errorText="Please provide tags for seminar"
-                            floatingLabelText="tags"
-                            type="text"
-                            onChange={this.handleTagsChange.bind(this)}
-                            value={this.state.tags}
-                        /><br />
+                        <TagBox getSelectedTags={(q)=>this.getSelectedTags(q)}/><br/>
+                        <br />
                         <DatePicker onChange={this.handleStartDate.bind(this)} value ={this.state.startDate} hintText="Seminar start date" />
                         <TimePicker onChange={this.handleStartTime.bind(this)} value={this.state.startTime} hintText="Seminar start time" /><br />
                         <DatePicker onChange={this.handleEndDate.bind(this)} value ={this.state.endDate} hintText="Seminar end date" />
@@ -183,7 +224,6 @@ class Seminar extends Component {
                         <Dialog
                             title=""
                             actions={null}
-                            modal={true}
                             open={this.state.showPickQuestDialog}
                             onRequestClose={this.hidePickQuestionsDialog}
                             autoScrollBodyContent={true}
@@ -198,6 +238,9 @@ class Seminar extends Component {
                         <FlatButton className="landing-btn" label="Create Seminar" primary={true}
                                     backgroundColor={'#4ebcd5'}  style={{color:'#ffffff'}} onClick={this.handleSubmit.bind(this)}
                                     target="_blank"/>
+                    </div>
+                    <div className="msg-bar">
+                        {this.getMsgBarContent()}
                     </div>
                 </div>
             </div>

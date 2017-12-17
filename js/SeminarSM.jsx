@@ -328,6 +328,7 @@ class SeminarSM extends Component {
 
 
 }
+/*
 
 const mapStateToProps = (state) =>({showDialog:state.login.showDialog,email:state.login.email,password:state.login.password});
 const mapDispatchToProps = (dispatch)=>({
@@ -343,4 +344,6 @@ const mapDispatchToProps = (dispatch)=>({
 
 })
 
-export default connect(mapStateToProps,mapDispatchToProps)( withCookies( SeminarSM ) )
+export default connect(mapStateToProps,mapDispatchToProps)( withCookies( SeminarSM ) )*/
+
+export default withCookies( SeminarSM );
