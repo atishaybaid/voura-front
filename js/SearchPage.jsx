@@ -21,7 +21,7 @@ class SearchPage extends Component {
                     <SearchSeminars />
                 </Tab>
                 <Tab label="Search Videos">
-                    <SearchVideos />
+                    <SearchVideos showSearchInputForm={true}/>
                 </Tab>
             </Tabs>
         );

@@ -8,16 +8,17 @@ import UserCard from './UserCard';
 
 class SearchVideos extends Component {
     constructor(props) {
-        super();
+        super( props );
         this.state = {
-            selectedTags : [],
-            question : "",
+            selectedTags : this.props.selectedTags ? this.props.selectedTags : [],
+            question : this.props.question ? this.props.question : '',
             resultVideos: []
         }
         this.getSelectedTags = this.getSelectedTags.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.generateVideosList = this.generateVideosList.bind(this);
         this.questionChange = this.questionChange.bind(this);
+        this.generateInputFields = this.generateInputFields.bind(this);
     }
 
     componentDidMount(){
@@ -25,7 +26,19 @@ class SearchVideos extends Component {
         var dummy = [ { "tags": [ "mongodb", "redis" ], "videoIds": [], "question": "xyz", "user": "4", "answered": false, "time": "-1", "createdAt": 1511698969634, "upvote": 0, "downvote": 0, "id": "r1fQMNßgf" }, { "tags": [ "mongodb", "redis" ], "videoIds": [ "ryGv1fJlG" ], "question": "xyz", "user": "4", "answered": false, "time": "-1", "createdAt": 1511877211440, "upvote": 5, "downvote": 1, "id": "HkQP9yjgM" }, { "tags": [ "mongodb", "redis" ], "videoIds": [ "ryGv1fJlG" ], "question": "xyz", "user": "4", "answered": false, "time": "-1", "createdAt": 1511699100603, "upvote": 0, "downvote": 0, "id": "BJriGEOef" } ];
 
         this.setState({ resultVideos: dummy } );
-*/
+*//*
+        if( !Utils.isEmpty( this.props.question ) || Utils.isNonEmptyArray( this.props.selectedTags ) ){
+            this.setState( { question: this.props.question, selectedTags: this.props.selectedTags } );
+            this.handleSubmit();
+        }*/
+
+        if( !this.props.showSearchInputForm )
+            this.props.onRef(this)
+    }
+
+    componentWillUnmount() {
+        if( !this.props.showSearchInputForm )
+            this.props.onRef(undefined)
     }
 
     getSelectedTags( tags ){
@@ -148,9 +161,9 @@ class SearchVideos extends Component {
         return vidList;
     }
 
-    render(){
-        return (
-            <div className="">
+    generateInputFields(){
+        if( !Utils.isEmpty(this.props.showSearchInputForm ) ) {
+            return (
                 <div className="inputBox">
                     <TagBox getSelectedTags={(q)=>this.getSelectedTags(q)}/>
                     <TextField
@@ -162,10 +175,20 @@ class SearchVideos extends Component {
                         value={this.state.question}
                     /><br />
                     <FlatButton className="search-btn" label="Search videos" primary={true}
-                                backgroundColor={'#4ebcd5'}  style={{color:'#ffffff'}} onClick={this.handleSubmit}
+                                backgroundColor={'#4ebcd5'} style={{color:'#ffffff'}} onClick={this.handleSubmit}
                                 target="_blank"/>
 
                 </div>
+            );
+        }else {
+            return (null);
+        }
+    }
+
+    render(){
+        return (
+            <div className="">
+                {this.generateInputFields()}
                 <div className="outBox">
                     {this.generateVideosList()}
                 </div>

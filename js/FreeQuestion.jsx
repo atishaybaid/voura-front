@@ -6,6 +6,7 @@ import TextField from 'material-ui/TextField';
 import iVConfigs from '../Configs/local.json';
 import requests from './utils/requests';
 import TagBox from './TagBox';
+import SearchVideos from './SearchVideos';
 
 import { withCookies, Cookies } from 'react-cookie';
 
@@ -17,7 +18,8 @@ class FreeQuestion extends Component {
             qTitle: '',
             qDesc: '',
             tags: [],
-            selectedTag: []
+            selectedTag: [],
+            searchedAlready: false
         }
         this.handleAskQuestion = this.handleAskQuestion.bind(this);
         this.qTitleChange = this.qTitleChange.bind(this);
@@ -50,24 +52,31 @@ class FreeQuestion extends Component {
 
     }
 */
-    handleAskQuestion(){
-        const { cookies } = this.props;
+    handleAskQuestion() {
+
+        if (!this.state.searchedAlready) {
+            this.child.handleSubmit();
+            this.setState({searchedAlready: true});
+        } else {
+
+            const {cookies} = this.props;
 
 //        const userId = cookies.get('userId');
 
-        let data = {
-            question: this.state.qTitle,
-            desc: this.state.qDesc,
+            let data = {
+                question: this.state.qTitle,
+                desc: this.state.qDesc,
 //            user : userId,
-            tags: this.state.selectedTag
-        }
+                tags: this.state.selectedTag
+            }
 
-        var that = this;
-        requests.saveQuestion( data )
-            .then( function ( resolve ) {
-                console.log('question saved' + resolve);
-            }, function ( reject ) {
-            });
+            var that = this;
+            requests.saveQuestion(data)
+                .then(function (resolve) {
+                    console.log('question saved' + resolve);
+                }, function (reject) {
+                });
+        }
     }
 /*
     renderChips(){
@@ -112,6 +121,7 @@ class FreeQuestion extends Component {
                 /><br/>
                 <TagBox getSelectedTags={(q)=>this.getSelectedTags(q)}/><br/>
                 <FlatButton className="control-btn" label='ask' primary={true} backgroundColor={'#4ebcd5'}  style={{color:'#ffffff'}} onClick={this.handleAskQuestion} target="_blank"/>
+                <SearchVideos selectedTags={this.state.selectedTag} question={this.state.qTitle} showSearchInputForm={false} onRef={ref => (this.child = ref)}/>
             </div>
         )
     }
