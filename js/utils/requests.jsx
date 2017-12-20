@@ -6,7 +6,7 @@ function getUserInfo( userId ){
     var that = this, path;
 
     if( userId )
-        path ='users/getuser/?id='+userId;
+        path ='users/public/getuser/?id='+userId;
     else
         path ='users/getuser';
 
@@ -20,7 +20,8 @@ function getUserInfo( userId ){
 
 function fetchSeminarData( data ){
     var videoId = data.videoId;
-    var path ='seminar/?videoId='+videoId;
+    //var path ='seminar/?videoId='+videoId;
+    var path ='seminar/public/?videoId='+videoId;
     var that = this;
     var promise = new Promise( function ( resolve, reject ) {
         GetReq( path, iVConfigs.common.baseUrl )
@@ -33,7 +34,7 @@ function fetchSeminarData( data ){
 function searchQuestionsByTag( data ){
 
     var promise = new Promise( function ( resolve, reject ) {
-        GetReq(`questions/questionbytag?tags=${data.searchedTag}&page=${data.page}&limit=${data.limitPerPage}`, iVConfigs.tags.url)
+        GetReq(`questions/public/questionbytag?tags=${data.searchedTag}&page=${data.page}&limit=${data.limitPerPage}`, iVConfigs.tags.url)
             .then( _responseHandler( resolve, reject ) )
             .catch( _catchHandler() );
     });
@@ -42,8 +43,11 @@ function searchQuestionsByTag( data ){
 
 function _responseHandler( resolve, reject ) {
     var f = function(response) {
-        if( response.status == 400 ) {
+        if( response.data.status == 401 ) {
             //redirect to login page
+            console.log('got 401 for below');
+            console.log( response );
+            //window.location.href = '/';
         } else if (response.status == 200 && response.data.status == 'SUCCESS') {
             if( Utils.isEmpty( response.data ) ){
                 resolve( true );
@@ -86,7 +90,8 @@ function signup( data ) {
 }
 function fetchTags( searchText ) {
 
-    var path = `users/suggestions/tag?t=${searchText}`;
+    //var path = `users/suggestions/tag?t=${searchText}`;
+    var path = `users/public/suggestions/tag?t=${searchText}`;
     var promise = new Promise( function ( resolve, reject ) {
         GetReq( path, iVConfigs.tags.url )
             .then( _responseHandler( resolve, reject ) )
@@ -134,7 +139,7 @@ function getVideoSearch( data ){
 function getUsersInfo( userIds ){
     var that = this, path;
 
-    path ='users/getusers/?id='+userIds;
+    //path ='users/getusers/?id='+userIds;
 
     var promise = new Promise( function ( resolve, reject ) {
         GetReq( path, iVConfigs.tags.url )
@@ -247,7 +252,8 @@ function completeSeminar( data ) {
 }
 
 function voteCountForQuestions( data ) {
-    var path ='questions/votecount/';
+    //var path ='questions/votecount/';
+    var path ='questions/public/votecount/';
     var promise = new Promise( function ( resolve, reject ) {
         PostReq(path, data)
             .then( _responseHandler( resolve, reject ) )
@@ -257,7 +263,8 @@ function voteCountForQuestions( data ) {
 }
 
 function getQuestionsForVideo( data ) {
-    var path ='questions/find/?videoid='+data.videoId;
+    //var path ='questions/find/?videoid='+data.videoId;
+    var path ='questions/public/find/?videoid='+data.videoId;
     var promise = new Promise( function ( resolve, reject ) {
         GetReq( path, iVConfigs.common.baseUrl )
             .then( _responseHandler( resolve, reject ) )
@@ -277,7 +284,8 @@ function voteQuestion( data ) {
 }
 
 function getVideoData( videoId ) {
-    var path ='video/show/'+videoId;
+    //var path ='video/show/'+videoId;
+    var path ='video/public/show/'+videoId;
     var promise = new Promise( function ( resolve, reject ) {
         GetReq( path, iVConfigs.common.baseUrl )
             .then( _responseHandler( resolve, reject ) )

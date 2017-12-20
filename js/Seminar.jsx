@@ -115,7 +115,7 @@ class Seminar extends Component {
         var selectedFreeQuestsIds = Utils.getSelectedQuestionsIds( this.state.freeQuests );
         let data = {
             "requestee": userId,
-            "bTags": iVCommonUtils.getArrFromStr( this.state.tags ),
+            "bTags": this.state.tags ,
             "bTitle": this.state.title,
             "bDescription" : this.state.description,
             "bStartDateTime": iVCommonUtils.mergeDateTime( this.state.startDate, this.state.startTime ),

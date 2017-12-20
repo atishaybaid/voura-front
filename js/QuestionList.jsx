@@ -61,7 +61,7 @@ class QuestionList extends Component {
     }
 
     handleTagSelected(chosenTag){
-        this.setState({searchedTag:chosenTag.Name})
+        this.setState({searchedTag:chosenTag})
         //@todo hit api to fetch questions with this tag and set state of question list
         var that = this;
         //GetReq("users/tags", iVConfigs.common.baseUrl )

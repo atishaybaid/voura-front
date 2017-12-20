@@ -21,6 +21,11 @@ class SearchVideos extends Component {
         this.generateInputFields = this.generateInputFields.bind(this);
     }
 
+    componentWillReceiveProps(nextProps) {
+        this.setState({ question: nextProps.question, selectedTags: nextProps.selectedTags });
+    }
+
+
     componentDidMount(){
 /*
         var dummy = [ { "tags": [ "mongodb", "redis" ], "videoIds": [], "question": "xyz", "user": "4", "answered": false, "time": "-1", "createdAt": 1511698969634, "upvote": 0, "downvote": 0, "id": "r1fQMNßgf" }, { "tags": [ "mongodb", "redis" ], "videoIds": [ "ryGv1fJlG" ], "question": "xyz", "user": "4", "answered": false, "time": "-1", "createdAt": 1511877211440, "upvote": 5, "downvote": 1, "id": "HkQP9yjgM" }, { "tags": [ "mongodb", "redis" ], "videoIds": [ "ryGv1fJlG" ], "question": "xyz", "user": "4", "answered": false, "time": "-1", "createdAt": 1511699100603, "upvote": 0, "downvote": 0, "id": "BJriGEOef" } ];
@@ -186,6 +191,7 @@ class SearchVideos extends Component {
     }
 
     render(){
+
         return (
             <div className="">
                 {this.generateInputFields()}

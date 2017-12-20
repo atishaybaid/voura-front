@@ -29,13 +29,13 @@ class HorNav extends Component {
 
     handleHomeClick(){
         window.location.href = '/';
-        //this.history.push('/my-new-location');
+        this.history.push('/my-new-location');
     }
 
     handleCreateSemClick(){
-        //this.props.history.push('/seminar/create');
+        this.props.history.push('/seminar/create');
         //browserHistory.push( '/seminar/create' );
-        window.location.href = '/seminar/create';
+        //window.location.href = '/seminar/create';
         //this.context.router.transitionTo( '/seminar/create' );
         //transitionTo('/seminar/create');
     }
