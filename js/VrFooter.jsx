@@ -7,7 +7,7 @@ import '../less/common.less';
 
 const VrFooter = (props)=>{
 
-    return(<div className="app-footer">
+    return(<div className="app-footer container">
             <BottomHorNav/>
         </div>
     )

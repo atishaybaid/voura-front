@@ -159,11 +159,21 @@ class SearchSeminars extends Component {
         return (
             <div className="">
                 <div className="inputBox">
+                    <div className="mt-md-2" >
                     <TagBox getSelectedTags={(q)=>this.getSelectedTags(q)}/>
+                        </div>
+                    <div className="row">
+                        <div className="col-md-10">
                     <FromToDateTime showStartDate="true" showEndDate="true" updateDateTime={(q)=>this.getSelectedDateTime(q)} />
+                        </div>
+                     </div>
+                    <div className="row">
+                        <div className="col-md-6">
                     <FlatButton className="search-btn" label="Search Seminars" primary={true}
                                 backgroundColor={'#4ebcd5'}  style={{color:'#ffffff'}} onClick={this.handleSubmit}
                                 target="_blank"/>
+                            </div>
+                        </div>
 
                  </div>
                 <div className="outBox">

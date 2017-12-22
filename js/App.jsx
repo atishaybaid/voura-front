@@ -48,7 +48,7 @@ const App = ()=>(
                         <Route path="/notifications" component={Notifications} />
                         <Route path="/search" component={SearchPage} />
                     </Switch>
-
+                    <VrFooter />
                 </div>
             </MuiThemeProvider>
         </Provider>

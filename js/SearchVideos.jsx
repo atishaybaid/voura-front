@@ -170,19 +170,25 @@ class SearchVideos extends Component {
         if( !Utils.isEmpty(this.props.showSearchInputForm ) ) {
             return (
                 <div className="inputBox">
+                    <div className="mt-md-2" >
                     <TagBox getSelectedTags={(q)=>this.getSelectedTags(q)}/>
+                        </div>
+                    <div className="col-md-10">
                     <TextField
                         hintText="question"
-                        errorText="Please provide question"
-                        floatingLabelText="Search by question"
                         type="text"
                         onChange={this.questionChange}
                         value={this.state.question}
-                    /><br />
+                        fullWidth={true}
+                    />
+                        </div>
+                    <div className="row">
+                        <div className="col-md-6">
                     <FlatButton className="search-btn" label="Search videos" primary={true}
                                 backgroundColor={'#4ebcd5'} style={{color:'#ffffff'}} onClick={this.handleSubmit}
                                 target="_blank"/>
-
+                            </div>
+                    </div>
                 </div>
             );
         }else {

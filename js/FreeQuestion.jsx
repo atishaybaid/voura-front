@@ -103,24 +103,33 @@ class FreeQuestion extends Component {
 
     render() {
         return (
-            <div className="Question-page">
+            <div className="question-page container">
+                <div className="row col-md-10">
                 <TextField
                     hintText="Type a question"
-                    errorText="Please provide title for seminar"
+                    errorText="Type a question"
                     type="text"
                     onChange={this.qTitleChange}
                     value={this.state.qTitle}
                     multiLine={true}
-                /><br/>
+                    fullWidth={true}
+                />
+                </div>
+                <div className="row col-md-10">
                 <TextField
                     hintText="Type question description"
                     type="text"
                     onChange={this.qDescChange}
                     value={this.state.qDesc}
                     multiLine={true}
-                /><br/>
-                <TagBox getSelectedTags={(q)=>this.getSelectedTags(q)}/><br/>
+                    fullWidth={true}
+                />
+                    </div>
+
+                <TagBox getSelectedTags={(q)=>this.getSelectedTags(q)}/>
+                <div className="row col-md-1">
                 <FlatButton className="control-btn" label='ask' primary={true} backgroundColor={'#4ebcd5'}  style={{color:'#ffffff'}} onClick={this.handleAskQuestion} target="_blank"/>
+                    </div>
                 <SearchVideos selectedTags={this.state.selectedTag} question={this.state.qTitle} showSearchInputForm={false} onRef={ref => (this.child = ref)}/>
             </div>
         )

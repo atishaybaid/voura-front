@@ -288,7 +288,7 @@ class SeminarSM extends Component {
 
     render(){
         return (
-            <div className="seminarSM-page">
+            <div className="seminarSM-page container">
                 <div className="main-container">
                     <div className="prof-desc col-sm-12">
                         {this.generateProfileDesc()}

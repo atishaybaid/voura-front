@@ -13,6 +13,7 @@ class SearchPage extends Component {
 
     render(){
         return (
+            <div className="container">
             <Tabs>
                 <Tab label="Search Professionals" >
                     <SearchPeople />
@@ -24,6 +25,7 @@ class SearchPage extends Component {
                     <SearchVideos showSearchInputForm={true}/>
                 </Tab>
             </Tabs>
+                </div>
         );
     }
 

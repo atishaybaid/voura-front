@@ -91,7 +91,12 @@ class QuestionList extends Component {
         this.setState({questionList:qList});
     }
 
-
+    addQuestionAfterListClick( index, event ){
+        let qList = this.state.questionList;
+        var newState = !qList[index].selected;
+        qList[index].selected = newState;
+        this.setState({questionList:qList});
+    }
 
     generateQuesList(){
         //console.log( this.state.questionList );
@@ -100,13 +105,9 @@ class QuestionList extends Component {
         if( Utils.isNonEmptyArray( this.state.questionList ) ) {
             var quesList = this.state.questionList.map(function (item, index) {
                 return <div key={`selectedQuest.quest_${index}`}>
-                    <ListItem primaryText={item.question}/>
-                    <Checkbox
-                        label="Add to seminar"
-                        checked={ item.selected }
+                    <ListItem primaryText={item.question} onClick={that.addQuestionAfterListClick.bind(that, index)} leftCheckbox={<Checkbox checked={ item.selected }
                         onCheck={that.addQuestion.bind(that, index)}
-                        style={{marginBottom: 16}}
-                    />
+                        style={{marginBottom: 16}} />} />
                     <hr className="hr-primary"/>
                 </div>
             })
@@ -141,10 +142,9 @@ class QuestionList extends Component {
                     onUpdateInput={this.fetchTags}
                 />
                 <FlatButton className="control-btn" label='Search' primary={true} backgroundColor={'#4ebcd5'}  style={{color:'#ffffff'}} onClick={this.search} target="_blank"/>
-                <br/>
                 <div className="Question-list">
                     <List>
-                        <Subheader>Add questions to seminar</Subheader>
+                        <Subheader>Select questions below to add to seminar</Subheader>
                         {this.generateQuesList()}
                     </List>
                 </div><br/>

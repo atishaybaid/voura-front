@@ -48,6 +48,7 @@ class Seminar extends Component {
         this.onTitleBlur = this.onTitleBlur.bind(this);
         this.onDescBlur = this.onDescBlur.bind(this);
         this.getMsgBarContent = this.getMsgBarContent.bind(this);
+        this.addRemoveQuestionAfterListClick = this.addRemoveQuestionAfterListClick.bind(this);
     };
 
     pickQuestions( quests ){
@@ -141,6 +142,13 @@ class Seminar extends Component {
         this.setState({ showPickQuestDialog: false });
     }
 
+    addRemoveQuestionAfterListClick(){
+        let qList = this.state.freeQuests;
+        var newState = !qList[index].selected;
+        qList[index].selected = newState;
+        this.setState({freeQuests:qList});
+    }
+
     addRemoveQuestion( index, event, checked ){
         let qList = this.state.freeQuests;
         qList[index].selected = checked;
@@ -154,13 +162,9 @@ class Seminar extends Component {
         if( Utils.isNonEmptyArray( this.state.freeQuests )  ) {
             var quesList = this.state.freeQuests.map(function (item, index) {
                 return <div key={`selectedQuest.quest_${index}`}>
-                    <ListItem primaryText={item.question}/>
-                    <Checkbox
-                        label="Add to seminar"
-                        checked={ item.selected }
+                    <ListItem primaryText={item.question} onClick={that.addRemoveQuestionAfterListClick.bind(that, index)} leftCheckbox={<Checkbox checked={ item.selected }
                         onCheck={that.addRemoveQuestion.bind(that, index)}
-                        style={{marginBottom: 16}}
-                    />
+                        style={{marginBottom: 16}} />}/>
                     <hr className="hr-primary"/>
                 </div>
             })
@@ -182,7 +186,7 @@ class Seminar extends Component {
     getMsgBarContent(){
         if( Utils.isNonEmptyObject( this.state.semData ) ){
             return (
-                <span> Seminar created. please <a href={ Utils.getSeminarForPUrl( this.state.semData.videoId )}> visit here </a> </span>
+                <span className="highlight"> Seminar created. please <a href={ Utils.getSeminarForPUrl( this.state.semData.videoId )}> visit here </a> </span>
             )
         }
     }
@@ -190,9 +194,10 @@ class Seminar extends Component {
     render(){
         return(
             <div className="seminar-create-page">
-                <div className="main-container">
-
+                <div className="main-container container">
                     <div className="seminar-create-container">
+                        <div className="row">
+                            <div className="col-md-10">
                         <TextField
                             hintText="Title"
                             errorText={this.state.titleErrorText}
@@ -200,7 +205,12 @@ class Seminar extends Component {
                             onChange={this.handleTitleChange.bind(this)}
                             value={this.state.title}
                             onBlur={this.onTitleBlur}
-                        /><br />
+                            fullWidth={true}
+                        />
+                                </div>
+                            </div>
+                        <div className="row">
+                            <div className="col-md-10">
                         <TextField
                             hintText="Description"
                             errorText={this.state.descErrorText}
@@ -208,19 +218,42 @@ class Seminar extends Component {
                             onChange={this.handleDescriptionChange.bind(this)}
                             value={this.state.description}
                             multiLine={true}
+                            rows={2}
                             onBlur={this.onDescBlur}
-                        /><br />
+                            fullWidth={true}
+                        />
+                                </div>
+                            </div>
                         <TagBox getSelectedTags={(q)=>this.getSelectedTags(q)}/><br/>
-                        <br />
+                        <div className="row">
+                            <div className="col-md-3">
+                                <span className="h4"> seminar start date-time</span>
+                                </div>
+                            <div className="col-md-2">
                         <DatePicker onChange={this.handleStartDate.bind(this)} value ={this.state.startDate} hintText="Seminar start date" />
-                        <TimePicker onChange={this.handleStartTime.bind(this)} value={this.state.startTime} hintText="Seminar start time" /><br />
+                                </div>
+                            <div className="col-md-2 col-md-offset-1">
+                        <TimePicker onChange={this.handleStartTime.bind(this)} value={this.state.startTime} hintText="Seminar start time" />
+                                </div>
+                            </div>
+                        <div className="row">
+                            <div className="col-md-3">
+                                <span className="h4"> seminar end date time</span>
+                            </div>
+                            <div className="col-md-2">
                         <DatePicker onChange={this.handleEndDate.bind(this)} value ={this.state.endDate} hintText="Seminar end date" />
-                        <TimePicker onChange={this.handleEndTime.bind(this)} value={this.state.endTime} hintText="Seminar end time" /><br />
-
+                                </div>
+                            <div className="col-md-2 col-md-offset-1">
+                        <TimePicker onChange={this.handleEndTime.bind(this)} value={this.state.endTime} hintText="Seminar end time" />
+                                </div>
+                         </div>
+                        <div className="row">
+                            <div className="col-md-6">
                         <FlatButton className="landing-btn" label="Pick questions for seminar" primary={true}
                                     backgroundColor={'#4ebcd5'}  style={{color:'#ffffff'}} onClick={this.showPickQuestionsDialog}
                                     target="_blank"/>
-
+                                </div>
+                        </div>
                         <Dialog
                             title=""
                             actions={null}
@@ -231,17 +264,23 @@ class Seminar extends Component {
                         <QuestionList pickQuestion={(q)=>this.pickQuestions(q)}></QuestionList>
                         </Dialog>
                         <List>
-                            <Subheader>{this.getSubheaderText()}</Subheader>
+                            <div className="highlight">{this.getSubheaderText()}</div>
                             {this.showSelectedQuesList()}
                         </List>
 
+                        <div className="row">
+                            <div className="col-md-6">
                         <FlatButton className="landing-btn" label="Create Seminar" primary={true}
                                     backgroundColor={'#4ebcd5'}  style={{color:'#ffffff'}} onClick={this.handleSubmit.bind(this)}
                                     target="_blank"/>
+                                </div>
                     </div>
+                        </div>
+                    <div className="row">
                     <div className="msg-bar">
                         {this.getMsgBarContent()}
                     </div>
+                        </div>
                 </div>
             </div>
         )

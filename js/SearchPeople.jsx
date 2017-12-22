@@ -70,19 +70,27 @@ class SearchPeople extends Component {
         return (
             <div className="">
                 <div className="inputBox">
+                    <div className="mt-md-2" >
                     <TagBox getSelectedTags={(q)=>this.getSelectedTags(q)}/>
-                    {this.state.selectedTags}
+                    </div>
+                    <div className="row">
+                        <div className="col-md-10">
                     <TextField
                         hintText="person name"
-                        errorText="Please provide person's name"
-                        floatingLabelText="Search by person name"
                         type="text"
                         onChange={this.nameChange}
                         value={this.state.personName}
-                    /><br />
+                        fullWidth={true}
+                    />
+                            </div>
+                        </div>
+                    <div className="row">
+                        <div className="col-md-6">
                     <FlatButton className="search-btn" label="Search People" primary={true}
                                 backgroundColor={'#4ebcd5'}  style={{color:'#ffffff'}} onClick={this.handleSubmit}
                                 target="_blank"/>
+                            </div>
+                        </div>
                 </div>
                 <div className="outBox">
                     {this.generatePeopleList()}

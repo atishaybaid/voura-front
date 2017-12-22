@@ -5,6 +5,16 @@ import iVConfigs from '../Configs/local.json';
 import FlatButton from 'material-ui/FlatButton';
 import requests from './utils/requests';
 
+const styles = {
+    chip: {
+        margin: 4,
+    },
+    wrapper: {
+        display: 'flex',
+        flexWrap: 'wrap',
+    },
+};
+
 // pass selectedTag in props.getSelectedTags
 class TagBox extends Component {
     constructor(props) {
@@ -37,7 +47,7 @@ class TagBox extends Component {
     }
 
     renderChips(){
-        return  this.state.selectedTag.map((selectedTag,index)=>(<Chip key={`selectedTag.tag_${index}`} onRequestDelete={() => this.handleRequestDelete(selectedTag,index)}>
+        return  this.state.selectedTag.map((selectedTag,index)=>(<Chip style={styles.chip} key={`selectedTag.tag_${index}`} onRequestDelete={() => this.handleRequestDelete(selectedTag,index)}>
                 {selectedTag}
             </Chip>)
 
@@ -65,6 +75,8 @@ class TagBox extends Component {
     render(){
         return (
             <div className="tagbox">
+                <div className="row">
+                    <div className="col-md-10">
                 <AutoComplete
                     hintText="Search Tags"
                     dataSource={this.state.tags}
@@ -73,10 +85,14 @@ class TagBox extends Component {
                     onNewRequest={this.handleTagSelected}
                     onUpdateInput={this.fetchTags}
                     searchText={this.state.inputText}
+                    fullWidth={true}
                 />
+                        </div>
+                    <div className="col-md-2">
                 <FlatButton className="control-btn" label='Add tag' primary={true} backgroundColor={'#4ebcd5'}  style={{color:'#ffffff'}} onClick={this.addToChip} target="_blank"/>
-                <br/>
-                <div className="selected-tags">
+                        </div>
+                </div>
+                <div className="selected-tags row" style={styles.wrapper}>
                     {this.renderChips()}
                 </div><br/>
             </div>
