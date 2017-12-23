@@ -16,7 +16,7 @@
     "less": "^2.7.3",
     "less-loader": "^4.0.5",
     "material-datetime-picker": "^2.4.0",
-    "material-ui": "^0.19.4",
+    "material-ui": "^0.20.1",
     "material-ui-icons": "^1.0.0-beta.17",
     "path": "^0.12.7",
     "react": "^16.0.0",

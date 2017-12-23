@@ -40,34 +40,39 @@ class LoginPopup extends Component {
                 />
 
              <Dialog
-                title=""
-                actions={null}
-                modal={true}
+                title="Login into interlverse"
+                modal={false}
                 open={this.props.showDialog}
-               
+                autoScrollBodyContent={true}
                 >
                 <div className="login-container">
-                    <h1 className="heading">Login</h1>
+                    <div className="row">
+                        <div className="col-md-10">
                     <TextField
                         hintText="Email"
-                        floatingLabelText="Email"
-                        floatingLabelFixed={true}
                         type="email"
                         onChange={this.props.handleEmailChange}
                         value={this.props.email}
-                    /><br />
-        
+                        fullWidth={true}
+                    />
+                    </div>
+                        </div>
+                    <div className="row">
+                        <div className="col-md-10">
                     <TextField
                     hintText="Password"
-                    floatingLabelText="Password"
-                    floatingLabelFixed={true}
                     type="password"
                     onChange={this.props.handlePasswordChange}
                     value={this.props.password}
-
-                    /><br />
+                    fullWidth={true}
+                    />
+                            </div>
+                        </div>
+                    <div className="row">
+                        <div className="col-md-6">
                     <FlatButton label="Submit" onClick={this.handleSubmit}/>
-
+                        </div>
+                        </div>
                 </div>
                
                 </Dialog>

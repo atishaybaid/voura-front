@@ -23,6 +23,11 @@ import VideoShow from './VideoShow.jsx';
 import VrHeader from './VrHeader.jsx';
 import VrFooter from './VrFooter.jsx';
 import SearchPage from './SearchPage';
+import AboutPage from './page/about';
+import PrivacyPage from './page/privacy';
+import TermsPage from './page/terms';
+import ContactUsPage from './page/contact';
+import FourOhFourPage from './page/404'
 
 const App = ()=>(
 
@@ -47,6 +52,11 @@ const App = ()=>(
                         <Route path="/profile" component={Profile} />
                         <Route path="/notifications" component={Notifications} />
                         <Route path="/search" component={SearchPage} />
+                        <Route path="/about-us" component={AboutPage} />
+                        <Route path="/privacy" component={PrivacyPage} />
+                        <Route path="/terms" component={TermsPage} />
+                        <Route path="/contact-us" component={ContactUsPage} />
+                        <Route path='*' exact={true} component={FourOhFourPage} />
                     </Switch>
                     <VrFooter />
                 </div>

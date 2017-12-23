@@ -45,9 +45,14 @@ function _responseHandler( resolve, reject ) {
     var f = function(response) {
         if( response.data.status == 401 ) {
             //redirect to login page
-            console.log('got 401 for below');
-            console.log( response );
+            //console.log('got 401 for below');
+            //console.log( response );
             //window.location.href = '/';
+            document.body.innerHTML = 'This page requires you to be logged into intelverse. Redirecting you to login page. If automatic redirection fails, please <a href="/">click here</a>';
+            setTimeout(function () {
+                window.location.href = "/"; //will redirect to your blog page (an ex: blog.html)
+            }, 2000);   
+
         } else if (response.status == 200 && response.data.status == 'SUCCESS') {
             if( Utils.isEmpty( response.data ) ){
                 resolve( true );
