@@ -3,7 +3,7 @@ import FontIcon from 'material-ui/FontIcon';
 import HomeIcon from 'material-ui-icons/Home';
 import FlatButton from 'material-ui/FlatButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
-import SearchIcon from 'material-ui/svg-icons/action/search';
+    import SearchIcon from 'material-ui/svg-icons/action/search';
 import QAIcon from 'material-ui/svg-icons/action/question-answer';
 import NotiIcon from 'material-ui/svg-icons/social/notifications';
 import AccountIcon from 'material-ui/svg-icons/action/account-circle';

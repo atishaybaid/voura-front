@@ -20,8 +20,10 @@ import TagBox from './TagBox';
 class Seminar extends Component {
     constructor(props){
 
-        super();
+        super( props );
+        var videoId = window.location.pathname.match(/([^\/]*)\/*$/)[1];
         this.state ={
+            videoId: videoId,
             title:'',
             titleErrorText:'',
             description: '',
@@ -49,7 +51,64 @@ class Seminar extends Component {
         this.onDescBlur = this.onDescBlur.bind(this);
         this.getMsgBarContent = this.getMsgBarContent.bind(this);
         this.addRemoveQuestionAfterListClick = this.addRemoveQuestionAfterListClick.bind(this);
+        this.prepareState = this.prepareState.bind(this);
     };
+
+    getQuestions(){
+        let data = {
+            videoId: this.state.videoId
+        }
+        return requests.getQuestionsForVideo(data);
+    }
+
+    setQuestsAsSelected( quests ){
+
+        if( quests.length > 0 ){
+            quests.forEach( function( q ){
+                q.selected = true;
+            } );
+        }
+        return quests;
+    }
+
+    prepareState( allData ){
+        var quests = this.setQuestsAsSelected( allData[0] );
+        var semData = allData[1];
+        var event = allData[2];
+        this.setState({ title: event.title, description: event.description, tags: event.tags, startDate: event.startDate, startTime: event.startTime, endDate: event.endDate, endTime: event.endTime, freeQuests: quests, semData: semData});
+    }
+
+    componentDidMount() {
+        var that = this;
+        var semObj = {videoId: this.state.videoId};
+        if( this.state.videoId ) {
+            Promise.all([that.getQuestions(), requests.fetchSeminarData(semObj), /* fetchEventData*/])
+                .then(function (allData) {
+                    console.log(allData);
+                    allData[2] = {
+                        "_id" : "Bk3RJQigz",
+                        "videoId" : "B1lhRkXiez",
+                        "mType" : "SEMINAR",
+                        "mReq" : "MODERATE",
+                        "from" : 1511973023000,
+                        "to" : 1512063023000,
+                        "description" : "u2semdesc",
+                        "tags" : [
+                            "mongodb",
+                            "redis"
+                        ],
+                        "aTags" : [],
+                        "requestor" : 0,
+                        "requestee" : 2,
+                        "state" : "ACCEPTED",
+                        "createdAt" : 1511890899767,
+                        "updatedAt" : 1511890899767
+                    };
+                    that.prepareState(allData);
+                })
+        }
+
+    }
 
     pickQuestions( quests ){
 
@@ -133,7 +192,7 @@ class Seminar extends Component {
             });
 
     };
-
+    
     showPickQuestionsDialog(){
         this.setState({ showPickQuestDialog: true });
     }

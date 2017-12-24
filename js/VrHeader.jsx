@@ -11,7 +11,6 @@ class VrHeader extends Component {
 
     constructor(props) {
         super(props);
-        console.log(props);
         this.isMobile = this.isMobile.bind(this);
 
             if( this.isMobile() ){

@@ -28,6 +28,7 @@ import PrivacyPage from './page/privacy';
 import TermsPage from './page/terms';
 import ContactUsPage from './page/contact';
 import FourOhFourPage from './page/404'
+import EditProfile from './page/EditProfile';
 
 const App = ()=>(
 
@@ -42,6 +43,7 @@ const App = ()=>(
                             
                         }} />
 <Route  exact path="/seminar/create" component={Seminar} />
+<Route  exact path="/seminar/create/:semId" component={Seminar} />
 <Route  exact path="/seminar/PM/:semId" component={SeminarPM} />
 <Route  exact path="/seminar/SM/:semId" component={SeminarSM} />
 <Route  exact path="/add-question" component={FreeQuestion} />
@@ -49,6 +51,8 @@ const App = ()=>(
 <Route exact path="/videoshow/:videoId" component={VideoShow} />
                         <Route path="/home" component={UserHome} />
                         <Route path="/videoDetail/:id" component={videoDetail} />
+                        <Route path="/profile/edit/:id" component={EditProfile} />
+                        <Route path="/profile/:id" component={Profile} />
                         <Route path="/profile" component={Profile} />
                         <Route path="/notifications" component={Notifications} />
                         <Route path="/search" component={SearchPage} />

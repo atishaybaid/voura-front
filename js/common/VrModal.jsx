@@ -18,7 +18,7 @@ class VrModal extends Component{
                     title={this.title}
                     actions={null}
                     modal={false}
-                    open={true} 
+                    autoScrollBodyContent={true}
                 >
                    <div className="edit-profile">
                        <img src="images/profile.jpg" className="profile-image" alt=""  width="150px" height="150px" />
