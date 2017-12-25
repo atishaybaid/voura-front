@@ -13,7 +13,11 @@ const ClientApp = () =>(
 )
 
 
-ReactDom.render(<ClientApp />, document.getElementById('app'));
+if(typeof window !== 'undefined') {
+    ReactDom.render(<ClientApp />, document.getElementById('app'));
+}
+
+
 
 
 export default ClientApp;
