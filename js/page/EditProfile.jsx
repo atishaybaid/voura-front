@@ -7,6 +7,8 @@ import requests from '../utils/requests';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import AddEducation from '../components/AddEducation';
 import EducationList from '../components/EducationList';
+import AddExperience from '../components/AddExperience';
+import ExperienceList from '../components/ExperienceList';
 import Utils from '../utils/common.js';
 
 class EditProfile extends Component {
@@ -20,10 +22,14 @@ class EditProfile extends Component {
             description: "",
             tagline: "",
             tags: [],
+
             educations: [],
-            experiences: [],
             showAddEducationDialog: false,
-            eduItemToEdit: {}
+            eduItemToEdit: {},
+
+            experiences: [],
+            showAddExperienceDialog: false,
+            expItemToEdit: {}
         }
         // inc only below vars, don't decrement in case of deletion of item
         this.eduInx = 1; // used while adding/updating/listing of educations, be careful
@@ -39,6 +45,14 @@ class EditProfile extends Component {
         this.updateEducationItem = this.updateEducationItem.bind(this);
         this.showAddEducationDialog = this.showAddEducationDialog.bind(this);
         this.pickEduItemForEdit = this.pickEduItemForEdit.bind(this);
+
+        this.handleAddExperience = this.handleAddExperience.bind(this);
+        this.hideAddExperienceDialog = this.hideAddExperienceDialog.bind(this);
+        this.showAddExperienceDialog = this.showAddExperienceDialog.bind(this);
+        this._updateExperienceItem = this._updateExperienceItem.bind(this);
+        this.updateExperienceItem = this.updateExperienceItem.bind(this);
+        this.pickExpItemForEdit = this.pickExpItemForEdit.bind(this);
+        this.updateProfileInfo = this.updateProfileInfo.bind(this)
     }
 
 
@@ -57,6 +71,7 @@ class EditProfile extends Component {
     getSelectedTags( tags ){
         this.setState({ tags: tags });
     }
+
 
     handleAddEducation(){
         this.showAddEducationDialog();
@@ -94,6 +109,45 @@ class EditProfile extends Component {
 
     pickEduItemForEdit( item ){
         this.setState({eduItemToEdit:item, showAddEducationDialog: true});
+    }
+
+
+    handleAddExperience(){
+        this.showAddExperienceDialog();
+    }
+    hideAddExperienceDialog(){
+        this.setState({showAddExperienceDialog: false});
+    }
+    showAddExperienceDialog(){
+        this.setState({showAddExperienceDialog: true});
+    }
+
+    _updateExperienceItem( exps, expItem ){
+        var res = [];
+        exps.forEach( function ( item ) {
+            if( Utils.isNonEmptyObject( item ) && (item.index == expItem.index) ){
+                res.push( expItem );
+            } else {
+                res.push( item );
+            }
+        })
+        return res;
+    }
+
+    updateExperienceItem( expItem ){
+        var exps = this.state.experiences;
+        if( Utils.isEmpty( expItem.index ) ){
+            expItem.index = ++this.expInx;
+            exps.push( expItem );
+        } else {
+            exps = this._updateExperienceItem( exps, expItem );
+        }
+
+        this.setState({ experiences: exps, showAddExperienceDialog: false });
+    }
+
+    pickExpItemForEdit( item ){
+        this.setState({expItemToEdit:item, showAddExperienceDialog: true});
     }
 
     render(){
@@ -159,6 +213,43 @@ class EditProfile extends Component {
                         <EducationList eduList={this.state.educations} pickEduItemForEdit={(q)=>this.pickEduItemForEdit(q)}/>
 
 
+                    </div>
+                    <div className="experience-box">
+                        <div className="row">
+                            <div className="col-md-8">
+                                <span className="h3">Add experience</span>
+                            </div>
+                            <div className="col-md-4">
+                                <FlatButton
+                                    secondary={true}
+                                    icon={<ContentAdd />}
+                                    onClick={this.handleAddExperience}
+                                />
+                            </div>
+                        </div>
+                        <Dialog
+                            title="Add Experience"
+                            actions={null}
+                            open={this.state.showAddExperienceDialog}
+                            onRequestClose={this.hideAddExperienceDialog}
+                            autoScrollBodyContent={true}
+                        >
+                            <AddExperience updateExperienceItem={(q)=>this.updateExperienceItem(q)} expItem={this.state.expItemToEdit} />
+                        </Dialog>
+                        <ExperienceList expList={this.state.experiences} pickExpItemForEdit={(q)=>this.pickExpItemForEdit(q)}/>
+
+                    </div>
+                    <div className="submit-box">
+                        <div className="row">
+                            <div className="col-md-8">
+                                <FlatButton
+                                    label="Update Profile Info"
+                                    primary={true}
+                                    keyboardFocused={true}
+                                    onClick={this.updateProfileInfo}
+                                />
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

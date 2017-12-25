@@ -5,40 +5,36 @@ import DatePicker from 'material-ui/DatePicker';
 import Utils from '../utils/common.js';
 
 // update in incoming callback
-// this.props.updateEducationItem
-class AddEducation extends Component {
+// this.props.updateExperienceItem
+class AddExperience extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
             index: '',
-            school: '',
-            degree: '',
-            fieldOfStudy: '',
-            grade :'',
+            title: '',
+            company: '',
+            location: '',
             fromDate: new Date(),
             toDate: new Date()
         };
-        this.handleSchoolChange = this.handleSchoolChange.bind(this);
-        this.handleDegreeChange = this.handleDegreeChange.bind(this);
-        this.handleFieldOfStudyChange = this.handleFieldOfStudyChange.bind(this);
-        this.handleGradeChange = this.handleGradeChange.bind(this);
+        this.handleTitleChange = this.handleTitleChange.bind(this);
+        this.handleCompanyChange = this.handleCompanyChange.bind(this);
+        this.handleLocationChange = this.handleLocationChange.bind(this);
         this.handleFromDate = this.handleFromDate.bind(this);
         this.handleToDate = this.handleToDate.bind(this);
         this.updateParent = this.updateParent.bind(this);
-        this.addEducation = this.addEducation.bind(this);
+        this.addExperience = this.addExperience.bind(this);
 
-        //modal is not firing receive props, so putting in constructor itself
         var nextProps = props;
-        if( Utils.isNonEmptyObject( nextProps.eduItem ) ) {
+        if( Utils.isNonEmptyObject( nextProps.expItem ) ) {
             this.state = {
-                school: nextProps.eduItem.school,
-                degree: nextProps.eduItem.degree,
-                fieldOfStudy: nextProps.eduItem.fieldOfStudy,
-                grade: nextProps.eduItem.grade,
-                fromDate: nextProps.eduItem.fromDate,
-                toDate: nextProps.eduItem.toDate,
-                index: nextProps.eduItem.index
+                title: nextProps.expItem.title,
+                company: nextProps.expItem.company,
+                location: nextProps.expItem.location,
+                fromDate: nextProps.expItem.fromDate,
+                toDate: nextProps.expItem.toDate,
+                index: nextProps.expItem.index
             };
         }
 
@@ -46,13 +42,13 @@ class AddEducation extends Component {
 
 
     updateParent(){
-        if( this.props.updateEducationItem ){
+        if( this.props.updateExperienceItem ){
             var obj = this.state;
-            this.props.updateEducationItem( obj );
+            this.props.updateExperienceItem( obj );
         }
     }
 
-    addEducation(){
+    addExperience(){
         this.updateParent();
     }
 
@@ -64,22 +60,17 @@ class AddEducation extends Component {
         this.setState({toDate:newValue});
     }
 
-    handleSchoolChange(event,newValue){
-        this.setState({school:newValue});
+    handleTitleChange(event,newValue){
+        this.setState({title:newValue});
     }
 
-    handleDegreeChange(event,newValue){
-        this.setState({degree:newValue});
+    handleCompanyChange(event,newValue){
+        this.setState({company:newValue});
     }
 
-    handleFieldOfStudyChange(event,newValue){
-        this.setState({fieldOfStudy:newValue});
+    handleLocationChange(event,newValue){
+        this.setState({location:newValue});
     }
-
-    handleGradeChange(event,newValue){
-        this.setState({grade:newValue});
-    }
-
 
     componentWillMount(){
         console.log( this.state );
@@ -87,30 +78,18 @@ class AddEducation extends Component {
 
     //below is not getting fired by dialog box
     componentWillReceiveProps(nextProps) {
-
-        if( Utils.isNonEmptyObject( nextProps.eduItem ) ) {
-            this.setState({
-                school: nextProps.eduItem.school,
-                degree: nextProps.eduItem.degree,
-                fieldOfStudy: nextProps.eduItem.fieldOfStudy,
-                grade: nextProps.eduItem.grade,
-                fromDate: nextProps.eduItem.fromDate,
-                toDate: nextProps.eduItem.toDate,
-                index: nextProps.eduItem.index
-            });
-        }
     }
 
     render(){
         return(
-            <div className="add-edu">
+            <div className="add-exp">
                 <div className="row">
                     <div className="col-md-10">
                         <TextField
-                            hintText="school"
+                            hintText="title"
                             type="text"
-                            onChange={this.handleSchoolChange}
-                            value={this.state.school}
+                            onChange={this.handleTitleChange}
+                            value={this.state.title}
                             fullWidth={true}
                         />
                     </div>
@@ -118,10 +97,10 @@ class AddEducation extends Component {
                 <div className="row">
                     <div className="col-md-10">
                         <TextField
-                            hintText="Degree"
+                            hintText="company"
                             type="text"
-                            onChange={this.handleDegreeChange}
-                            value={this.state.degree}
+                            onChange={this.handleCompanyChange}
+                            value={this.state.company}
                             fullWidth={true}
                         />
                     </div>
@@ -129,21 +108,10 @@ class AddEducation extends Component {
                 <div className="row">
                     <div className="col-md-10">
                         <TextField
-                            hintText="Field of study"
+                            hintText="location"
                             type="text"
-                            onChange={this.handleFieldOfStudyChange}
-                            value={this.state.fieldOfStudy}
-                            fullWidth={true}
-                        />
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col-md-10">
-                        <TextField
-                            hintText="Grade( 1-10 )"
-                            type="text"
-                            onChange={this.handleGradeChange}
-                            value={this.state.grade}
+                            onChange={this.handleLocationChange}
+                            value={this.state.location}
                             fullWidth={true}
                         />
                     </div>
@@ -167,7 +135,7 @@ class AddEducation extends Component {
                         label="Update"
                         primary={true}
                         keyboardFocused={true}
-                        onClick={this.addEducation}
+                        onClick={this.addExperience}
                     />
                 </div>
             </div>
@@ -176,4 +144,4 @@ class AddEducation extends Component {
 
 }
 
-export default AddEducation;
+export default AddExperience;
