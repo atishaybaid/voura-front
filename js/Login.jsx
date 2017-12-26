@@ -14,7 +14,6 @@ import requests from './utils/requests';
 
 class LoginPopup extends Component {
     constructor(props){
-        console.log(props);
         super(props);
         this.handleSubmit = this.handleSubmit.bind(this);
     }

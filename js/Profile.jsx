@@ -8,8 +8,6 @@ import TextField from 'material-ui/TextField';
 import {toggleEditProfile,getProfileData} from './actionCreators.js';
 import {connect}  from 'react-redux';
 import '../less/Profile.less';
-
-
 import FollowButton from './FollowButton.jsx';
 
 class Profile extends Component{
@@ -44,8 +42,7 @@ class Profile extends Component{
         return(
             <div className="profile-page">
               <div className="profile-card">
-                
-               <VrModal title="Edit Profile"></VrModal>
+
                 <Card style={{'backgroundColor':'aliceblue','padding':'10px'}}>
                 <div className="profile-card-header">
                      <i className="fa fa-pencil edit-icon" onClick={this.props.handleEdit} aria-hidden="true"></i>

@@ -121,13 +121,13 @@ class AddExperience extends Component {
                         <span>From Date</span>
                     </div>
                     <div className="col-md-4">
-                        <DatePicker hintText="From Date" onChange={this.handleStartDate} value ={this.state.fromDate} openToYearSelection={true} />
+                        <DatePicker hintText="From Date" onChange={this.handleFromDate} value ={this.state.fromDate} openToYearSelection={true} />
                     </div>
                     <div className="col-md-2">
                         <span>To Date</span>
                     </div>
                     <div className="col-md-4">
-                        <DatePicker hintText="To Date" onChange={this.handleEndDate} value ={this.state.toDate}  openToYearSelection={true} />
+                        <DatePicker hintText="To Date" onChange={this.handleToDate} value ={this.state.toDate}  openToYearSelection={true} />
                     </div>
                 </div>
                 <div className="row">

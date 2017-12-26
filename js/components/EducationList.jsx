@@ -17,6 +17,7 @@ class EducationList extends Component {
         }
         this.generateEduList = this.generateEduList.bind(this);
         this.editEduItem = this.editEduItem.bind(this);
+        this.getRightIconButton = this.getRightIconButton.bind(this);
     }
 
     getSecondryText( item ){
@@ -37,6 +38,15 @@ class EducationList extends Component {
         this.setState({ eduList: nextProps.eduList });
     }
 
+    getRightIconButton( item ){
+        if( this.props.readonly ) {
+            return null
+        }else{
+            return <IconButton onClick={this.editEduItem.bind(this, item)}> <EditIcon /> </IconButton>
+        }
+
+    }
+
     generateEduList(){
         var that = this;
         var eduList = '';
@@ -45,7 +55,7 @@ class EducationList extends Component {
                 return <div key={`edu.item_${index}`}>
                     <ListItem
                         leftIcon={<CollegeIcon />}
-                        rightIconButton={<IconButton onClick={that.editEduItem.bind(that, item)}> <EditIcon /> </IconButton>}
+                        rightIconButton={ that.getRightIconButton(item) }
                         primaryText={that.getPrimaryText( item )}
                         secondaryText={that.getSecondryText( item )}
                         secondaryTextLines={2}

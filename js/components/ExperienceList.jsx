@@ -17,6 +17,7 @@ class ExperienceList extends Component {
         }
         this.generateExpList = this.generateExpList.bind(this);
         this.editExpItem = this.editExpItem.bind(this);
+        this.getRightIconButton = this.getRightIconButton.bind(this);
     }
 
     getSecondryText( item ){
@@ -37,6 +38,15 @@ class ExperienceList extends Component {
         this.setState({ expList: nextProps.expList });
     }
 
+    getRightIconButton( item ){
+        if( this.props.readonly ) {
+            return null
+        }else{
+            return <IconButton onClick={this.editExpItem.bind(this, item)}> <EditIcon /> </IconButton>
+        }
+
+    }
+
     generateExpList(){
         var that = this;
         var expList = '';
@@ -45,7 +55,7 @@ class ExperienceList extends Component {
                 return <div key={`exp.item_${index}`}>
                     <ListItem
                         leftIcon={<CollegeIcon />}
-                        rightIconButton={<IconButton onClick={that.editExpItem.bind(that, item)}> <EditIcon /> </IconButton>}
+                        rightIconButton={that.getRightIconButton(item)}
                         primaryText={that.getPrimaryText( item )}
                         secondaryText={that.getSecondryText( item )}
                         secondaryTextLines={2}

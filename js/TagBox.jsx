@@ -4,6 +4,7 @@ import Chip from 'material-ui/Chip';
 import iVConfigs from '../Configs/local.json';
 import FlatButton from 'material-ui/FlatButton';
 import requests from './utils/requests';
+import Utils from './utils/common.js';
 
 const styles = {
     chip: {
@@ -15,20 +16,29 @@ const styles = {
     },
 };
 
-// pass selectedTag in props.getSelectedTags
+// tags for initial props
+// pass selectedTag in props.getSelectedTags to parent
 class TagBox extends Component {
     constructor(props) {
-        super();
+        super( props );
         this.state = {
             inputText: '',
             tags : [],
-            selectedTag: [] // it is tags
+            selectedTag: props.tags ? props.tags : [] // it is tags
         }
         this.fetchTags = this.fetchTags.bind(this);
         this.handleTagSelected = this.handleTagSelected.bind(this);
         this.renderChips = this.renderChips.bind(this);
         this.handleRequestDelete = this.handleRequestDelete.bind(this);
         this.addToChip =this.addToChip.bind(this);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if( Utils.isNonEmptyArray( nextProps.tags ) ) {
+            this.setState({
+                selectedTag: nextProps.tags,
+            });
+        }
     }
 
     handleTagSelected(chosenTag){

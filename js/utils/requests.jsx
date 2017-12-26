@@ -157,7 +157,7 @@ function getUsersInfo( userIds ){
 
 
 function getFollowStatus( userId ){
-    var path ='users/isfollows?id='+userId;
+    var path ='users/public/isfollows?id='+userId;
 
     var promise = new Promise( function ( resolve, reject ) {
         GetReq( path, iVConfigs.common.baseUrl )
@@ -300,4 +300,31 @@ function getVideoData( videoId ) {
     return promise;
 }
 
-export default { getUserInfo, fetchSeminarData, searchQuestionsByTag, signin, signout, signup, fetchTags, getPersonSearch, getSeminarSearch, getVideoSearch, getUsersInfo, getFollowStatus, handleFollowUnfollow, saveQuestion, createSeminar,getTopQuestionsForSeminar, setSeminarQuestionStatus, getStreamStatus, liveSeminar, completeSeminar, voteCountForQuestions, getQuestionsForVideo, voteQuestion, getVideoData }
+function updateProfile( data ) {
+    //@todo update api
+    var path ='update/profile/';
+    var promise = new Promise( function ( resolve, reject ) {
+        PostReq(path, data)
+            .then( _responseHandler( resolve, reject ) )
+            .catch( _catchHandler() );
+    });
+    return promise;
+}
+
+function getProfile( userId ) {
+    //@todo update api
+    if( userId )
+        var path ='/profile/'+userId;
+    else
+        var path ='/profile/';
+
+    var promise = new Promise( function ( resolve, reject ) {
+        GetReq( path, iVConfigs.common.baseUrl )
+            .then( _responseHandler( resolve, reject ) )
+            .catch( _catchHandler() );
+    });
+    return promise;
+
+}
+
+export default { getUserInfo, fetchSeminarData, searchQuestionsByTag, signin, signout, signup, fetchTags, getPersonSearch, getSeminarSearch, getVideoSearch, getUsersInfo, getFollowStatus, handleFollowUnfollow, saveQuestion, createSeminar,getTopQuestionsForSeminar, setSeminarQuestionStatus, getStreamStatus, liveSeminar, completeSeminar, voteCountForQuestions, getQuestionsForVideo, voteQuestion, getVideoData, updateProfile, getProfile }

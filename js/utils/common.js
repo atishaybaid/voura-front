@@ -86,3 +86,11 @@ exports.openInNewTab = function(url) {
         var win = window.open(url, '_blank');
         win.focus();
 }
+
+exports.getProfileUrl = function ( userId ) {
+        return '/profile/'+userId;
+}
+
+exports.getProfileEditUrl = function ( userId ) {
+        return '/profile/edit/'+userId;
+}

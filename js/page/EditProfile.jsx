@@ -10,14 +10,14 @@ import EducationList from '../components/EducationList';
 import AddExperience from '../components/AddExperience';
 import ExperienceList from '../components/ExperienceList';
 import Utils from '../utils/common.js';
+import PropTypes from 'prop-types';
 
 class EditProfile extends Component {
 
     constructor(props) {
         super(props);
-        var userId = window.location.pathname.match(/([^\/]*)\/*$/)[1];
+        this.userId = window.location.pathname.match(/([^\/]*)\/*$/)[1];
         this.state = {
-            userId: userId,
             name: "",
             description: "",
             tagline: "",
@@ -29,7 +29,8 @@ class EditProfile extends Component {
 
             experiences: [],
             showAddExperienceDialog: false,
-            expItemToEdit: {}
+            expItemToEdit: {},
+            profileUpdated : ""
         }
         // inc only below vars, don't decrement in case of deletion of item
         this.eduInx = 1; // used while adding/updating/listing of educations, be careful
@@ -37,6 +38,11 @@ class EditProfile extends Component {
         //@todo
         // when we get data through props/get from ajax, attach eduInx to each item,
 
+        this.EDIT_PROFILE_RESULT = {
+            "error" : <span>Some error occured while updating profile. please try again after some time.</span>,
+            "success" : <span>profile updated. you can view your profile by clicking <a href={ Utils.getProfileUrl( this.userId ) }>this</a></span>
+        };
+        
         this.handleNameChange = this.handleNameChange.bind(this);
         this.handleDescriptionChange = this.handleDescriptionChange.bind(this);
         this.handleTaglineChange = this.handleTaglineChange.bind(this);
@@ -52,9 +58,78 @@ class EditProfile extends Component {
         this._updateExperienceItem = this._updateExperienceItem.bind(this);
         this.updateExperienceItem = this.updateExperienceItem.bind(this);
         this.pickExpItemForEdit = this.pickExpItemForEdit.bind(this);
-        this.updateProfileInfo = this.updateProfileInfo.bind(this)
+        this.updateProfileInfo = this.updateProfileInfo.bind(this);
+        this.getDataForProfile = this.getDataForProfile.bind(this);
+        this.getInfo = this.getInfo.bind(this);
     }
 
+    getDataForProfile(){
+        //@todo get required data form state only
+        var data = {}, state = this.state;
+        data.name = state.name;
+        data.desc = state.description;
+        data.title = state.tagline;
+        data.tags = state.tags;
+        data.colleges = state.educations;
+        data.organisations = state.experiences;
+        return data;
+    }
+
+    getDummyProfileData(){
+        return {
+            "desc" : "pricess of amazons",
+            "name" :"wonder woman",
+            "title":"unconqurable warrior",
+            "colleges" : [
+                {
+                    "degree": "a",
+                    "fieldOfStudy": "a",
+                    "fromDate" : 1451131002000,
+                    "grade":"10",
+                    "school":"a",
+                    "toDate":  1482753402000
+                }
+            ],
+            "tags" : [
+                "princess", "amazons"
+            ],
+            "organisations" : [
+                {
+                    "company" : "a",
+                    "fromDate": 1482839802000,
+                    "location":"a",
+                    "title":"warfare",
+                    "toDate": 1514375802000
+                }
+            ]
+
+        }
+    }
+
+    componentDidMount() {
+        //this.setState( { profileData: } );
+        var resolve = this.getDummyProfileData();
+        this.setState( { name: resolve.name, description: resolve.desc, tagline: resolve.title, tags: resolve.tags, educations: resolve.colleges,showAddEducationDialog: false, eduItemToEdit: {}, experiences: resolve.organisations, showAddExperienceDialog: false, expItemToEdit: {} } );
+        return;
+
+        var that = this;
+        requests.getProfile().then(function (resolve) {
+            that.setState({profileData: resolve});
+        }, function (error) {
+
+        })
+    }
+
+    updateProfileInfo(){
+        var data = this.getDataForProfile();
+        console.log( data ); return;
+        var that = this;
+        requests.updateProfile( data ).then( function ( res ) {
+            this.setState( { profileUpdated : "success" });
+        }, function ( error ) {
+            this.setState( { profileUpdated : "error" });
+        })
+    }
 
     handleNameChange(event,newValue){
         this.setState({name:newValue});
@@ -150,6 +225,17 @@ class EditProfile extends Component {
         this.setState({expItemToEdit:item, showAddExperienceDialog: true});
     }
 
+    getInfo(){
+
+            if( this.profileUpdated == 'success' )
+                return this.EDIT_PROFILE_RESULT.success;
+            else if( this.profileUpdated == 'error' )
+                return this.EDIT_PROFILE_RESULT.error;
+            else
+                return null;
+
+    }
+
     render(){
         return(
             <div className="edit-profile-page">
@@ -187,7 +273,7 @@ class EditProfile extends Component {
                             />
                         </div>
                     </div>
-                    <TagBox getSelectedTags={(q)=>this.getSelectedTags(q)}/><br/>
+                    <TagBox getSelectedTags={(q)=>this.getSelectedTags(q)} tags={this.state.tags} /><br/>
                     <div className="education-box">
                         <div className="row">
                             <div className="col-md-8">
@@ -249,6 +335,11 @@ class EditProfile extends Component {
                                     onClick={this.updateProfileInfo}
                                 />
                             </div>
+                        </div>
+                    </div>
+                    <div className="info-box">
+                        <div className="row">
+                            {this.getInfo()}
                         </div>
                     </div>
                 </div>

@@ -29,6 +29,7 @@ import TermsPage from './page/terms';
 import ContactUsPage from './page/contact';
 import FourOhFourPage from './page/404'
 import EditProfile from './page/EditProfile';
+import ProfileNew from './page/ProfileNew';
 
 const App = ()=>(
 
@@ -53,6 +54,7 @@ const App = ()=>(
                         <Route path="/videoDetail/:id" component={videoDetail} />
                         <Route path="/profile/edit/:id" component={EditProfile} />
                         <Route path="/profile/:id" component={Profile} />
+                        <Route path="/profile-new/:id" component={ProfileNew} />
                         <Route path="/profile" component={Profile} />
                         <Route path="/notifications" component={Notifications} />
                         <Route path="/search" component={SearchPage} />
