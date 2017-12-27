@@ -1,4 +1,4 @@
-import{SHOW_LOGIN_DIALOG,SET_EMAIL,SET_PASSWORD,SIGNUP_SET_EMAIL,SIGNUP_SET_PASSWORD,SIGNUP_SET_NAME,
+import{SHOW_LOGIN_DIALOG,SET_EMAIL,HIDE_LOGIN_DIALOG,SET_PASSWORD,SIGNUP_SET_EMAIL,SIGNUP_SET_PASSWORD, SIGNUP_SET_PASSWORD2, SIGNUP_SET_NAME,
     REQUEST_TAGS,RECEIVE_TAGS,FETCH_SCHEDULE_DATA,RECEIVE_SCHEDULE_DATA,RECEIVE_NOTIS,TOGGLE_EDIT_PROFILE,
     PROFILE_NAME_CHANGE,PROFILE_TITLE_CHANGE,PROFILE_DESC_CHANGE,PROFILE_INST_CHANGE,PROFILE_FIELD_CHANGE,
     RECEIVE_PROFILE_DATA} from './actions';
@@ -8,6 +8,9 @@ export function showLoginDialog(){
     return {type:SHOW_LOGIN_DIALOG}
 }
 
+export function hideLoginDialog(){
+    return {type:HIDE_LOGIN_DIALOG}
+}
 
 export function setEmail(value){
     return {type:SET_EMAIL,payload:value}
@@ -31,6 +34,9 @@ export function signupSetPassword(value){
     return {type:SIGNUP_SET_PASSWORD,payload:value}
 }
 
+export function signupSetPassword2(value){
+    return {type:SIGNUP_SET_PASSWORD2,payload:value}
+}
 
 export function signupSetName(value){
      return {type:SIGNUP_SET_NAME,payload:value}

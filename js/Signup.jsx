@@ -12,22 +12,38 @@ import requests from './utils/requests';
 class Signup extends Component {
     constructor(props){
         super();
-         this.credentialsSubmit = this.credentialsSubmit.bind(this);
-         
-         this.utilSpace = null;
-         this.stepIndex=0;
-         if(props.match.params.page === 'newuser'){
-            this.utilSpace = <SignupCredential   onSubmit={this.credentialsSubmit} />
+         this.state = {
+             stepIndex : 0,
+             finished : false,
+             utilSpace : null
          }
+        this.credentialsSubmit = this.credentialsSubmit.bind(this);
 
-         if(props.match.params.page === 'userdetails'){
-            this.stepIndex = 1;
-            this.utilSpace = <UserDetails />
-         }
+        if(props.match.params.page === 'newuser'){
+            this.state = {
+                stepIndex : 0,
+                utilSpace : <SignupCredential   onSubmit={this.credentialsSubmit} />
+            }
+        } else {
+            this.state = {
+                stepIndex : 1,
+                utilSpace : <UserDetails />
+            }
+        }
+    }
 
 
+    componentWillReceiveProps(nextProps) {
+        if(nextProps.match.params.page === 'newuser'){
+            this.setState( {stepIndex : 0, utilSpace : <SignupCredential   onSubmit={this.credentialsSubmit} /> } );
+        }
 
-    };
+        if(nextProps.match.params.page === 'userdetails'){
+            this.setState( { stepIndex : 1, utilSpace : <UserDetails /> } );
+        }
+    }
+    
+    
     credentialsSubmit(idata){
         //make ajax hit
         let data = {
@@ -38,9 +54,11 @@ class Signup extends Component {
         }
         console.log(data);
 
+        var that = this;
         requests.signup( data )
             .then( function ( resolve ) {
-                this.context.history.push('/signup/userdetails');
+                //this.context.history.push('/signup/userdetails');
+                that.setState({ stepIndex: 1, utilSpace : <UserDetails /> })
             }, function ( reject ) {
 
             });
@@ -51,7 +69,7 @@ class Signup extends Component {
             <div className="signup-page">
                 <div className="main-container">             
                   <div className="steeper">
-                    <Stepper activeStep={this.stepIndex}>
+                    <Stepper activeStep={this.state.stepIndex}>
                         <Step>
                             <StepLabel>Signup</StepLabel>
                         </Step>
@@ -60,7 +78,7 @@ class Signup extends Component {
                         </Step>
                     </Stepper>
                   </div>
-               {this.utilSpace}   
+               {this.state.utilSpace}
                 </div>
             </div>
             )

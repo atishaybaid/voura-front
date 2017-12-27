@@ -6,11 +6,13 @@ import TextField from 'material-ui/TextField';
 import axios from 'axios';
 import {PostReq} from './utils/apiRequest.jsx';
 import {showLoginDialog,
+        hideLoginDialog,
         setEmail,
         setPassword} from './actionCreators.js';
 import '../less/common.less'
 import  {connect} from 'react-redux';
 import requests from './utils/requests';
+import PropTypes from 'prop-types';
 
 class LoginPopup extends Component {
     constructor(props){
@@ -27,8 +29,11 @@ class LoginPopup extends Component {
 
         requests.signin( data )
             .then(function (response) {
-                    window.location.href = '/signup/newuser';
-                    that.props.handleGetNotifications();
+                that.props.hideLoginDialog();
+                //that.context.router.history.push('/home');
+                    //that.props.handleGetNotifications();
+                // to reflecct changes in header refreshig page is better
+                window.location.href = '/home';
             });
     }
 
@@ -43,6 +48,7 @@ class LoginPopup extends Component {
                 modal={false}
                 open={this.props.showDialog}
                 autoScrollBodyContent={true}
+                onRequestClose={this.props.hideLoginDialog}
                 >
                 <div className="login-container">
                     <div className="row">
@@ -95,8 +101,15 @@ const mapDispatchToProps = (dispatch)=>({
     },
     handleGetNotifications:function () {
         dispatch(fetchNotifications())
-    }
+    },
+    hideLoginDialog:function () {
+        dispatch(hideLoginDialog())
+    },
 })
+
+LoginPopup.contextTypes = {
+    router: PropTypes.object
+}
 
 export default connect(mapStateToProps,mapDispatchToProps)(LoginPopup)
 

@@ -70,8 +70,8 @@ class HorNav extends Component {
         cookies.remove('userId');
 
         requests.signout().then( function ( resolve ) {
-            //window.location.href = '/';
-            that.context.router.history.push( '/' )
+            window.location.href = '/';
+            //that.context.router.history.push( '/home' )
         });
     }
 

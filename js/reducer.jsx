@@ -1,6 +1,6 @@
 
-import {SHOW_LOGIN_DIALOG,SET_EMAIL,SET_PASSWORD,SIGNUP_SET_EMAIL,SIGNUP_SET_NAME,
-    SIGNUP_SET_PASSWORD,REQUEST_TAGS,RECEIVE_TAGS,RECEIVE_SCHEDULE_DATA, RECEIVE_NOTIS,
+import {SHOW_LOGIN_DIALOG,HIDE_LOGIN_DIALOG, SET_EMAIL,SET_PASSWORD,SIGNUP_SET_EMAIL,SIGNUP_SET_NAME,
+    SIGNUP_SET_PASSWORD,SIGNUP_SET_PASSWORD2,REQUEST_TAGS,RECEIVE_TAGS,RECEIVE_SCHEDULE_DATA, RECEIVE_NOTIS,
 TOGGLE_EDIT_PROFILE,PROFILE_NAME_CHANGE,PROFILE_TITLE_CHANGE,PROFILE_DESC_CHANGE,
 PROFILE_INST_CHANGE,PROFILE_FIELD_CHANGE} from './actions';
 
@@ -39,6 +39,10 @@ const showLoginDialog =  (state,action) => {
     return Object.assign({},state,{login:{showDialog:true, email:'',password:''}});
 };
 
+const hideLoginDialog =  (state,action) => {
+    return Object.assign({},state,{login:{showDialog:false, email:'',password:''}});
+};
+
 const setEmail = (state,action)=>{
     return Object.assign({},state,{login:{showDialog:state.login.showDialog,email:action.payload,password:state.login.password}})
 }
@@ -48,12 +52,17 @@ const setPassword = (state,action)=>{
 }
 
 const signupSetEmail = (state,action)=>{
-    return Object.assign({},state,{signup:{email:action.payload,pass:state.signup.pass,name:state.signup.name}})
+    return Object.assign({},state,{signup:{email:action.payload,pass:state.signup.pass,pass2:state.signup.pass2,name:state.signup.name}})
 }
 
 const signupSetPassword = (state,action)=>{
-    return Object.assign({},state,{signup:{email:state.signup.email,pass:action.payload,name:state.signup.name}})
+    return Object.assign({},state,{signup:{email:state.signup.email,pass:action.payload,pass2:state.signup.pass2,name:state.signup.name}})
 }
+
+const signupSetPassword2 = (state,action)=>{
+    return Object.assign({},state,{signup:{email:state.signup.email,pass:state.signup.pass,pass2:action.payload,name:state.signup.name}})
+}
+
 const signupSetName = (state,action)=>{
     return Object.assign({},state,{signup:{email:state.signup.email,pass:state.signup.pass,name:action.payload}})
 }
@@ -98,6 +107,8 @@ const rootReducer = (state = DEFAULT_STATE,action)=>{
     switch(action.type){
         case SHOW_LOGIN_DIALOG:
             return showLoginDialog(state);
+        case HIDE_LOGIN_DIALOG:
+            return hideLoginDialog(state);
         case SET_EMAIL:
             return setEmail(state,action);
         case SET_PASSWORD:
@@ -106,6 +117,8 @@ const rootReducer = (state = DEFAULT_STATE,action)=>{
             return signupSetEmail(state,action);
         case SIGNUP_SET_PASSWORD:
             return signupSetPassword(state,action);
+        case SIGNUP_SET_PASSWORD2:
+            return signupSetPassword2(state,action);
         case SIGNUP_SET_NAME:
             return signupSetName(state,action);
         case REQUEST_TAGS:

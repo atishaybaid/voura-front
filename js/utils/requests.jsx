@@ -1,6 +1,7 @@
 import {GetReq, PostReq} from './apiRequest';
 import iVConfigs from '../../Configs/local.json';
 import Utils from './common.js';
+import { withCookies, Cookies } from 'react-cookie';
 
 function getUserInfo( userId ){
     var that = this, path;
@@ -42,25 +43,28 @@ function searchQuestionsByTag( data ){
 }
 
 function _responseHandler( resolve, reject ) {
+
     var f = function(response) {
-        if( response.data.status == 401 ) {
-            //redirect to login page
-            //console.log('got 401 for below');
-            //console.log( response );
-            //window.location.href = '/';
-            /*
-            document.body.innerHTML = 'This page requires you to be logged into intelverse. Redirecting you to login page. If automatic redirection fails, please <a href="/">click here</a>';
-            setTimeout(function () {
-                window.location.href = "/"; //will redirect to your blog page (an ex: blog.html)
-            }, 2000);
-*/
-        } else if (response.status == 200 && response.data.status == 'SUCCESS') {
-            if( Utils.isEmpty( response.data ) ){
-                resolve( true );
-            }else {
+        if ( response.status == 200 && Utils.isNonEmptyObject( response.data ) ) {
+
+            if( response.data.status == 401 ) {
+                //redirect to login page
+                //console.log('got 401 for below');
+                //console.log( response );
+                //window.location.href = '/';
+                document.body.innerHTML = 'This page requires you to be logged into intelverse. Redirecting you to login page. If automatic redirection fails, please <a href="/">click here</a>';
+                setTimeout(function () {
+                    window.location.href = "/"; //will redirect to your blog page (an ex: blog.html)
+                }, 2000);
+            } else if( response.data.status == 'SUCCESS' ){
                 resolve(response.data.data);
+            } else {
+                reject(response);
             }
-        } else {
+        } else if ( response.status == 200 ){
+            // response.data is empty
+            resolve( true );
+        }else {
             reject(response);
         }
     }
@@ -105,6 +109,16 @@ function fetchTags( searchText ) {
     });
     return promise;
 
+}
+
+function updateTags( data ){
+    var path = 'users/tags';
+    var promise = new Promise( function ( resolve, reject ) {
+        PostReq(path, data)
+            .then( _responseHandler( resolve, reject ) )
+            .catch( _catchHandler() );
+    });
+    return promise;
 }
 
 function getPersonSearch( data ) {
@@ -327,4 +341,13 @@ function getProfile( userId ) {
 
 }
 
-export default { getUserInfo, fetchSeminarData, searchQuestionsByTag, signin, signout, signup, fetchTags, getPersonSearch, getSeminarSearch, getVideoSearch, getUsersInfo, getFollowStatus, handleFollowUnfollow, saveQuestion, createSeminar,getTopQuestionsForSeminar, setSeminarQuestionStatus, getStreamStatus, liveSeminar, completeSeminar, voteCountForQuestions, getQuestionsForVideo, voteQuestion, getVideoData, updateProfile, getProfile }
+function isUserLoggedInCookieExist( ) {
+    var userId = Cookies.get('userId');
+    if (Utils.isEmpty(userId)){
+        return false;
+    }else {
+        return true;
+    }
+}
+
+export default { getUserInfo, fetchSeminarData, searchQuestionsByTag, signin, signout, signup, fetchTags, updateTags, getPersonSearch, getSeminarSearch, getVideoSearch, getUsersInfo, getFollowStatus, handleFollowUnfollow, saveQuestion, createSeminar,getTopQuestionsForSeminar, setSeminarQuestionStatus, getStreamStatus, liveSeminar, completeSeminar, voteCountForQuestions, getQuestionsForVideo, voteQuestion, getVideoData, updateProfile, getProfile, isUserLoggedInCookieExist }

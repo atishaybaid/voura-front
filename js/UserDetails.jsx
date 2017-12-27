@@ -5,89 +5,86 @@ import FlatButton from 'material-ui/FlatButton';
 import {fetchTags} from './actionCreators.js'
 import {connect} from 'react-redux';
 import {GetReq,PostReq} from './utils/apiRequest.jsx';
+import requests from './utils/requests';
+import Utils from './utils/common';
+import Snackbar from 'material-ui/Snackbar';
+import TagBox from './TagBox';
+import PropTypes from 'prop-types';
 
 class UserDetails extends Component{
     constructor(props){
         super(props);
         this.state={
             tags:[],
-            selectedTag:[]
-            
+            selectedTag:[],
+
+            snackBarAutoHideDuration: 4000,
+            snackBarMessage: '',
+            snackBarOpen: false,
+
         }
-        this.renderChips = this.renderChips.bind(this);
         this.handleContinue = this.handleContinue.bind(this);
+        this.handleActionClick = this.handleActionClick.bind(this);
+        this.handleRequestClose = this.handleRequestClose.bind(this);
+        this.getSelectedTags = this.getSelectedTags.bind(this);
     }
-    handleUpdateInput(){
-        console.log("handleUpdateInput");
-    }
-    handleTagSelected(chosenTag){
-        let tagObj = {
-            tag:chosenTag.Name,
-            rating:1
-        }
-        let tagList = this.state.selectedTag;
-        tagList.push(tagObj);
-        this.setState({selectedTag:tagList})
-       
-    }
-    handleRequestDelete(tag,index){
-        let selectedTag = this.state.selectedTag;
-        selectedTag.splice(index,1);
-       this.setState({selectedTag:selectedTag})
-        
-    }
+
     handleContinue(){
         let data = {
-            "id":"atishaybaid@gmail.com",
             "tags":this.state.selectedTag
         }
+        var that = this;
+
+        requests.updateTags(data).then( function (resolve ) {
 
 
-        PostReq('/users/tags',data)
-        .then((res)=>{
-            console.log(res);
-            this.context.history.push('/profile');
-        })
-        .catch((err)=>{
-            console.log(error);
-        })
+            that.setState( {snackBarMessage : 'Account created. You can edit your profile by clicking account >> profile from top right corner'});
+            that.context.router.history.push('/home');
+        }, function (reject) {
+
+        });
     }
-    renderChips(){
-      return  this.state.selectedTag.map((selectedTag,index)=>(<Chip key={`selectedTag.tag_${index}`} onRequestDelete={() => this.handleRequestDelete(selectedTag.tag,index)}>
-                                        {selectedTag.tag}
-                                        </Chip>)
-                        
-                    )  
+
+    handleRequestClose(){
+        this.setState({
+            snackBarOpen: false,
+            snackBarMessage: ''
+        });
+    };
+
+    handleActionClick(){
+        var url = Utils.getProfileEditUrl();
+        this.context.history.push( url );
     }
+
+    getSelectedTags( tags ){
+        this.setState({ selectedTag: tags });
+    }
+
     render(){
         return(
              <div className="userdetails-container">
-                <h1 className="step-title">Provide some intrests,for best experiance</h1>
+                <h1 className="step-title">Provide some intrests, for best experiance</h1>
                 <p className="main-line">Last step and you land to home</p>
-                    <AutoComplete
-                        hintText="Search Tags"
-                        dataSource={this.props.tags}
-                        dataSourceConfig={{text:"Name",value:"Name"}}
-                        maxSearchResults={10}
-                        onNewRequest={this.handleTagSelected.bind(this)}
-                        onUpdateInput={this.props.handleUpdateUserInput}
-                    />
-                <div className="selected-tags">
-                  {this.renderChips()}
-                </div>
+                 <TagBox getSelectedTags={(q)=>this.getSelectedTags(q)}/>
             <FlatButton className="landing-btn" label="CONTINUE" primary={true}  backgroundColor={'#4ebcd5'}  style={{color:'#ffffff'}} 
                     onClick={this.handleContinue} />
+                 <Snackbar
+                     open={this.state.snackBarOpen}
+                     message={this.state.snackBarMessage}
+                     action="Edit Full Profile"
+                     autoHideDuration={this.state.snackBarAutoHideDuration}
+                     onActionClick={this.handleActionClick}
+                     onRequestClose={this.handleRequestClose}
+                 />
                 
             </div>   
             )
        
     }
 }
-const mapStateToProps = (state) =>({tags:state.tagList})
 
-const mapDispatchToProps = (dispatch)=>({
-    handleUpdateUserInput:function(searchText){
-        dispatch(fetchTags(searchText));
-    }
-})
-export default connect(mapStateToProps,mapDispatchToProps)(UserDetails);
+UserDetails.contextTypes = {
+    router: PropTypes.object
+}
+export default UserDetails;

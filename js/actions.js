@@ -1,6 +1,8 @@
 
 //login methods
 export const SHOW_LOGIN_DIALOG = 'SHOW_LOGIN_DIALOG';
+export const HIDE_LOGIN_DIALOG = 'HIDE_LOGIN_DIALOG';
+
 export const SET_EMAIL = 'SET_EMAIL';
 export const SET_PASSWORD = 'SET_PASSWORD';
 
@@ -8,6 +10,7 @@ export const SET_PASSWORD = 'SET_PASSWORD';
 //signup methods
 export const SIGNUP_SET_EMAIL = 'SIGNUP_SET_EMAIL';
 export const SIGNUP_SET_PASSWORD = 'SIGNUP_SET_PASSWORD';
+export const SIGNUP_SET_PASSWORD2 = 'SIGNUP_SET_PASSWORD2';
 export const SIGNUP_SET_NAME = 'SIGNUP_SET_NAME';
 
 

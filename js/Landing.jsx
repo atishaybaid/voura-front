@@ -9,8 +9,7 @@ const Landing = ()=>(
                 <h1 className="pitch">A video community to share knowledge!</h1>
                 <p className="slog">Learn Anywhere.Interact Anytime.</p>
                 <FlatButton className="landing-btn" label="Join The Community" primary={true} 
-                backgroundColor={'#4ebcd5'}  style={{color:'#ffffff'}}  href="/signup/newuser"
-                 target="_blank"/>
+                backgroundColor={'#4ebcd5'}  style={{color:'#ffffff'}}  href="/signup/newuser" />
             </div>
         </div>
     </div>
