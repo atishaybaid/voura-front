@@ -21,6 +21,7 @@ class ProfileNew extends Component {
         }
         this.handleEdit = this.handleEdit.bind(this);
         this.renderChips = this.renderChips.bind(this);
+        this.getEditButton = this.getEditButton.bind(this);
     }
 
     renderChips(){
@@ -78,6 +79,15 @@ class ProfileNew extends Component {
         })
     }
 
+    getEditButton(){
+        var that = this;
+        if( Utils.getCookie('userId') == this.userId ){
+            return ( <i className="fa fa-pencil edit-icon" onClick={that.handleEdit} aria-hidden="true"></i> )
+        } else {
+            return null;
+        }
+    }
+
     handleEdit(){
         var profileEditUrl = Utils.getProfileEditUrl( this.userId )
         this.context.router.history.push( profileEditUrl );
@@ -90,9 +100,8 @@ class ProfileNew extends Component {
 
                 <Card style={{'backgroundColor':'aliceblue','padding':'10px'}}>
                     <div className="profile-card-header">
-                        <i className="fa fa-pencil edit-icon" onClick={this.handleEdit} aria-hidden="true"></i>
-                        <img src={this.state.profileData.image} className="profile-image" alt="" width="150px"
-                             height="150px"/>
+                        {this.getEditButton()}
+                        <img src={this.state.profileData.image} className="profile-image" alt="" width="150px" height="150px"/>
                         <div className="user-info">
                             <div className="user-name base-pitch">{this.state.profileData.name}</div>
                             <div className="user-tagline sub-pitch">{this.state.profileData.title}</div>

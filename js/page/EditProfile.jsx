@@ -61,6 +61,10 @@ class EditProfile extends Component {
         this.updateProfileInfo = this.updateProfileInfo.bind(this);
         this.getDataForProfile = this.getDataForProfile.bind(this);
         this.getInfo = this.getInfo.bind(this);
+        this.insertCollegeIndexes = this.insertCollegeIndexes.bind(this);
+        this.insertExpIndexes = this.insertExpIndexes.bind(this);
+        this.removeCollegeIndexes = this.removeCollegeIndexes.bind(this);
+        this.removeExpIndexes = this.removeExpIndexes.bind(this);
     }
 
     getDataForProfile(){
@@ -84,10 +88,10 @@ class EditProfile extends Component {
                 {
                     "degree": "a",
                     "fieldOfStudy": "a",
-                    "fromDate" : 1451131002000,
+                    "fromDate" : new Date(1451131002000),
                     "grade":"10",
                     "school":"a",
-                    "toDate":  1482753402000
+                    "toDate":  new Date(1482753402000)
                 }
             ],
             "tags" : [
@@ -96,24 +100,72 @@ class EditProfile extends Component {
             "organisations" : [
                 {
                     "company" : "a",
-                    "fromDate": 1482839802000,
+                    "fromDate": new Date( 1482839802000 ),
                     "location":"a",
                     "title":"warfare",
-                    "toDate": 1514375802000
+                    "toDate": new Date( 1514375802000 )
                 }
             ]
 
         }
     }
 
+    removeCollegeIndexes( data ){
+        var colleges = data.colleges;
+        var that = this;
+        colleges.forEach( function ( college ) {
+            delete college.index;
+        } );
+
+        data.colleges = colleges;
+        return data;
+    }
+
+    removeExpIndexes( data ){
+        var orgs = data.organisations;
+        var that = this;
+        orgs.forEach( function ( org ) {
+            delete org.index;
+        } );
+
+        data.organisations = orgs;
+        return data;
+    }
+
+    insertCollegeIndexes( data ){
+        var colleges = data.colleges;
+        var that = this;
+        colleges.forEach( function ( college ) {
+            college.index = ++that.eduInx;
+        } );
+
+        data.colleges = colleges;
+        return data;
+    }
+
+    insertExpIndexes( data ){
+        var orgs = data.organisations;
+        var that = this;
+        orgs.forEach( function ( org ) {
+            org.index = ++that.expInx;
+        } );
+
+        data.organisations = orgs;
+        return data;
+    }
+
     componentDidMount() {
         //this.setState( { profileData: } );
         var resolve = this.getDummyProfileData();
+        resolve = this.insertCollegeIndexes( resolve );
+        resolve = this.insertExpIndexes(resolve);
         this.setState( { name: resolve.name, description: resolve.desc, tagline: resolve.title, tags: resolve.tags, educations: resolve.colleges,showAddEducationDialog: false, eduItemToEdit: {}, experiences: resolve.organisations, showAddExperienceDialog: false, expItemToEdit: {} } );
         return;
 
         var that = this;
         requests.getProfile().then(function (resolve) {
+            resolve = that.insertCollegeIndexes( resolve );
+            resolve = that.insertExpIndexes(resolve);
             that.setState({profileData: resolve});
         }, function (error) {
 
@@ -122,6 +174,8 @@ class EditProfile extends Component {
 
     updateProfileInfo(){
         var data = this.getDataForProfile();
+        data = this.removeCollegeIndexes( data );
+        data = this.removeExpIndexes(data);
         console.log( data ); return;
         var that = this;
         requests.updateProfile( data ).then( function ( res ) {
@@ -152,7 +206,7 @@ class EditProfile extends Component {
         this.showAddEducationDialog();
     }
     hideAddEducationDialog(){
-        this.setState({showAddEducationDialog: false});
+        this.setState({showAddEducationDialog: false, eduItemToEdit: {} });
     }
     showAddEducationDialog(){
         this.setState({showAddEducationDialog: true});
@@ -160,9 +214,11 @@ class EditProfile extends Component {
     
     _updateEducationItem( edus, eduItem ){
         var res = [];
+
         edus.forEach( function ( item ) {
             if( Utils.isNonEmptyObject( item ) && (item.index == eduItem.index) ){
-                res.push( eduItem );
+                if( eduItem.deleted != true )
+                    res.push( eduItem );
             } else {
                 res.push( item );
             }
@@ -179,7 +235,7 @@ class EditProfile extends Component {
             edus = this._updateEducationItem( edus, eduItem );
         }
 
-        this.setState({ educations: edus, showAddEducationDialog: false });
+        this.setState({ educations: edus, showAddEducationDialog: false, eduItemToEdit: {} });
     }
 
     pickEduItemForEdit( item ){
@@ -191,7 +247,7 @@ class EditProfile extends Component {
         this.showAddExperienceDialog();
     }
     hideAddExperienceDialog(){
-        this.setState({showAddExperienceDialog: false});
+        this.setState({showAddExperienceDialog: false, expItemToEdit: {} });
     }
     showAddExperienceDialog(){
         this.setState({showAddExperienceDialog: true});
@@ -201,7 +257,8 @@ class EditProfile extends Component {
         var res = [];
         exps.forEach( function ( item ) {
             if( Utils.isNonEmptyObject( item ) && (item.index == expItem.index) ){
-                res.push( expItem );
+                if( expItem.deleted != true )
+                    res.push( expItem );
             } else {
                 res.push( item );
             }
@@ -218,7 +275,7 @@ class EditProfile extends Component {
             exps = this._updateExperienceItem( exps, expItem );
         }
 
-        this.setState({ experiences: exps, showAddExperienceDialog: false });
+        this.setState({ experiences: exps, showAddExperienceDialog: false, expItemToEdit:{} });
     }
 
     pickExpItemForEdit( item ){

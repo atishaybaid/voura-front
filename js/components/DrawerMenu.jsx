@@ -138,8 +138,6 @@ class DrawerMenu extends Component {
                     <MenuItem leftIcon={<HomeIcon style={homeIconStyle}/>} primaryText="Home" onClick={this.handleHomeClick} />
                     <MenuItem leftIcon={<ContentAdd />} primaryText="Create Seminar" onClick={this.handleCreateSemClick} />
                     <MenuItem leftIcon={<SearchIcon />} primaryText="Search" onClick={this.handleSearchClick} />
-                    <MenuItem leftIcon={<QAIcon />} primaryText="Questions List" onClick={this.handleQAListClick} />
-                    <MenuItem value="profile" primaryText="Profile" onClick={this.showProfile} leftIcon={<AccountIcon />}/>
                     <MenuItem value="logout" primaryText="Logout" onClick={this.logout}/>
                 </Drawer>
             </div>

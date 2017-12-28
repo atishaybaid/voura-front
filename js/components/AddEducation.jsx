@@ -17,7 +17,8 @@ class AddEducation extends Component {
             fieldOfStudy: '',
             grade :'',
             fromDate: new Date(),
-            toDate: new Date()
+            toDate: new Date(),
+            deleted: false
         };
         this.handleSchoolChange = this.handleSchoolChange.bind(this);
         this.handleDegreeChange = this.handleDegreeChange.bind(this);
@@ -27,6 +28,7 @@ class AddEducation extends Component {
         this.handleToDate = this.handleToDate.bind(this);
         this.updateParent = this.updateParent.bind(this);
         this.addEducation = this.addEducation.bind(this);
+        this.deleteEducation = this.deleteEducation.bind(this);
 
         //modal is not firing receive props, so putting in constructor itself
         var nextProps = props;
@@ -38,7 +40,8 @@ class AddEducation extends Component {
                 grade: nextProps.eduItem.grade,
                 fromDate: nextProps.eduItem.fromDate,
                 toDate: nextProps.eduItem.toDate,
-                index: nextProps.eduItem.index
+                index: nextProps.eduItem.index,
+                deleted: false
             };
         }
 
@@ -54,6 +57,10 @@ class AddEducation extends Component {
 
     addEducation(){
         this.updateParent();
+    }
+
+    deleteEducation(){
+        this.setState({deleted: true}, this.updateParent );
     }
 
     handleFromDate(event,newValue){
@@ -163,6 +170,12 @@ class AddEducation extends Component {
                     </div>
                 </div>
                 <div className="row">
+                    <FlatButton
+                        label="Delete"
+                        primary={true}
+                        keyboardFocused={true}
+                        onClick={this.deleteEducation}
+                    />
                     <FlatButton
                         label="Update"
                         primary={true}

@@ -16,7 +16,8 @@ class AddExperience extends Component {
             company: '',
             location: '',
             fromDate: new Date(),
-            toDate: new Date()
+            toDate: new Date(),
+            deleted: false
         };
         this.handleTitleChange = this.handleTitleChange.bind(this);
         this.handleCompanyChange = this.handleCompanyChange.bind(this);
@@ -25,6 +26,7 @@ class AddExperience extends Component {
         this.handleToDate = this.handleToDate.bind(this);
         this.updateParent = this.updateParent.bind(this);
         this.addExperience = this.addExperience.bind(this);
+        this.deleteExperience = this.deleteExperience.bind(this);
 
         var nextProps = props;
         if( Utils.isNonEmptyObject( nextProps.expItem ) ) {
@@ -34,7 +36,8 @@ class AddExperience extends Component {
                 location: nextProps.expItem.location,
                 fromDate: nextProps.expItem.fromDate,
                 toDate: nextProps.expItem.toDate,
-                index: nextProps.expItem.index
+                index: nextProps.expItem.index,
+                deleted: false
             };
         }
 
@@ -71,6 +74,11 @@ class AddExperience extends Component {
     handleLocationChange(event,newValue){
         this.setState({location:newValue});
     }
+
+    deleteExperience(){
+        this.setState({deleted: true}, this.updateParent );
+    }
+
 
     componentWillMount(){
         console.log( this.state );
@@ -131,6 +139,12 @@ class AddExperience extends Component {
                     </div>
                 </div>
                 <div className="row">
+                    <FlatButton
+                        label="Delete"
+                        primary={true}
+                        keyboardFocused={true}
+                        onClick={this.deleteExperience}
+                    />
                     <FlatButton
                         label="Update"
                         primary={true}

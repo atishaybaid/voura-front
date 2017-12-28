@@ -17,6 +17,7 @@ import requests from '../utils/requests';
 import PropTypes from 'prop-types';
 import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
 import Login from '../Login';
+import Utils from '../utils/common';
 
 const homeIconStyle = {
     marginLeft: 10
@@ -89,7 +90,10 @@ class ToolbarMenu extends Component {
 
     showProfile(){
         //window.location.href = '/profile';
-        this.context.router.history.push( '/profile' )
+        /*var url = Utils.getProfileEditUrl( Utils.getCookie('userId') );
+        this.context.router.history.push( url );*/
+        var url = Utils.getProfileUrl( Utils.getCookie('userId') );
+        this.context.router.history.push( url );
     }
 
     getLoggedInMenu(){
@@ -116,20 +120,8 @@ class ToolbarMenu extends Component {
                             icon={<SearchIcon />}
                             onClick={this.handleSearchClick}
                         />
-                        <FlatButton
-                            label="Questions List"
-                            secondary={true}
-                            icon={<QAIcon />}
-                            onClick={this.handleQAListClick}
-                        />
                     </ToolbarGroup>
                     <ToolbarGroup>
-                        <FlatButton
-                            label=""
-                            secondary={true}
-                            icon={<NotiIcon />}
-                            onClick={this.handleNotiClick}
-                        />
                         <IconMenu
                             iconButtonElement={<IconButton><AccountIcon /></IconButton>}
                         >
