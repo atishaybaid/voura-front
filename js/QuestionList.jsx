@@ -5,78 +5,46 @@ import Chip from 'material-ui/Chip';
 import FlatButton from 'material-ui/FlatButton';
 import {List, ListItem} from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
-import TextField from 'material-ui/TextField';
-import {GetReq,PostReq} from './utils/apiRequest.jsx';
-import iVConfigs from '../Configs/local.json';
 import Checkbox from 'material-ui/Checkbox';
 import requests from './utils/requests';
 import Utils from './utils/common.js';
+import TagBox from './TagBox';
+import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
+import Pagination from 'material-ui-pagination'
+
+const styles = {
+    block: {
+        maxWidth: 250,
+    },
+    radioButton: {
+        marginBottom: 16,
+    },
+};
 
 class QuestionList extends Component {
 
     constructor(props) {
         super(props);
+        this.defaultSortBySelected = 'date';
         this.state = {
-            searchedTag: "",
+            selectedTag:[],
             questionList: [],
-            tags: [],
-            page: 0,
+            sortBy: this.defaultSortBySelected,
             limitPerPage: 10,
-            inputText: ""
+            total: 1,
+            display: 5,
+            number: 1 // page number
         }
-        this.fetchTags = this.fetchTags.bind(this);
         this.handleTagSelected = this.handleTagSelected.bind(this);
         this.addToSeminar = this.addToSeminar.bind(this);
         this.search = this.search.bind(this);
     };
 
-//let him add any tagged questions to seminar
-/*
-    fetchTags(searchText){
-
-
-        var that = this;
-        //GetReq("users/tags", iVConfigs.common.baseUrl )
-        GetReq(`users/suggestions/tag?t=${searchText}`, iVConfigs.common.baseUrl )
-            .then((res)=>{
-                if( Utils.isNonEmptyObject( res.data.data ) ) {
-                    let tagList = JSON.parse(res.data.data);
-                    that.setState({tags: tagList});
-                }
-            })
-            .catch((err)=>{
-                console.log(err);
-            });
-
-    }
-*/
-
-    fetchTags(searchText){
-        var that = this;
-        this.setState({ inputText:searchText });
-        requests.fetchTags( searchText ).then( function ( resolve ) {
-            let tagList =  resolve;
-            that.setState({tags:tagList});
-        });
-    }
-
     handleTagSelected(chosenTag){
-        this.setState({searchedTag:chosenTag})
         //@todo hit api to fetch questions with this tag and set state of question list
         var that = this;
-        //GetReq("users/tags", iVConfigs.common.baseUrl )
-        /*GetReq(`questions/questionbytag?tags=${this.state.searchedTag}&page=${this.state.page}&limit=${this.state.limitPerPage}`, iVConfigs.tags.url )
-            .then((res)=>{
-                if( res.status == 200 && res.data.status == 'SUCCESS' ){
-                    console.log( res );
-                    that.setState({ questionList: res.data.data });
-                }
-            })
-            .catch((err)=>{
-                console.log(err);
-            });*/
 
-        var data = { searchedTag: this.state.searchedTag, page: this.state.page, limitPerPage: this.state.limitPerPage };
+        var data = { searchedTag: chosenTag, page: this.state.number, limitPerPage: this.state.limitPerPage, sortBy: this.state.sortBy };
         requests.searchQuestionsByTag( data ).then( function ( resolve ) {
             that.setState({ questionList: resolve });
         }, function ( reject ) {
@@ -126,28 +94,65 @@ class QuestionList extends Component {
 
     search(){
         //spoof tag is selected
-        var chosenTag = { Name: this.state.inputText };
-        this.handleTagSelected( chosenTag );
+        var chosenTags = Utils.getStringFromArr( this.state.selectedTag );
+        this.handleTagSelected( chosenTags );
+    }
+
+    getSelectedTags( tags ){
+        this.setState({ selectedTag: tags });
+    }
+
+    handleSortByChange( value ){
+        this.setState({ sortBy: value });
+    }
+
+    getPagination(){
+        if( Utils.isNonEmptyArray( this.state.questionList ) ){
+            return (
+                <Pagination
+                    total = { this.state.total }
+                    current = { this.state.number }
+                    display = { this.state.display }
+                    onChange = { number => this.setState({ number }) }
+                />
+            );
+        } else {
+            return null;
+        }
+
     }
 
     render(){
         return (
             <div className="questionList-page">
-                <AutoComplete
-                    hintText="Search Tags"
-                    dataSource={this.state.tags}
-                    dataSourceConfig={{text:"Name",value:"Name"}}
-                    maxSearchResults={10}
-                    onNewRequest={this.handleTagSelected}
-                    onUpdateInput={this.fetchTags}
-                />
+                <div className="input-area">
+                <TagBox getSelectedTags={(q)=>this.getSelectedTags(q)}/>
+                <RadioButtonGroup name="sort" defaultSelected={this.defaultSortBySelected} onChange={this.handleSortByChange}>
+                    <RadioButton
+                        value="date"
+                        label="Date"
+                        style={styles.radioButton}
+                    />
+                    <RadioButton
+                        value="upvotes"
+                        label="Upvotes"
+                        style={styles.radioButton}
+                    />
+                    <RadioButton
+                        value="unanswered"
+                        label="Unanswered"
+                        style={styles.radioButton}
+                    />
+                    </RadioButtonGroup>
                 <FlatButton className="control-btn" label='Search' primary={true} backgroundColor={'#4ebcd5'}  style={{color:'#ffffff'}} onClick={this.search} target="_blank"/>
+                    </div>
                 <div className="Question-list">
                     <List>
                         <Subheader>Select questions below to add to seminar</Subheader>
                         {this.generateQuesList()}
                     </List>
                 </div><br/>
+                {this.getPagination()}
                 <FlatButton className="control-btn" label='Add to seminar' primary={true} backgroundColor={'#4ebcd5'}  style={{color:'#ffffff'}} onClick={this.addToSeminar} target="_blank"/>
             </div>
         )

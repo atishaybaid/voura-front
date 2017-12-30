@@ -25,6 +25,24 @@ exports.getArrFromStr = function( str ){
         return arr;
 }
 
+exports.getStringFromArr = function ( arr ) {
+        var str = '';
+        if( arr ){
+                str = arr.join(',');
+        }
+        return str;
+}
+
+exports.getDateFromYoutubeTime = function( ytime ){
+        var d = new Date( ytime );
+        return d.toLocaleDateString();
+}
+
+exports.getTimeFromYoutubeTime = function( ytime ){
+        var d = new Date( ytime );
+        return d.toLocaleTimeString();
+}
+
 exports.isEmpty = function ( x ) {
         var y = !x ? true : false;
         return y;

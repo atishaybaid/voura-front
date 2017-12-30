@@ -11,6 +11,7 @@ import AddExperience from '../components/AddExperience';
 import ExperienceList from '../components/ExperienceList';
 import Utils from '../utils/common.js';
 import PropTypes from 'prop-types';
+import FileBase64 from '../components/react-file-base64';
 
 class EditProfile extends Component {
 
@@ -30,7 +31,8 @@ class EditProfile extends Component {
             experiences: [],
             showAddExperienceDialog: false,
             expItemToEdit: {},
-            profileUpdated : ""
+            profileUpdated : "",
+            file: {}
         }
         // inc only below vars, don't decrement in case of deletion of item
         this.eduInx = 1; // used while adding/updating/listing of educations, be careful
@@ -65,6 +67,7 @@ class EditProfile extends Component {
         this.insertExpIndexes = this.insertExpIndexes.bind(this);
         this.removeCollegeIndexes = this.removeCollegeIndexes.bind(this);
         this.removeExpIndexes = this.removeExpIndexes.bind(this);
+        this.getFile = this.getFile.bind(this);
     }
 
     getDataForProfile(){
@@ -76,6 +79,7 @@ class EditProfile extends Component {
         data.tags = state.tags;
         data.colleges = state.educations;
         data.organisations = state.experiences;
+        data.image = state.file.base64;
         return data;
     }
 
@@ -109,6 +113,11 @@ class EditProfile extends Component {
 
         }
     }
+
+    getFile(file){
+        this.setState({ file: file })
+    }
+
 
     removeCollegeIndexes( data ){
         var colleges = data.colleges;
@@ -176,7 +185,7 @@ class EditProfile extends Component {
         var data = this.getDataForProfile();
         data = this.removeCollegeIndexes( data );
         data = this.removeExpIndexes(data);
-        console.log( data ); return;
+        //console.log( data ); return;
         var that = this;
         requests.updateProfile( data ).then( function ( res ) {
             this.setState( { profileUpdated : "success" });
@@ -293,10 +302,29 @@ class EditProfile extends Component {
 
     }
 
+    getProfileImage(){
+        if( Utils.isNonEmptyObject( this.state.file ) ){
+            return (
+            <div className="row">
+                <div className="text-center">
+                    <img src={this.state.file.base64}/>
+                </div>
+            </div>
+            )
+        } else {
+            return null;
+        }
+    }
     render(){
         return(
             <div className="edit-profile-page">
                 <div className="main-container container">
+                    {this.getProfileImage()}
+                    <div className="row">
+                        <FileBase64
+                            multiple={ false }
+                            onDone={ this.getFile.bind(this) } />
+                    </div>
                     <div className="row">
                         <div className="col-md-10">
                             <TextField

@@ -35,7 +35,7 @@ function fetchSeminarData( data ){
 function searchQuestionsByTag( data ){
 
     var promise = new Promise( function ( resolve, reject ) {
-        GetReq(`questions/public/questionbytag?tags=${data.searchedTag}&page=${data.page}&limit=${data.limitPerPage}`, iVConfigs.tags.url)
+        GetReq(`questions/public/questionbytag?tags=${data.searchedTag}&sortBy=${data.sortBy}&page=${data.page}&limit=${data.limitPerPage}`, iVConfigs.tags.url)
             .then( _responseHandler( resolve, reject ) )
             .catch( _catchHandler() );
     });

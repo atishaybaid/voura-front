@@ -52,6 +52,7 @@ class Seminar extends Component {
         this.getMsgBarContent = this.getMsgBarContent.bind(this);
         this.addRemoveQuestionAfterListClick = this.addRemoveQuestionAfterListClick.bind(this);
         this.prepareState = this.prepareState.bind(this);
+        this.getCreateUpdateButton = this.getCreateUpdateButton.bind(this);
     };
 
     getQuestions(){
@@ -74,8 +75,31 @@ class Seminar extends Component {
     prepareState( allData ){
         var quests = this.setQuestsAsSelected( allData[0] );
         var semData = allData[1];
-        var event = allData[2];
-        this.setState({ title: event.title, description: event.description, tags: event.tags, startDate: event.startDate, startTime: event.startTime, endDate: event.endDate, endTime: event.endTime, freeQuests: quests, semData: semData});
+        //var event = allData[2];
+        //this.setState({ title: event.title, description: event.description, tags: event.tags, startDate: event.startDate, startTime: event.startTime, endDate: event.endDate, endTime: event.endTime, freeQuests: quests, semData: semData});
+        this.setState({ title: semData.broadcast.resource.snippet.title, description: semData.broadcast.resource.snippet.description, tags: semData.tags, startDate: new Date( semData.broadcast.resource.snippet.scheduledStartTime ), startTime: new Date( semData.broadcast.resource.snippet.scheduledStartTime ), endDate: new Date( semData.broadcast.resource.snippet.scheduledEndTime ), endTime: new Date( semData.broadcast.resource.snippet.scheduledEndTime ), freeQuests: quests, semData: semData});
+    }
+
+    getDummyEventData(){
+        return {
+            "_id" : "Bk3RJQigz",
+            "videoId" : "B1lhRkXiez",
+            "mType" : "SEMINAR",
+            "mReq" : "MODERATE",
+            "from" : 1511973023000,
+            "to" : 1512063023000,
+            "description" : "u2semdesc",
+            "tags" : [
+                "mongodb",
+                "redis"
+            ],
+            "aTags" : [],
+            "requestor" : 0,
+            "requestee" : 2,
+            "state" : "ACCEPTED",
+            "createdAt" : 1511890899767,
+            "updatedAt" : 1511890899767
+        };
     }
 
     componentDidMount() {
@@ -85,25 +109,7 @@ class Seminar extends Component {
             Promise.all([that.getQuestions(), requests.fetchSeminarData(semObj), /* fetchEventData*/])
                 .then(function (allData) {
                     console.log(allData);
-                    allData[2] = {
-                        "_id" : "Bk3RJQigz",
-                        "videoId" : "B1lhRkXiez",
-                        "mType" : "SEMINAR",
-                        "mReq" : "MODERATE",
-                        "from" : 1511973023000,
-                        "to" : 1512063023000,
-                        "description" : "u2semdesc",
-                        "tags" : [
-                            "mongodb",
-                            "redis"
-                        ],
-                        "aTags" : [],
-                        "requestor" : 0,
-                        "requestee" : 2,
-                        "state" : "ACCEPTED",
-                        "createdAt" : 1511890899767,
-                        "updatedAt" : 1511890899767
-                    };
+                    //allData[2] = that.getDummyEventData();
                     that.prepareState(allData);
                 })
         }
@@ -250,6 +256,22 @@ class Seminar extends Component {
         }
     }
 
+    getCreateUpdateButton(){
+        if( Utils.isEmpty( this.state.semData ) ){
+            return (
+                <FlatButton className="landing-btn" label="Create seminar" primary={true}
+                            backgroundColor={'#4ebcd5'}  style={{color:'#ffffff'}} onClick={this.handleSubmit.bind(this)}
+                            target="_blank"/>
+            )
+        } else {
+            return (
+                <FlatButton className="landing-btn" label="Update seminar" primary={true}
+                            backgroundColor={'#4ebcd5'}  style={{color:'#ffffff'}} onClick={this.handleSubmit.bind(this)}
+                            target="_blank"/>
+            );
+        }
+    }
+
     render(){
         return(
             <div className="seminar-create-page">
@@ -283,8 +305,8 @@ class Seminar extends Component {
                         />
                                 </div>
                             </div>
-                        <TagBox getSelectedTags={(q)=>this.getSelectedTags(q)}/><br/>
-                        <div className="row">
+                        <TagBox getSelectedTags={(q)=>this.getSelectedTags(q)} tags={this.state.tags}/><br/>
+                        <div className="row">   
                             <div className="col-md-3">
                                 <span className="h4"> seminar start date-time</span>
                                 </div>
@@ -329,9 +351,7 @@ class Seminar extends Component {
 
                         <div className="row">
                             <div className="col-md-6">
-                        <FlatButton className="landing-btn" label="Create Seminar" primary={true}
-                                    backgroundColor={'#4ebcd5'}  style={{color:'#ffffff'}} onClick={this.handleSubmit.bind(this)}
-                                    target="_blank"/>
+                                {this.getCreateUpdateButton()}
                                 </div>
                     </div>
                         </div>
