@@ -34,49 +34,18 @@ class ProfileNew extends Component {
         }
     }
 
-    getDummyProfileData(){
-        return {
-            "desc" : "pricess of amazons",
-            "name" :"wonder woman",
-            "title":"unconqurable warrior",
-            "colleges" : [
-                {
-                    "degree": "a",
-                    "fieldOfStudy": "a",
-                    "fromDate" : 1451131002000,
-                    "grade":"10",
-                    "school":"a",
-                    "toDate":  1482753402000
-                }
-            ],
-            "tags" : [
-                "princess", "amazons"
-            ],
-            "organisations" : [
-                {
-                    "company" : "a",
-                    "fromDate": 1482839802000,
-                    "location":"a",
-                    "title":"warfare",
-                    "toDate": 1514375802000
-                }
-            ]
-
-        }
-    }
-
     componentDidMount() {
         //this.setState( { profileData: } );
-        var resolve = this.getDummyProfileData();
-        this.setState({profileData: resolve});
-        return;
+        //var resolve = this.getDummyProfileData();
 
         var that = this;
-        requests.getProfile().then(function (resolve) {
-            that.setState({profileData: resolve});
-        }, function (error) {
+        Promise.all( [ requests.getUserInfo(), requests.getTagsForUser() ] )
+            .then(  function ( allData ) {
+                var data = allData[0];
+                data.tags = Utils.getTagsFromTagRatingArray( allData[1] );
+                that.setState({profileData: data});
+            } );
 
-        })
     }
 
     getEditButton(){

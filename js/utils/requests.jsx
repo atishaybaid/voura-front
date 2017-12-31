@@ -8,13 +8,25 @@ function getUserInfo( userId ){
     var path ='/users/getuser/';
     if( userId )
         path = path + '?id='+userId;
-    
+
     var promise = new Promise( function ( resolve, reject ) {
         GetReq( path, iVConfigs.common.baseUrl )
             .then( _responseHandler( resolve, reject ) )
             .catch( _catchHandler() );
     });
     return promise;
+}
+
+function putUserInfo( data ){
+    var path ='/users/';
+
+    var promise = new Promise( function ( resolve, reject ) {
+        PutReq(path, data)
+            .then( _responseHandler( resolve, reject ) )
+            .catch( _catchHandler() );
+    });
+    return promise;
+
 }
 
 function fetchSeminarData( data ){
@@ -107,6 +119,16 @@ function fetchTags( searchText ) {
     });
     return promise;
 
+}
+
+function getTagsForUser(){
+    var path = '/users/tags';
+    var promise = new Promise( function ( resolve, reject ) {
+        GetReq( path, iVConfigs.tags.url )
+            .then( _responseHandler( resolve, reject ) )
+            .catch( _catchHandler() );
+    });
+    return promise;
 }
 
 function updateTags( data ){
@@ -311,7 +333,7 @@ function getVideoData( videoId ) {
     });
     return promise;
 }
-
+/*
 function updateProfile( data ) {
     //@todo update api
     var path ='update/profile/';
@@ -322,6 +344,7 @@ function updateProfile( data ) {
     });
     return promise;
 }
+*/
 /*
 //use getUser instead
 function getProfile( userId ) {
@@ -382,5 +405,5 @@ function getPendingSeminars( data ) {
     return promise;
 }
 
-export default { getUserInfo, fetchSeminarData, updateSeminar, deleteSeminar, searchQuestionsByTag, signin, signout, signup, fetchTags, updateTags, getPersonSearch, getSeminarSearch, getVideoSearch, getUsersInfo, getFollowStatus, handleFollowUnfollow, saveQuestion, createSeminar,getTopQuestionsForSeminar, setSeminarQuestionStatus, getStreamStatus, liveSeminar, completeSeminar, voteCountForQuestions, getQuestionsForVideo, voteQuestion, getVideoData, updateProfile, getRecommendations, getPendingSeminars
+export default { getUserInfo, putUserInfo, fetchSeminarData, updateSeminar, deleteSeminar, searchQuestionsByTag, signin, signout, signup, fetchTags, getTagsForUser, updateTags, getPersonSearch, getSeminarSearch, getVideoSearch, getUsersInfo, getFollowStatus, handleFollowUnfollow, saveQuestion, createSeminar,getTopQuestionsForSeminar, setSeminarQuestionStatus, getStreamStatus, liveSeminar, completeSeminar, voteCountForQuestions, getQuestionsForVideo, voteQuestion, getVideoData, getRecommendations, getPendingSeminars
 }

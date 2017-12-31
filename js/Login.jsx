@@ -33,7 +33,8 @@ class LoginPopup extends Component {
                 //that.context.router.history.push('/home');
                     //that.props.handleGetNotifications();
                 // to reflecct changes in header refreshig page is better
-                window.location.href = '/home';
+                //window.location.href = '/home';
+                window.location.reload( true );
             });
     }
 

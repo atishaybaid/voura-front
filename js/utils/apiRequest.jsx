@@ -26,7 +26,7 @@ function GetReq(api,timeout,baseURL,emptyHeader){
  }
 
 
- function PutReq(api,timeout,baseURL,emptyHeader){
+ function PutReq(api,data,timeout,baseURL,emptyHeader){
      let axiosInstance = axios.create({
          baseURL: baseURL || 'http://lapis.intelverse.com:3000/',
          timeout: timeout||5000,
@@ -34,7 +34,7 @@ function GetReq(api,timeout,baseURL,emptyHeader){
          withCredentials: true
      });
 
-     return axiosInstance.put(api)
+     return axiosInstance.put(api, data)
 
  }
 

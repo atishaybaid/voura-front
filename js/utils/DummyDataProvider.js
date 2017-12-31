@@ -134,3 +134,34 @@ exports.getPendingSeminars = function ( ) {
         }
     ]
 }
+
+exports.getDummyProfileData = function(){
+    return {
+        "desc" : "pricess of amazons",
+        "name" :"wonder woman",
+        "title":"unconqurable warrior",
+        "colleges" : [
+            {
+                "degree": "a",
+                "fieldOfStudy": "a",
+                "fromDate" : new Date(1451131002000),
+                "grade":"10",
+                "school":"a",
+                "toDate":  new Date(1482753402000)
+            }
+        ],
+        "tags" : [
+            "princess", "amazons"
+        ],
+        "organisations" : [
+            {
+                "company" : "a",
+                "fromDate": new Date( 1482839802000 ),
+                "location":"a",
+                "title":"warfare",
+                "toDate": new Date( 1514375802000 )
+            }
+        ]
+
+    }
+}

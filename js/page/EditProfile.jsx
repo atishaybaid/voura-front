@@ -12,6 +12,7 @@ import ExperienceList from '../components/ExperienceList';
 import Utils from '../utils/common.js';
 import PropTypes from 'prop-types';
 import FileBase64 from '../components/react-file-base64';
+import DDP from '../utils/DummyDataProvider';
 
 class EditProfile extends Component {
 
@@ -83,37 +84,6 @@ class EditProfile extends Component {
         return data;
     }
 
-    getDummyProfileData(){
-        return {
-            "desc" : "pricess of amazons",
-            "name" :"wonder woman",
-            "title":"unconqurable warrior",
-            "colleges" : [
-                {
-                    "degree": "a",
-                    "fieldOfStudy": "a",
-                    "fromDate" : new Date(1451131002000),
-                    "grade":"10",
-                    "school":"a",
-                    "toDate":  new Date(1482753402000)
-                }
-            ],
-            "tags" : [
-                "princess", "amazons"
-            ],
-            "organisations" : [
-                {
-                    "company" : "a",
-                    "fromDate": new Date( 1482839802000 ),
-                    "location":"a",
-                    "title":"warfare",
-                    "toDate": new Date( 1514375802000 )
-                }
-            ]
-
-        }
-    }
-
     getFile(file){
         this.setState({ file: file })
     }
@@ -165,20 +135,36 @@ class EditProfile extends Component {
 
     componentDidMount() {
         //this.setState( { profileData: } );
-        var resolve = this.getDummyProfileData();
+        /*
+        var resolve = DDP.getDummyProfileData();
         resolve = this.insertCollegeIndexes( resolve );
         resolve = this.insertExpIndexes(resolve);
         this.setState( { name: resolve.name, description: resolve.desc, tagline: resolve.title, tags: resolve.tags, educations: resolve.colleges,showAddEducationDialog: false, eduItemToEdit: {}, experiences: resolve.organisations, showAddExperienceDialog: false, expItemToEdit: {} } );
         return;
+        */
 
         var that = this;
-        requests.getProfile().then(function (resolve) {
-            resolve = that.insertCollegeIndexes( resolve );
-            resolve = that.insertExpIndexes(resolve);
-            that.setState({profileData: resolve});
-        }, function (error) {
+        Promise.all( [ requests.getUserInfo(), requests.getTagsForUser() ] )
+            .then(  function ( allData ) {
 
-        })
+                var resolve = that.insertCollegeIndexes( allData[0] );
+                resolve = that.insertExpIndexes(resolve);
+                //resolve = that.preProcessInput( resolve );
+                that.setState( {
+                    name: resolve.name ? resolve.name : '',
+                    description: resolve.desc ? resolve.desc : '',
+                    tagline: resolve.title ? resolve.title : '',
+                    tags: Utils.getTagsFromTagRatingArray( allData[1] ) ,
+                    educations: Utils.isNonEmptyArray( resolve.colleges ) ? resolve.colleges : [],
+                    showAddEducationDialog: false,
+                    eduItemToEdit: {},
+                    experiences: Utils.isNonEmptyArray( resolve.organisations ) ? resolve.organisations : [],
+                    showAddExperienceDialog: false,
+                    expItemToEdit: {},
+                    file: Utils.getFileObjectFromBase64( resolve.image )
+                } );
+
+            } );
     }
 
     updateProfileInfo(){
@@ -187,10 +173,10 @@ class EditProfile extends Component {
         data = this.removeExpIndexes(data);
         //console.log( data ); return;
         var that = this;
-        requests.updateProfile( data ).then( function ( res ) {
-            this.setState( { profileUpdated : "success" });
+        requests.putUserInfo( data ).then( function ( res ) {
+            that.setState( { profileUpdated : "success" });
         }, function ( error ) {
-            this.setState( { profileUpdated : "error" });
+            that.setState( { profileUpdated : "error" });
         })
     }
 

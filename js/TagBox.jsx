@@ -53,7 +53,9 @@ class TagBox extends Component {
     addToChip(){
         //spoof tag is selected
         var chosenTag = this.state.inputText;
-        this.handleTagSelected( chosenTag );
+        if( !isEmpty( chosenTag ) ){
+            this.handleTagSelected( chosenTag );
+        }
     }
 
     renderChips(){

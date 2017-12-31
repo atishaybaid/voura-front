@@ -29,17 +29,18 @@ class UserDetails extends Component{
         this.getSelectedTags = this.getSelectedTags.bind(this);
     }
 
+    
     handleContinue(){
         let data = {
-            "tags":this.state.selectedTag
+            "tags": Utils.getTagRatingArray( this.state.selectedTag )
         }
         var that = this;
 
         requests.updateTags(data).then( function (resolve ) {
 
-
             that.setState( {snackBarMessage : 'Account created. You can edit your profile by clicking account >> profile from top right corner'});
-            that.context.router.history.push('/home');
+            //that.context.router.history.push('/home');
+            window.location.href = '/home';
         }, function (reject) {
 
         });

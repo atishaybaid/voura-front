@@ -49,7 +49,7 @@ class ToolbarMenu extends Component {
     handleHomeClick(){
         //window.location.href = '/';
         //this.history.push('/my-new-location');
-        this.context.router.history.push( '/home' )
+        this.context.router.history.push( '/' )
     }
 
     handleCreateSemClick(){
@@ -68,7 +68,7 @@ class ToolbarMenu extends Component {
 
     handleQAListClick(){
         //window.location.href = '/qna-list';
-        this.context.router.history.push( '/questions-list' )
+        this.context.router.history.push( '/qna-list' )
     }
 
     handleNotiClick(){
@@ -83,8 +83,8 @@ class ToolbarMenu extends Component {
         cookies.remove('userId');
 
         requests.signout().then( function ( resolve ) {
-            //window.location.href = '/';
-            that.context.router.history.push( '/' )
+            window.location.href = '/';
+            //that.context.router.history.push( '/' )
         });
     }
 
