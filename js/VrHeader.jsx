@@ -1,6 +1,7 @@
 import React,{Component} from 'react';
 import ToolbarMenu from './components/ToolbarMenu';
 import DrawerMenu from './components/DrawerMenu';
+import Utils from './utils/common';
 
 import '../less/common.less';
 import { withCookies, Cookies } from 'react-cookie';
@@ -21,7 +22,7 @@ class VrHeader extends Component {
     }
 
     isMobile(){
-        return false;
+        return Utils.isMobile();
     }
 
     componentDidMount() {

@@ -49,7 +49,7 @@ class ToolbarMenu extends Component {
     handleHomeClick(){
         //window.location.href = '/';
         //this.history.push('/my-new-location');
-        this.context.router.history.push( '/' )
+        this.context.router.history.push( '/home' )
     }
 
     handleCreateSemClick(){
@@ -68,7 +68,7 @@ class ToolbarMenu extends Component {
 
     handleQAListClick(){
         //window.location.href = '/qna-list';
-        this.context.router.history.push( '/qna-list' )
+        this.context.router.history.push( '/questions-list' )
     }
 
     handleNotiClick(){
@@ -119,6 +119,12 @@ class ToolbarMenu extends Component {
                             secondary={true}
                             icon={<SearchIcon />}
                             onClick={this.handleSearchClick}
+                        />
+                        <FlatButton
+                            label="Questions List"
+                            secondary={true}
+                            icon={<QAIcon />}
+                            onClick={this.handleQAListClick}
                         />
                     </ToolbarGroup>
                     <ToolbarGroup>

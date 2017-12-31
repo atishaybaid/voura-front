@@ -18,6 +18,7 @@ import { withCookies, Cookies } from 'react-cookie';
 import PropTypes from 'prop-types';
 import HomeIcon from 'material-ui-icons/Home';
 import Login from '../Login';
+import Utils from '../utils/common';
 
 const homeIconStyle = {
     marginLeft: 10
@@ -93,7 +94,7 @@ class DrawerMenu extends Component {
 
     handleQAListClick(){
         //window.location.href = '/qna-list';
-        this.context.router.history.push( '/qna-list' )
+        this.context.router.history.push( '/questions-list' )
     }
 
     handleNotiClick(){
@@ -115,7 +116,8 @@ class DrawerMenu extends Component {
 
     showProfile(){
         //window.location.href = '/profile';
-        this.context.router.history.push( '/profile' )
+        var url = Utils.getProfileUrl( Utils.getCookie('userId') );
+        this.context.router.history.push( url );
     }
 
     getLoggedInMenu(){
@@ -126,8 +128,6 @@ class DrawerMenu extends Component {
                     showMenuIconButton={true}
                     iconElementLeft={<IconButton><MenuIcon /></IconButton>}
                     onLeftIconButtonClick={this.handleLeftIconButtonClick}
-                    iconElementRight={<NotiIcon />}
-                    onRightIconButtonClick={this.handleNotiClick}
                 />
                 <Drawer
                     docked={false}
@@ -138,6 +138,9 @@ class DrawerMenu extends Component {
                     <MenuItem leftIcon={<HomeIcon style={homeIconStyle}/>} primaryText="Home" onClick={this.handleHomeClick} />
                     <MenuItem leftIcon={<ContentAdd />} primaryText="Create Seminar" onClick={this.handleCreateSemClick} />
                     <MenuItem leftIcon={<SearchIcon />} primaryText="Search" onClick={this.handleSearchClick} />
+                    <MenuItem leftIcon={<QAIcon />} primaryText="Questions List" onClick={this.handleQAListClick} />
+                    <MenuItem leftIcon={<AccountIcon />} primaryText="Profile" onClick={this.showProfile}/>
+
                     <MenuItem value="logout" primaryText="Logout" onClick={this.logout}/>
                 </Drawer>
             </div>

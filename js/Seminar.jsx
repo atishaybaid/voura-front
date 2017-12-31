@@ -53,6 +53,9 @@ class Seminar extends Component {
         this.addRemoveQuestionAfterListClick = this.addRemoveQuestionAfterListClick.bind(this);
         this.prepareState = this.prepareState.bind(this);
         this.getCreateUpdateButton = this.getCreateUpdateButton.bind(this);
+        this.createSeminar = this.createSeminar.bind(this);
+        this.updateSeminar = this.updateSeminar.bind(this);
+        this.deleteSeminar = this.deleteSeminar.bind(this);
     };
 
     getQuestions(){
@@ -172,7 +175,35 @@ class Seminar extends Component {
         this.setState({ tags: tags });
     }
 
-    handleSubmit(event,newValue){
+    getMessageBarText( type ){
+        switch( type ){
+            case 'create':
+                return (
+                    <span className="highlight"> Seminar created. please <a href={ Utils.getSeminarForPUrl( this.state.semData.videoId )}> visit here </a> </span>
+                )
+            case 'create_failed':
+                return (
+                    <span className="highlight"> Seminar creation failed at this moment. We are looking into it. please visit after some time </span>
+                )
+            case 'update':
+                return (
+                    <span className="highlight"> Seminar updated. please <a href={ Utils.getSeminarForPUrl( this.state.semData.videoId )}> visit here </a> </span>
+                )
+            case 'update_failed':
+                return (
+                    <span className="highlight"> Seminar updation failed at this moment. We are looking into it. please visit after some time </span>
+                )
+            case 'delete':
+                return (
+                    <span className="highlight"> Seminar deleted.</span>
+                )
+            default:
+                return null;
+        }
+
+    }
+
+    createSeminar( ){
 
         const { cookies } = this.props
         const userId = cookies.get('userId');
@@ -191,10 +222,10 @@ class Seminar extends Component {
         requests.createSeminar(data)
             .then( function ( resolve ) {
                 console.log('sem created');
-                that.setState( {semData: resolve} );
+                that.setState( {semData: resolve, msgBarText: this.getMessageBarText('create') } );
             }, function (reject) {
                 console.log('sem rejected');
-                that.setState( {semData: reject} );
+                that.setState( {msgBarText: this.getMessageBarText('create_failed') } );
             });
 
     };
@@ -249,24 +280,61 @@ class Seminar extends Component {
     }
 
     getMsgBarContent(){
-        if( Utils.isNonEmptyObject( this.state.semData ) ){
-            return (
-                <span className="highlight"> Seminar created. please <a href={ Utils.getSeminarForPUrl( this.state.semData.videoId )}> visit here </a> </span>
-            )
-        }
+        return this.state.msgBarText;
     }
 
     getCreateUpdateButton(){
         if( Utils.isEmpty( this.state.semData ) ){
             return (
                 <FlatButton className="landing-btn" label="Create seminar" primary={true}
-                            backgroundColor={'#4ebcd5'}  style={{color:'#ffffff'}} onClick={this.handleSubmit.bind(this)}
+                            backgroundColor={'#4ebcd5'}  style={{color:'#ffffff'}} onClick={this.createSeminar.bind(this)}
                             target="_blank"/>
             )
         } else {
             return (
                 <FlatButton className="landing-btn" label="Update seminar" primary={true}
-                            backgroundColor={'#4ebcd5'}  style={{color:'#ffffff'}} onClick={this.handleSubmit.bind(this)}
+                            backgroundColor={'#4ebcd5'}  style={{color:'#ffffff'}} onClick={this.updateSeminar.bind(this)}
+                            target="_blank"/>
+            );
+        }
+    }
+    
+    updateSeminar(){
+        const that = this;
+        var selectedFreeQuestsIds = Utils.getSelectedQuestionsIds( this.state.freeQuests );
+        let data = {
+            "videoId" : this.state.videoId,
+            "bTags": this.state.tags ,
+            "bTitle": this.state.title,
+            "bDescription" : this.state.description,
+            "bStartDateTime": iVCommonUtils.mergeDateTime( this.state.startDate, this.state.startTime ),
+            "bEndDateTime": iVCommonUtils.mergeDateTime( this.state.endDate, this.state.endTime ),
+            "qIds" : selectedFreeQuestsIds
+        };
+        requests.updateSeminar(data)
+            .then( function ( resolve ) {
+                that.setState( {msgBarText: this.getMessageBarText('update') } );
+            }, function (reject) {
+                that.setState( {msgBarText: this.getMessageBarText('update_failed') } );
+            });
+    }
+    deleteSeminar(){
+        let data = {
+            "videoId": this.state.videoId
+        }
+        requests.deleteSeminar( data )
+            .then( function ( resolve ) {
+                that.setState( {msgBarText: this.getMessageBarText('delete') } );
+            }, function (reject) {
+                that.setState( {msgBarText: this.getMessageBarText('delete_failed') } );
+            });
+    }
+
+    getDeleteButton(){
+        if( !Utils.isEmpty( this.state.semData ) ){
+            return (
+                <FlatButton className="landing-btn" label="Delete seminar" primary={true}
+                            backgroundColor={'#4ebcd5'}  style={{color:'#ffffff'}} onClick={this.deleteSeminar.bind(this)}
                             target="_blank"/>
             );
         }
@@ -306,7 +374,7 @@ class Seminar extends Component {
                                 </div>
                             </div>
                         <TagBox getSelectedTags={(q)=>this.getSelectedTags(q)} tags={this.state.tags}/><br/>
-                        <div className="row">   
+                        <div className="row">
                             <div className="col-md-3">
                                 <span className="h4"> seminar start date-time</span>
                                 </div>
@@ -353,6 +421,9 @@ class Seminar extends Component {
                             <div className="col-md-6">
                                 {this.getCreateUpdateButton()}
                                 </div>
+                            <div className="col-md-6">
+                                {this.getDeleteButton()}
+                            </div>
                     </div>
                         </div>
                     <div className="row">

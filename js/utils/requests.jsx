@@ -1,16 +1,14 @@
-import {GetReq, PostReq} from './apiRequest';
+import {GetReq, PostReq, PutReq, DeleteReq} from './apiRequest';
 import iVConfigs from '../../Configs/local.json';
 import Utils from './common.js';
 import { withCookies, Cookies } from 'react-cookie';
 
 function getUserInfo( userId ){
-    var that = this, path;
 
+    var path ='/users/getuser/';
     if( userId )
-        path ='users/public/getuser/?id='+userId;
-    else
-        path ='users/getuser';
-
+        path = path + '?id='+userId;
+    
     var promise = new Promise( function ( resolve, reject ) {
         GetReq( path, iVConfigs.common.baseUrl )
             .then( _responseHandler( resolve, reject ) )
@@ -156,10 +154,11 @@ function getVideoSearch( data ){
 }
 
 //comma separated userids
+
 function getUsersInfo( userIds ){
     var that = this, path;
 
-    //path ='users/getusers/?id='+userIds;
+    path ='users/public/getusers/?id='+userIds;
 
     var promise = new Promise( function ( resolve, reject ) {
         GetReq( path, iVConfigs.tags.url )
@@ -168,7 +167,6 @@ function getUsersInfo( userIds ){
     })
     return promise;
 }
-
 
 function getFollowStatus( userId ){
     var path ='users/public/isfollows?id='+userId;
@@ -324,7 +322,8 @@ function updateProfile( data ) {
     });
     return promise;
 }
-
+/*
+//use getUser instead
 function getProfile( userId ) {
     //@todo update api
     if( userId )
@@ -341,4 +340,47 @@ function getProfile( userId ) {
 
 }
 
-export default { getUserInfo, fetchSeminarData, searchQuestionsByTag, signin, signout, signup, fetchTags, updateTags, getPersonSearch, getSeminarSearch, getVideoSearch, getUsersInfo, getFollowStatus, handleFollowUnfollow, saveQuestion, createSeminar,getTopQuestionsForSeminar, setSeminarQuestionStatus, getStreamStatus, liveSeminar, completeSeminar, voteCountForQuestions, getQuestionsForVideo, voteQuestion, getVideoData, updateProfile, getProfile }
+*/
+function updateSeminar( data ) {
+    var path ='/seminar/update/?videoId='+data.videoId;
+    var promise = new Promise( function ( resolve, reject ) {
+        PostReq(path, data)
+            .then( _responseHandler( resolve, reject ) )
+            .catch( _catchHandler() );
+    });
+    return promise;
+}
+
+function deleteSeminar( data ) {
+    var path ='/seminar/?videoId='+data.videoId;
+    var promise = new Promise( function ( resolve, reject ) {
+        DeleteReq(path, data)
+            .then( _responseHandler( resolve, reject ) )
+            .catch( _catchHandler() );
+    });
+    return promise;
+}
+
+function getRecommendations( data ) {
+    var path ='/getrecommendation';
+
+    var promise = new Promise( function ( resolve, reject ) {
+        GetReq( path, iVConfigs.common.baseUrl )
+            .then( _responseHandler( resolve, reject ) )
+            .catch( _catchHandler() );
+    });
+    return promise;
+}
+
+function getPendingSeminars( data ) {
+    var path ='/event/upcoming';
+    var promise = new Promise( function ( resolve, reject ) {
+        GetReq( path, iVConfigs.common.baseUrl )
+            .then( _responseHandler( resolve, reject ) )
+            .catch( _catchHandler() );
+    });
+    return promise;
+}
+
+export default { getUserInfo, fetchSeminarData, updateSeminar, deleteSeminar, searchQuestionsByTag, signin, signout, signup, fetchTags, updateTags, getPersonSearch, getSeminarSearch, getVideoSearch, getUsersInfo, getFollowStatus, handleFollowUnfollow, saveQuestion, createSeminar,getTopQuestionsForSeminar, setSeminarQuestionStatus, getStreamStatus, liveSeminar, completeSeminar, voteCountForQuestions, getQuestionsForVideo, voteQuestion, getVideoData, updateProfile, getRecommendations, getPendingSeminars
+}

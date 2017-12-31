@@ -93,11 +93,11 @@ exports.getVideoUrl = function ( id ) {
 }
 
 exports.getSeminarForSUrl = function ( id ) {
-        return '/seminar/SM'+id;
+        return '/seminar/SM/'+id;
 }
 
 exports.getSeminarForPUrl = function ( id ) {
-        return '/seminar/PM'+id;
+        return '/seminar/PM/'+id;
 }
 
 exports.openInNewTab = function(url) {

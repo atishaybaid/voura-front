@@ -26,4 +26,29 @@ function GetReq(api,timeout,baseURL,emptyHeader){
  }
 
 
- export {PostReq,GetReq}
+ function PutReq(api,timeout,baseURL,emptyHeader){
+     let axiosInstance = axios.create({
+         baseURL: baseURL || 'http://lapis.intelverse.com:3000/',
+         timeout: timeout||5000,
+         headers: {'Access-Control-Allow-Origin': 'http://lapis.intelverse.com:3000/'},
+         withCredentials: true
+     });
+
+     return axiosInstance.put(api)
+
+ }
+
+
+ function DeleteReq(api,timeout,baseURL,emptyHeader){
+     let axiosInstance = axios.create({
+         baseURL: baseURL || 'http://lapis.intelverse.com:3000/',
+         timeout: timeout||5000,
+         headers: {'Access-Control-Allow-Origin': 'http://lapis.intelverse.com:3000/'},
+         withCredentials: true
+     });
+
+     return axiosInstance.delete(api)
+
+ }
+
+ export {PostReq,GetReq, PutReq, DeleteReq}

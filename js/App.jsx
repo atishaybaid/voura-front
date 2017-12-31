@@ -8,11 +8,11 @@ import store from './store';
 import Landing from './Landing.jsx';
 import Signup from './Signup.jsx';
 import Seminar from './Seminar.jsx';
-import UserHome from './UserHome.jsx';
+//import UserHome from './UserHome.jsx';
+import UserHome from './page/Homepage';
 import Profile from './Profile.jsx';
 import videoDetail from './VideoDetail.jsx';
 import FreeQuestion from './FreeQuestion.jsx';
-import QuestionList from './QuestionList.jsx';
 import Notifications from './notifications.jsx';
 
 /*import SeminarP from './SeminarP.jsx';*/
@@ -30,6 +30,7 @@ import ContactUsPage from './page/contact';
 import FourOhFourPage from './page/404'
 import EditProfile from './page/EditProfile';
 import ProfileNew from './page/ProfileNew';
+import QuestionListPage from './page/QuestionListPage.jsx';
 
 const App = ()=>(
 
@@ -48,7 +49,7 @@ const App = ()=>(
 <Route  exact path="/seminar/PM/:semId" component={SeminarPM} />
 <Route  exact path="/seminar/SM/:semId" component={SeminarSM} />
 <Route  exact path="/add-question" component={FreeQuestion} />
-<Route path="/question-list" component={QuestionList} />
+<Route path="/questions-list" component={QuestionListPage} />
 <Route exact path="/videoshow/:videoId" component={VideoShow} />
                         <Route path="/home" component={UserHome} />
                         <Route path="/videoDetail/:id" component={videoDetail} />

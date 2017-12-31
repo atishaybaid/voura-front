@@ -18,7 +18,10 @@ const styles = {
     },
     radioButton: {
         marginBottom: 16,
-    },
+        display: 'flex',
+        flexDirection: 'row',
+        flexWrap: 'wrap'
+    }
 };
 
 class QuestionList extends Component {
@@ -72,12 +75,26 @@ class QuestionList extends Component {
         var quesList = '';
         if( Utils.isNonEmptyArray( this.state.questionList ) ) {
             var quesList = this.state.questionList.map(function (item, index) {
-                return <div key={`selectedQuest.quest_${index}`}>
-                    <ListItem primaryText={item.question} onClick={that.addQuestionAfterListClick.bind(that, index)} leftCheckbox={<Checkbox checked={ item.selected }
+
+                if( that.props.pickQuestion ){
+                    return (
+                        <div key={`selectedQuest.quest_${index}`}>
+                        <ListItem primaryText={item.question} onClick={that.addQuestionAfterListClick.bind(that, index)} leftCheckbox={<Checkbox checked={ item.selected }
                         onCheck={that.addQuestion.bind(that, index)}
                         style={{marginBottom: 16}} />} />
-                    <hr className="hr-primary"/>
-                </div>
+                        <hr className="hr-primary"/>
+                    </div>
+                    )
+                } else {
+                    return (
+                        <div key={`selectedQuest.quest_${index}`}>
+                            <ListItem primaryText={item.question} />
+                            <hr className="hr-primary"/>
+                        </div>
+                    )
+                }
+
+
             })
         }
         //console.log( quesList );
@@ -122,20 +139,27 @@ class QuestionList extends Component {
 
     }
 
+    getAddToSeminarButton(){
+        if( this.props.pickQuestions ) {
+            return (
+                <FlatButton className="control-btn" label='Add to seminar' primary={true} backgroundColor={'#4ebcd5'}
+                            style={{color:'#ffffff'}} onClick={this.addToSeminar} target="_blank"/>
+            )
+        } else {
+            return (null);
+        }
+    }
+
     render(){
         return (
-            <div className="questionList-page">
+            <div className="questionList-component">
                 <div className="input-area">
                 <TagBox getSelectedTags={(q)=>this.getSelectedTags(q)}/>
+                    <span>Sort Quesitons by:</span>
                 <RadioButtonGroup name="sort" defaultSelected={this.defaultSortBySelected} onChange={this.handleSortByChange}>
                     <RadioButton
                         value="date"
                         label="Date"
-                        style={styles.radioButton}
-                    />
-                    <RadioButton
-                        value="upvotes"
-                        label="Upvotes"
                         style={styles.radioButton}
                     />
                     <RadioButton
@@ -148,12 +172,12 @@ class QuestionList extends Component {
                     </div>
                 <div className="Question-list">
                     <List>
-                        <Subheader>Select questions below to add to seminar</Subheader>
+                        { this.props.pickQuestions ? <Subheader>Select questions below to add to seminar</Subheader> : null }
                         {this.generateQuesList()}
                     </List>
                 </div><br/>
                 {this.getPagination()}
-                <FlatButton className="control-btn" label='Add to seminar' primary={true} backgroundColor={'#4ebcd5'}  style={{color:'#ffffff'}} onClick={this.addToSeminar} target="_blank"/>
+                {this.getAddToSeminarButton()}
             </div>
         )
     }

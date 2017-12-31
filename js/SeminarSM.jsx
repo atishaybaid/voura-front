@@ -157,8 +157,7 @@ class SeminarSM extends Component {
                 var questions = that.getQuestionList( allData[0], allData[1] );
                 that.setState({ questionList:questions, seminarData : allData[2] });
                 if( allData[2] ){
-                    var ownerId = allData[2].userID;
-                    requests.getUserInfo( ownerId ).then(function ( resolve ) {
+                    requests.getUserInfo( ).then(function ( resolve ) {
                         that.setState({ userInfo: resolve } );
                     }, function ( reject ) {
 
