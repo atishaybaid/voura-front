@@ -5,9 +5,11 @@ import { withCookies, Cookies } from 'react-cookie';
 
 function getUserInfo( userId ){
 
-    var path ='/users/getuser/';
+    var path = '/users/getuser/';
+    var publicPath ='/users/public/getuser/';
+
     if( userId )
-        path = path + '?id='+userId;
+        path = publicPath + '?id='+userId;
 
     var promise = new Promise( function ( resolve, reject ) {
         GetReq( path, iVConfigs.common.baseUrl )
@@ -32,7 +34,21 @@ function putUserInfo( data ){
 function fetchSeminarData( data ){
     var videoId = data.videoId;
     //var path ='seminar/?videoId='+videoId;
-    var path ='seminar/public/?videoId='+videoId;
+    var path ='/seminar/public/?videoId='+videoId;
+    var that = this;
+    var promise = new Promise( function ( resolve, reject ) {
+        GetReq( path, iVConfigs.common.baseUrl )
+            .then( _responseHandler( resolve, reject ) )
+            .catch( _catchHandler() );
+    });
+    return promise;
+}
+
+function fetchEventsData( data ){
+    // arr of videoId
+    var videoId = data.videoId;
+
+    var path ='/event/videos/?videoId='+videoId;
     var that = this;
     var promise = new Promise( function ( resolve, reject ) {
         GetReq( path, iVConfigs.common.baseUrl )
@@ -45,7 +61,20 @@ function fetchSeminarData( data ){
 function searchQuestionsByTag( data ){
 
     var promise = new Promise( function ( resolve, reject ) {
-        GetReq(`questions/public/questionbytag?tags=${data.searchedTag}&sortBy=${data.sortBy}&page=${data.page}&limit=${data.limitPerPage}`, iVConfigs.tags.url)
+        var temp;
+        switch( data.sortBy ){
+            case  'date':
+                temp = 'all=true';
+            case  'unanswered':
+                temp = 'answered=false';
+            case  'asked_by_me':
+                temp ='askedByMe=true';
+            default:
+                temp='all=true';
+        }
+        temp = '&' + temp + '&';
+
+        GetReq(`questions/public/questionbytag?tags=${data.searchedTag}${temp}&page=${data.page}&limit=${data.limitPerPage}`, iVConfigs.tags.url)
             .then( _responseHandler( resolve, reject ) )
             .catch( _catchHandler() );
     });
@@ -121,8 +150,13 @@ function fetchTags( searchText ) {
 
 }
 
-function getTagsForUser(){
+function getTagsForUser( userId ){
     var path = '/users/tags';
+    var publicPath ='/users/public/getuser/';
+
+    if( userId )
+        path = publicPath + '?userId='+userId;
+
     var promise = new Promise( function ( resolve, reject ) {
         GetReq( path, iVConfigs.tags.url )
             .then( _responseHandler( resolve, reject ) )
@@ -153,7 +187,7 @@ function getPersonSearch( data ) {
 }
 
 function getSeminarSearch( data ){
-    var path = 'event/search';
+    var path = '/event/search';
     var promise = new Promise( function ( resolve, reject ) {
         PostReq(path, data)
             .then( _responseHandler( resolve, reject ) )
@@ -180,7 +214,7 @@ function getVideoSearch( data ){
 function getUsersInfo( userIds ){
     var that = this, path;
 
-    path ='users/public/getusers/?id='+userIds;
+    path ='/users/public/getusers/?id='+userIds;
 
     var promise = new Promise( function ( resolve, reject ) {
         GetReq( path, iVConfigs.tags.url )
@@ -364,8 +398,30 @@ function getProfile( userId ) {
 }
 
 */
+
+function updateSeminarEvent( data ) {
+    var path ='/event/seminar/update';
+
+    var promise = new Promise( function ( resolve, reject ) {
+        PutReq(path, data)
+            .then( _responseHandler( resolve, reject ) )
+            .catch( _catchHandler() );
+    });
+    return promise;
+}
+
 function updateSeminar( data ) {
     var path ='/seminar/update/?videoId='+data.videoId;
+    var promise = new Promise( function ( resolve, reject ) {
+        PostReq(path, data)
+            .then( _responseHandler( resolve, reject ) )
+            .catch( _catchHandler() );
+    });
+    return promise;
+}
+
+function deleteSeminarEvent( data ){
+    var path = '/event/decline';
     var promise = new Promise( function ( resolve, reject ) {
         PostReq(path, data)
             .then( _responseHandler( resolve, reject ) )
@@ -405,5 +461,5 @@ function getPendingSeminars( data ) {
     return promise;
 }
 
-export default { getUserInfo, putUserInfo, fetchSeminarData, updateSeminar, deleteSeminar, searchQuestionsByTag, signin, signout, signup, fetchTags, getTagsForUser, updateTags, getPersonSearch, getSeminarSearch, getVideoSearch, getUsersInfo, getFollowStatus, handleFollowUnfollow, saveQuestion, createSeminar,getTopQuestionsForSeminar, setSeminarQuestionStatus, getStreamStatus, liveSeminar, completeSeminar, voteCountForQuestions, getQuestionsForVideo, voteQuestion, getVideoData, getRecommendations, getPendingSeminars
+export default { getUserInfo, putUserInfo, fetchEventsData, fetchSeminarData, updateSeminar, updateSeminarEvent, deleteSeminar, deleteSeminarEvent, searchQuestionsByTag, signin, signout, signup, fetchTags, getTagsForUser, updateTags, getPersonSearch, getSeminarSearch, getVideoSearch, getUsersInfo, getFollowStatus, handleFollowUnfollow, saveQuestion, createSeminar,getTopQuestionsForSeminar, setSeminarQuestionStatus, getStreamStatus, liveSeminar, completeSeminar, voteCountForQuestions, getQuestionsForVideo, voteQuestion, getVideoData, getRecommendations, getPendingSeminars
 }

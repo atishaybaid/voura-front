@@ -10,7 +10,7 @@ class QuestionListPage extends Component {
     render(){
         return(
             <div className="question-list-page">
-                <QuestionList />
+                <QuestionList showSnackBar={true}/>
                 </div>
         )
     }

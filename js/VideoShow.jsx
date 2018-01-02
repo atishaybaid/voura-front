@@ -21,7 +21,8 @@ class VideoShow extends Component {
 
     constructor(props) {
         super(props);
-        var videoId = window.location.pathname.match(/([^\/]*)\/*$/)[1];
+        //var videoId = window.location.pathname.match(/([^\/]*)\/*$/)[1];
+        var videoId = Utils.isEmpty( props.match.params.videoId ) ? '' : props.match.params.videoId;
         //videoId = "yv5i0oTHubc";
         this.state = {
             videoId: videoId,

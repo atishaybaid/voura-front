@@ -30,7 +30,8 @@ class SeminarSM extends Component {
 
     constructor(props) {
         super( props );
-        var videoId = window.location.pathname.match(/([^\/]*)\/*$/)[1];
+        //var videoId = window.location.pathname.match(/([^\/]*)\/*$/)[1];
+        var videoId = Utils.isEmpty( props.match.params.semId ) ? '' : props.match.params.semId;
         var youtubeUrl = "https://www.youtube.com/embed/WOoJh6oYAXE";
         this.state = {
             videoId: videoId,

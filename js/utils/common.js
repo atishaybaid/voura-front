@@ -43,18 +43,37 @@ exports.getTimeFromYoutubeTime = function( ytime ){
         return d.toLocaleTimeString();
 }
 
-exports.isEmpty = function ( x ) {
+isEmpty = exports.isEmpty = function ( x ) {
         var y = !x ? true : false;
         return y;
 }
 
 exports.isEmptyObject = function ( obj ) {
+        if( isEmpty(obj) )
+            return true;
         return Object.keys(obj).length === 0 && obj.constructor === Object
+}
+
+exports.isStrictEmptyObject  = function ( obj ) {
+        return !isEmpty(obj) && Object.keys(obj).length === 0 && obj.constructor === Object
 }
 
 exports.isNonEmptyObject = function ( obj ) {
         //if its null undefined etc.. return false
         return obj !== undefined && obj && Object.keys(obj).length > 0  && obj.constructor === Object
+}
+
+
+exports.isEmptyArray = function ( obj ) {
+        //if its null undefined etc.. return false
+        if( isEmpty(obj) )
+            return true;
+        return obj && obj.constructor === Array  && obj.length == 0
+}
+
+exports.isStrictEmptyArray= function ( obj ) {
+        //if its null undefined etc.. return false
+        return !isEmpty(obj) && obj && obj.constructor === Array  && obj.length == 0
 }
 
 exports.isNonEmptyArray = function ( obj ) {
@@ -120,7 +139,7 @@ exports.getSelectedQuestions = function( qList ){
 }
 
 exports.getProfileUrlFromId = function ( id ) {
-        return '/profile/'+id;
+        return '/profile-new/'+id;
 }
 
 exports.getVideoUrl = function ( id ) {

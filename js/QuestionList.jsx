@@ -11,6 +11,7 @@ import Utils from './utils/common.js';
 import TagBox from './TagBox';
 import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 import Pagination from 'material-ui-pagination'
+import Snackbar from 'material-ui/Snackbar';
 
 const styles = {
     block: {
@@ -36,22 +37,59 @@ class QuestionList extends Component {
             limitPerPage: 10,
             total: 1,
             display: 5,
-            number: 1 // page number
+            number: 1, // page number
+
+            snackBarAutoHideDuration: 2000,
+            snackBarMessage: '',
+            snackBarOpen: false,
+
         }
         this.handleTagSelected = this.handleTagSelected.bind(this);
         this.addToSeminar = this.addToSeminar.bind(this);
         this.search = this.search.bind(this);
+        this.handleRequestClose = this.handleRequestClose.bind(this);
+        this.addQuestion = this.addQuestion.bind(this);
+        this.addQuestionAfterListClick = this.addQuestionAfterListClick.bind(this);
+        this.generateQuesList = this.generateQuesList.bind(this);
+        this.addToSeminar = this.addToSeminar.bind(this);
+        this.getSelectedTags = this.getSelectedTags.bind(this);
+        this.handleSortByChange = this.handleSortByChange.bind(this);
+        this.getPagination = this.getPagination.bind(this);
+        this.getAddToSeminarButton = this.getAddToSeminarButton.bind(this);
+    };
+
+    handleRequestClose(){
+        this.setState({
+            snackBarOpen: false,
+            snackBarMessage: ''
+        });
     };
 
     handleTagSelected(chosenTag){
         //@todo hit api to fetch questions with this tag and set state of question list
         var that = this;
 
-        var data = { searchedTag: chosenTag, page: this.state.number, limitPerPage: this.state.limitPerPage, sortBy: this.state.sortBy };
-        requests.searchQuestionsByTag( data ).then( function ( resolve ) {
-            that.setState({ questionList: resolve });
-        }, function ( reject ) {
+        var data = { searchedTag: chosenTag, page: this.state.number, limitPerPage: this.state.limitPerPage };
+        switch( this.state.sortBy ){
+            case  'date':
+                data.all = true;
+            case  'unanswered':
+                data.answered=false;
+            case  'asked_by_me':
+                data.askedByMe=true;
+            default:
+                data.all = true;
+        }
 
+        requests.searchQuestionsByTag( data ).then( function ( resolve ) {
+            if( Utils.isEmpty( resolve ) ){
+                that.setState( {snackBarMessage : 'No questions found for your tags. Please try changing tags', questionList: resolve.questions, snackBarOpen: true});
+            } else {
+                var total = ( parseInt( resolve.totalQuestions )/ that.state.limitPerPage) + 1;
+                that.setState({ questionList: resolve.questions, total: total });
+            }
+        }, function ( reject ) {
+            console.log( reject );
         });
 
     }
@@ -140,7 +178,7 @@ class QuestionList extends Component {
     }
 
     getAddToSeminarButton(){
-        if( this.props.pickQuestions ) {
+        if( this.props.pickQuestion ) {
             return (
                 <FlatButton className="control-btn" label='Add to seminar' primary={true} backgroundColor={'#4ebcd5'}
                             style={{color:'#ffffff'}} onClick={this.addToSeminar} target="_blank"/>
@@ -167,17 +205,30 @@ class QuestionList extends Component {
                         label="Unanswered"
                         style={styles.radioButton}
                     />
+                    <RadioButton
+                        value="asked_by_me"
+                        label="Asked by me"
+                        style={styles.radioButton}
+                    />
                     </RadioButtonGroup>
                 <FlatButton className="control-btn" label='Search' primary={true} backgroundColor={'#4ebcd5'}  style={{color:'#ffffff'}} onClick={this.search} target="_blank"/>
                     </div>
                 <div className="Question-list">
                     <List>
-                        { this.props.pickQuestions ? <Subheader>Select questions below to add to seminar</Subheader> : null }
+                        { this.props.pickQuestion ? <Subheader>Select questions below to add to seminar</Subheader> : null }
                         {this.generateQuesList()}
                     </List>
                 </div><br/>
                 {this.getPagination()}
                 {this.getAddToSeminarButton()}
+                { this.props.showSnackBar ?
+                    <Snackbar
+                        open={this.state.snackBarOpen}
+                        message={this.state.snackBarMessage}
+                        autoHideDuration={this.state.snackBarAutoHideDuration}
+                        onRequestClose={this.handleRequestClose}
+                    />
+                : null}
             </div>
         )
     }

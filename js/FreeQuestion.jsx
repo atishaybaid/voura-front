@@ -9,6 +9,7 @@ import TagBox from './TagBox';
 import SearchVideos from './SearchVideos';
 
 import { withCookies, Cookies } from 'react-cookie';
+import Snackbar from 'material-ui/Snackbar';
 
 class FreeQuestion extends Component {
 
@@ -19,12 +20,18 @@ class FreeQuestion extends Component {
             qDesc: '',
             tags: [],
             selectedTag: [],
-            searchedAlready: false
+            searchedAlready: false,
+
+            snackBarAutoHideDuration: 4000,
+            snackBarMessage: '',
+            snackBarOpen: false,
         }
+
         this.handleAskQuestion = this.handleAskQuestion.bind(this);
         this.qTitleChange = this.qTitleChange.bind(this);
         this.qDescChange = this.qDescChange.bind(this);
         this.getSelectedTags = this.getSelectedTags.bind(this);
+        this.handleRequestClose = this.handleRequestClose.bind(this);
         /*this.renderChips = this.renderChips.bind(this);
         this.fetchTags = this.fetchTags.bind(this);
         this.handleTagSelected = this.handleTagSelected.bind(this);
@@ -52,15 +59,37 @@ class FreeQuestion extends Component {
 
     }
 */
-    handleAskQuestion() {
 
+    getMessageBarText( type ) {
+        switch (type) {
+            case 'ask_success':
+                return (
+                    <span> Your question has been successfully posted.</span>
+                )
+            case 'ask_failed':
+                return (
+                    <span> Error occured while posting question.</span>
+                )
+            default:
+                return null;
+        }
+    }
+
+    handleRequestClose(){
+        this.setState({
+            snackBarOpen: false,
+            snackBarMessage: ''
+        });
+    };
+
+        handleAskQuestion() {
+/*
         if (!this.state.searchedAlready) {
             this.child.handleSubmit();
             this.setState({searchedAlready: true});
         } else {
-
+*/
             const {cookies} = this.props;
-
 //        const userId = cookies.get('userId');
 
             let data = {
@@ -73,10 +102,23 @@ class FreeQuestion extends Component {
             var that = this;
             requests.saveQuestion(data)
                 .then(function (resolve) {
-                    console.log('question saved' + resolve);
+                    that.setState({
+                        snackBarOpen: true,
+                        snackBarMessage: that.getMessageBarText('ask_success'),
+                        qTitle: '',
+                        qDesc: '',
+                        tags: [],
+                        selectedTag: [],
+                    });
+                    that.tagBoxChild.clearTags();
                 }, function (reject) {
+                    that.setState({
+                        snackBarOpen: true,
+                        snackBarMessage: that.getMessageBarText('ask_failed')
+                    });
                 });
-        }
+
+        //}
     }
 /*
     renderChips(){
@@ -126,11 +168,16 @@ class FreeQuestion extends Component {
                 />
                     </div>
 
-                <TagBox getSelectedTags={(q)=>this.getSelectedTags(q)}/>
+                <TagBox getSelectedTags={(q)=>this.getSelectedTags(q)} onRef={ref => (this.tagBoxChild = ref)}/>
                 <div className="row col-md-1">
                 <FlatButton className="control-btn" label='ask' primary={true} backgroundColor={'#4ebcd5'}  style={{color:'#ffffff'}} onClick={this.handleAskQuestion} target="_blank"/>
                     </div>
-                <SearchVideos selectedTags={this.state.selectedTag} question={this.state.qTitle} showSearchInputForm={false} onRef={ref => (this.child = ref)}/>
+                <Snackbar
+                    open={this.state.snackBarOpen}
+                    message={this.state.snackBarMessage}
+                    autoHideDuration={this.state.snackBarAutoHideDuration}
+                    onRequestClose={this.handleRequestClose}
+                />
             </div>
         )
     }

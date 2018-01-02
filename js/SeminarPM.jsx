@@ -23,7 +23,8 @@ import WebCamCapture from './webcam';
 class SeminarPM extends Component {
     constructor(props) {
         super();
-        var videoId = window.location.pathname.match(/([^\/]*)\/*$/)[1];
+        //var videoId = window.location.pathname.match(/([^\/]*)\/*$/)[1];
+        var videoId = Utils.isEmpty( props.match.params.semId ) ? '' : props.match.params.semId;
         var youtubeUrl = "https://www.youtube.com/embed/WOoJh6oYAXE";
         var epoch = Math.round((new Date()).getTime() / 1000);
         this.state = {

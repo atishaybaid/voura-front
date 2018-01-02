@@ -6,6 +6,7 @@ import Utils from './utils/common.js';
 import FlatButton from 'material-ui/FlatButton';
 import TagBox from './TagBox';
 import UserCard from './UserCard';
+import DDP from './utils/DummyDataProvider';
 
 class SearchSeminars extends Component {
     constructor(props) {
@@ -120,7 +121,7 @@ class SearchSeminars extends Component {
         var data = { tags: this.state.selectedTags, from: this.state.startDateTime, to: this.state.endDateTime };
         requests.getSeminarSearch( data ).then(function ( resolve ) {
             //that.setState({ resultSeminars: resolve } );
-            that.setState({ resultSeminars: that.getDummyData() } );
+            that.setState({ resultSeminars: DDP.getSearchedSeminarResults() } );
             var sems = that.state.resultSeminars;
             var sems = that.attachUserInfoToSems( sems );
             //that.setState({ resultSeminars: sems } );

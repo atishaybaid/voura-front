@@ -36,6 +36,7 @@ class ToolbarMenu extends Component {
         this.handleNotiClick = this.handleNotiClick.bind(this);
         this.logout = this.logout.bind(this);
         this.showProfile = this.showProfile.bind(this);
+        this.handleAskQuestion = this.handleAskQuestion.bind(this);
     }
 
     componentDidMount(){
@@ -68,12 +69,16 @@ class ToolbarMenu extends Component {
 
     handleQAListClick(){
         //window.location.href = '/qna-list';
-        this.context.router.history.push( '/qna-list' )
+        this.context.router.history.push( '/questions-list' )
     }
 
     handleNotiClick(){
         //window.location.href = '/notifications';
         this.context.router.history.push( '/notifications' )
+    }
+
+    handleAskQuestion(){
+        this.context.router.history.push( '/add-question' );
     }
 
     logout(){
@@ -125,6 +130,12 @@ class ToolbarMenu extends Component {
                             secondary={true}
                             icon={<QAIcon />}
                             onClick={this.handleQAListClick}
+                        />
+                        <FlatButton
+                            label="Ask a question"
+                            secondary={true}
+                            icon={<ContentAdd />}
+                            onClick={this.handleAskQuestion}
                         />
                     </ToolbarGroup>
                     <ToolbarGroup>

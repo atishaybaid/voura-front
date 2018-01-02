@@ -15,7 +15,8 @@ class ProfileNew extends Component {
 
     constructor(props) {
         super(props);
-        this.userId = window.location.pathname.match(/([^\/]*)\/*$/)[1];
+        //this.userId = window.location.pathname.match(/([^\/]*)\/*$/)[1];
+        this.userId = Utils.isEmpty( props.match.params.id ) ? '' : props.match.params.id;
         this.state = {
             profileData: {}
         }
@@ -39,7 +40,7 @@ class ProfileNew extends Component {
         //var resolve = this.getDummyProfileData();
 
         var that = this;
-        Promise.all( [ requests.getUserInfo(), requests.getTagsForUser() ] )
+        Promise.all( [ requests.getUserInfo( that.userId ), requests.getTagsForUser( that.userId ) ] )
             .then(  function ( allData ) {
                 var data = allData[0];
                 data.tags = Utils.getTagsFromTagRatingArray( allData[1] );

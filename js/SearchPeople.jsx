@@ -5,6 +5,7 @@ import requests from './utils/requests';
 import Utils from './utils/common.js';
 import UserCard from './UserCard';
 import FlatButton from 'material-ui/FlatButton';
+import DDP from './utils/DummyDataProvider';
 
 class SearchPeople extends Component {
     constructor(props) {
@@ -36,17 +37,12 @@ class SearchPeople extends Component {
     }
 
 
-    getDummyData(){
-        var dummy = [ { "userId": 9, "fId": "sahvi06@gmail.com", "name": "sahvi05", "title": "9 title", "desc": "9  desc", "image": "/9.jpg", "organisations": ["nine-org"], "colleges": ["nine-college"], "tags": [ "redis", "sah" ] }, { "userId": 8, "fId": "sahvi08@gmail.com", "name": "sahvi08", "title": "8 title", "desc": "8  desc", "image": "/8.jpg", "organisations": ["8-org"], "colleges": ["8-college"], "tags": [ "redis", "8" ] } ];
-        return dummy;
-    }
-
     handleSubmit(){
         var that = this;
         var data = { name: this.state.personName, tags: this.state.selectedTags };
         requests.getPersonSearch( data ).then(function ( resolve ) {
-            //that.setState({ resultPeople: resolve } );
-            that.setState({ resultPeople: that.getDummyData() } );
+            that.setState({ resultPeople: resolve } );
+            //that.setState({ resultPeople: DDP.searchPeopleData() } );
         }, function ( reject ) {
 
         });
@@ -55,15 +51,24 @@ class SearchPeople extends Component {
     generatePeopleList(){
         var that = this;
 
-        var peopleList = this.state.resultPeople.map( function( item, index ){
-            var userInfo = { name : item.name, title : item.title, avatar: item.image, profileUrl : Utils.getProfileUrlFromId(item.userId) };
-            return ( <div key ={`people_${index}`}>
-                {Utils.isNonEmptyObject(userInfo) ? ( <UserCard userInfo={userInfo}/> ): "" }
-                <hr className="hr-primary" />
-            </div> )
-        } )
-        //console.log( quesList );
-        return peopleList;
+        if( Utils.isNonEmptyArray( this.state.resultPeople ) ) {
+            var peopleList = this.state.resultPeople.map(function (item, index) {
+                var userInfo = {
+                    name: item.name,
+                    title: item.title,
+                    avatar: item.image,
+                    profileUrl: Utils.getProfileUrlFromId(item.userId)
+                };
+                return ( <div key={`people_${index}`}>
+                    {Utils.isNonEmptyObject(userInfo) ? ( <UserCard userInfo={userInfo}/> ) : "" }
+                    <hr className="hr-primary"/>
+                </div> )
+            })
+            //console.log( quesList );
+            return peopleList;
+        }else {
+            return null;
+        }
     }
 
     render(){

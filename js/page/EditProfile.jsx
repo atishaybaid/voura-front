@@ -18,7 +18,9 @@ class EditProfile extends Component {
 
     constructor(props) {
         super(props);
-        this.userId = window.location.pathname.match(/([^\/]*)\/*$/)[1];
+        //this.userId = window.location.pathname.match(/([^\/]*)\/*$/)[1];
+        //this.userId = window.location.pathname.match(/([^\/]*)\/*$/)[1];
+        this.userId = Utils.isEmpty( props.match.params.id ) ? '' : props.match.params.id;
         this.state = {
             name: "",
             description: "",

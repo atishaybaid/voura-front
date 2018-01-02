@@ -107,8 +107,8 @@ class SearchVideos extends Component {
         var userIds = Array.prototype.join.call( userIdsArr, ',');
         requests.getUsersInfo( userIds ).then( function ( resolve ) {
             var sems  = that.state.resultVideos;
-            sems = that.updateSemData( sems, that.getDummyUsers() );
-            //sems = that.updateSemData( sems, resolve );
+            //sems = that.updateSemData( sems, that.getDummyUsers() );
+            sems = that.updateSemData( sems, resolve );
             that.setState({ resultVideos: sems } );
         }, function ( reject ) {
 
@@ -129,8 +129,8 @@ class SearchVideos extends Component {
         var that = this;
         var data = { name: this.state.question, tags: this.state.selectedTags };
         requests.getVideoSearch( data ).then(function ( resolve ) {
-            //that.setState({ resultVideos: resolve } );
-            that.setState({ resultVideos: that.getDummyVideoData() } );
+            that.setState({ resultVideos: resolve } );
+            //that.setState({ resultVideos: that.getDummyVideoData() } );
             var vids = that.state.resultVideos;
             var vids = that.attachUserInfoToVids( vids );
             //that.setState({ resultSeminars: vids } );

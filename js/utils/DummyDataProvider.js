@@ -165,3 +165,33 @@ exports.getDummyProfileData = function(){
 
     }
 }
+
+exports.getDummyEventData = function(){
+    return {
+        "_id" : "Bk3RJQigz",
+        "videoId" : "B1lhRkXiez",
+        "mType" : "SEMINAR",
+        "mReq" : "MODERATE",
+        "from" : 1511973023000,
+        "to" : 1512063023000,
+        "description" : "u2semdesc",
+        "tags" : [
+            "mongodb",
+            "redis"
+        ],
+        "aTags" : [],
+        "requestor" : 0,
+        "requestee" : 2,
+        "state" : "ACCEPTED",
+        "createdAt" : 1511890899767,
+        "updatedAt" : 1511890899767
+    };
+}
+
+exports.searchPeopleData = function ( ) {
+    return [ { "userId": 9, "fId": "sahvi06@gmail.com", "name": "sahvi05", "title": "9 title", "desc": "9  desc", "image": "/9.jpg", "organisations": ["nine-org"], "colleges": ["nine-college"], "tags": [ "redis", "sah" ] }, { "userId": 8, "fId": "sahvi08@gmail.com", "name": "sahvi08", "title": "8 title", "desc": "8  desc", "image": "/8.jpg", "organisations": ["8-org"], "colleges": ["8-college"], "tags": [ "redis", "8" ] } ];
+}
+
+exports.getSearchedSeminarResults = function ( ) {
+    return 
+}

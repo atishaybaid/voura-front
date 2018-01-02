@@ -19,11 +19,12 @@ import TagBox from './TagBox';
 
 class Seminar extends Component {
     constructor(props){
-
         super( props );
-        var videoId = window.location.pathname.match(/([^\/]*)\/*$/)[1];
+        //var videoId = window.location.pathname.match(/([^\/]*)\/*$/)[1];
+        var videoId = Utils.isEmpty( props.match.params.semId ) ? '' : props.match.params.semId;
         this.state ={
             videoId: videoId,
+            eventId: '',
             title:'',
             titleErrorText:'',
             description: '',
@@ -49,13 +50,14 @@ class Seminar extends Component {
         this.pickQuestions = this.pickQuestions.bind(this);
         this.onTitleBlur = this.onTitleBlur.bind(this);
         this.onDescBlur = this.onDescBlur.bind(this);
-        this.getMsgBarContent = this.getMsgBarContent.bind(this);
+        this.getMessageBarText = this.getMessageBarText.bind(this);
         this.addRemoveQuestionAfterListClick = this.addRemoveQuestionAfterListClick.bind(this);
         this.prepareState = this.prepareState.bind(this);
         this.getCreateUpdateButton = this.getCreateUpdateButton.bind(this);
         this.createSeminar = this.createSeminar.bind(this);
         this.updateSeminar = this.updateSeminar.bind(this);
         this.deleteSeminar = this.deleteSeminar.bind(this);
+        this.getEventDataForCreatedSeminar = this.getEventDataForCreatedSeminar.bind(this);
     };
 
     getQuestions(){
@@ -77,39 +79,30 @@ class Seminar extends Component {
 
     prepareState( allData ){
         var quests = this.setQuestsAsSelected( allData[0] );
-        var semData = allData[1];
-        //var event = allData[2];
-        //this.setState({ title: event.title, description: event.description, tags: event.tags, startDate: event.startDate, startTime: event.startTime, endDate: event.endDate, endTime: event.endTime, freeQuests: quests, semData: semData});
-        this.setState({ title: semData.broadcast.resource.snippet.title, description: semData.broadcast.resource.snippet.description, tags: semData.tags, startDate: new Date( semData.broadcast.resource.snippet.scheduledStartTime ), startTime: new Date( semData.broadcast.resource.snippet.scheduledStartTime ), endDate: new Date( semData.broadcast.resource.snippet.scheduledEndTime ), endTime: new Date( semData.broadcast.resource.snippet.scheduledEndTime ), freeQuests: quests, semData: semData});
-    }
+        var event = this.getEventDataForCreatedSeminar( allData[1] );
+        //var semData = allData[2];
 
-    getDummyEventData(){
-        return {
-            "_id" : "Bk3RJQigz",
-            "videoId" : "B1lhRkXiez",
-            "mType" : "SEMINAR",
-            "mReq" : "MODERATE",
-            "from" : 1511973023000,
-            "to" : 1512063023000,
-            "description" : "u2semdesc",
-            "tags" : [
-                "mongodb",
-                "redis"
-            ],
-            "aTags" : [],
-            "requestor" : 0,
-            "requestee" : 2,
-            "state" : "ACCEPTED",
-            "createdAt" : 1511890899767,
-            "updatedAt" : 1511890899767
-        };
+        this.setState({ eventId: event._id ,title: event.title, description: event.description, tags: event.tags, startDate: new Date( event.from ), startTime: new Date( event.from ), endDate: new Date( event.to ), endTime: new Date( event.to ), freeQuests: quests });
+        //this.setState({ title: semData.broadcast.resource.snippet.title, description: semData.broadcast.resource.snippet.description, tags: semData.tags, startDate: new Date( semData.broadcast.resource.snippet.scheduledStartTime ), startTime: new Date( semData.broadcast.resource.snippet.scheduledStartTime ), endDate: new Date( semData.broadcast.resource.snippet.scheduledEndTime ), endTime: new Date( semData.broadcast.resource.snippet.scheduledEndTime ), freeQuests: quests, semData: semData});
     }
-
+    
+    getEventDataForCreatedSeminar( dataArr ){
+        var res = {};
+        if( Utils.isNonEmptyArray( dataArr) ){
+            dataArr.forEach(function ( data, inx ) {
+                if( data.mType == 'SEMINAR' && data.state == 'ACCEPTED' ){
+                    res = data;
+                }
+            })
+        }
+        return res;
+    }   
+    
     componentDidMount() {
         var that = this;
         var semObj = {videoId: this.state.videoId};
-        if( this.state.videoId ) {
-            Promise.all([that.getQuestions(), requests.fetchSeminarData(semObj), /* fetchEventData*/])
+        if( !Utils.isEmpty( this.state.videoId ) ) {
+            Promise.all([that.getQuestions(), requests.fetchEventsData( semObj ), /* requests.fetchSeminarData(semObj) */ ])
                 .then(function (allData) {
                     console.log(allData);
                     //allData[2] = that.getDummyEventData();
@@ -179,7 +172,7 @@ class Seminar extends Component {
         switch( type ){
             case 'create':
                 return (
-                    <span className="highlight"> Seminar created. please <a href={ Utils.getSeminarForPUrl( this.state.semData.videoId )}> visit here </a> </span>
+                    <span className="highlight"> Seminar created. please <a href={ Utils.getSeminarForPUrl( this.state.videoId )}> visit here </a> </span>
                 )
             case 'create_failed':
                 return (
@@ -187,7 +180,7 @@ class Seminar extends Component {
                 )
             case 'update':
                 return (
-                    <span className="highlight"> Seminar updated. please <a href={ Utils.getSeminarForPUrl( this.state.semData.videoId )}> visit here </a> </span>
+                    <span className="highlight"> Seminar updated. please <a href={ Utils.getSeminarForPUrl( this.state.videoId )}> visit here </a> </span>
                 )
             case 'update_failed':
                 return (
@@ -222,10 +215,10 @@ class Seminar extends Component {
         requests.createSeminar(data)
             .then( function ( resolve ) {
                 console.log('sem created');
-                that.setState( {semData: resolve, msgBarText: this.getMessageBarText('create') } );
+                that.setState( {videoId: resolve.videoId, msgBarText: that.getMessageBarText('create') } );
             }, function (reject) {
                 console.log('sem rejected');
-                that.setState( {msgBarText: this.getMessageBarText('create_failed') } );
+                that.setState( {msgBarText: that.getMessageBarText('create_failed') } );
             });
 
     };
@@ -284,7 +277,7 @@ class Seminar extends Component {
     }
 
     getCreateUpdateButton(){
-        if( Utils.isEmpty( this.state.semData ) ){
+        if( Utils.isEmpty( this.state.videoId ) ){
             return (
                 <FlatButton className="landing-btn" label="Create seminar" primary={true}
                             backgroundColor={'#4ebcd5'}  style={{color:'#ffffff'}} onClick={this.createSeminar.bind(this)}
@@ -301,9 +294,13 @@ class Seminar extends Component {
     
     updateSeminar(){
         const that = this;
+        if( Utils.isEmpty(this.state.videoId) || Utils.isEmpty(this.state.eventId ) ){
+            return ;
+        }
         var selectedFreeQuestsIds = Utils.getSelectedQuestionsIds( this.state.freeQuests );
         let data = {
             "videoId" : this.state.videoId,
+            "eventId" : this.state.eventId,
             "bTags": this.state.tags ,
             "bTitle": this.state.title,
             "bDescription" : this.state.description,
@@ -311,27 +308,33 @@ class Seminar extends Component {
             "bEndDateTime": iVCommonUtils.mergeDateTime( this.state.endDate, this.state.endTime ),
             "qIds" : selectedFreeQuestsIds
         };
-        requests.updateSeminar(data)
+        requests.updateSeminarEvent(data)
             .then( function ( resolve ) {
-                that.setState( {msgBarText: this.getMessageBarText('update') } );
+                that.setState( {msgBarText: that.getMessageBarText('update') } );
             }, function (reject) {
-                that.setState( {msgBarText: this.getMessageBarText('update_failed') } );
+                that.setState( {msgBarText: that.getMessageBarText('update_failed') } );
             });
     }
+
     deleteSeminar(){
-        let data = {
-            "videoId": this.state.videoId
+        var that = this;
+        if( Utils.isEmpty( this.state.videoId ) || Utils.isEmpty( this.state.eventId ) ){
+            return ;
         }
-        requests.deleteSeminar( data )
+        let data = {
+            "videoId": this.state.videoId,
+            "eventId" : this.state.eventId
+        }
+        requests.deleteSeminarEvent( data )
             .then( function ( resolve ) {
-                that.setState( {msgBarText: this.getMessageBarText('delete') } );
+                that.setState( {msgBarText: that.getMessageBarText('delete') } );
             }, function (reject) {
-                that.setState( {msgBarText: this.getMessageBarText('delete_failed') } );
+                that.setState( {msgBarText: that.getMessageBarText('delete_failed') } );
             });
     }
 
     getDeleteButton(){
-        if( !Utils.isEmpty( this.state.semData ) ){
+        if( !Utils.isEmpty( this.state.videoId ) ){
             return (
                 <FlatButton className="landing-btn" label="Delete seminar" primary={true}
                             backgroundColor={'#4ebcd5'}  style={{color:'#ffffff'}} onClick={this.deleteSeminar.bind(this)}

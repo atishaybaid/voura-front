@@ -31,6 +31,7 @@ class TagBox extends Component {
         this.renderChips = this.renderChips.bind(this);
         this.handleRequestDelete = this.handleRequestDelete.bind(this);
         this.addToChip =this.addToChip.bind(this);
+        this.clearTags = this.clearTags.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -39,6 +40,24 @@ class TagBox extends Component {
                 selectedTag: nextProps.tags,
             });
         }
+    }
+
+    //setting refs for parent
+    componentDidMount() {
+        if( this.props.onRef ){
+            this.props.onRef(this)
+        }
+
+    }
+    componentWillUnmount() {
+        if( this.props.onRef ){
+            this.props.onRef(undefined)
+        }
+    }
+    clearTags(){
+        this.setState({
+            selectedTag: [],
+        });
     }
 
     handleTagSelected(chosenTag){
@@ -53,7 +72,7 @@ class TagBox extends Component {
     addToChip(){
         //spoof tag is selected
         var chosenTag = this.state.inputText;
-        if( !isEmpty( chosenTag ) ){
+        if( !Utils.isEmpty( chosenTag ) ){
             this.handleTagSelected( chosenTag );
         }
     }
