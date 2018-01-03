@@ -58,6 +58,21 @@ class Seminar extends Component {
         this.updateSeminar = this.updateSeminar.bind(this);
         this.deleteSeminar = this.deleteSeminar.bind(this);
         this.getEventDataForCreatedSeminar = this.getEventDataForCreatedSeminar.bind(this);
+
+        this.getQuestions = this.getQuestions.bind(this);
+        this.setQuestsAsSelected = this.setQuestsAsSelected.bind(this);
+        this.handleTitleChange = this.handleTitleChange.bind(this);
+        this.handleDescriptionChange = this.handleDescriptionChange.bind(this);
+        this.handleStartDate = this.handleStartDate.bind(this);
+        this.handleStartTime = this.handleStartTime.bind(this);
+        this.handleEndDate = this.handleEndDate.bind(this);
+        this.handleEndTime = this.handleEndTime.bind(this);
+        this.getSelectedTags = this.getSelectedTags.bind(this);
+        this.addRemoveQuestion = this.addRemoveQuestion.bind(this);
+        this.showSelectedQuesList = this.showSelectedQuesList.bind(this);
+        this.getSubheaderText = this.getSubheaderText.bind(this);
+        this.getMsgBarContent = this.getMsgBarContent.bind(this);
+        this.getDeleteButton = this.getDeleteButton.bind(this);
     };
 
     getQuestions(){

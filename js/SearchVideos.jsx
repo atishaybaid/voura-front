@@ -19,6 +19,14 @@ class SearchVideos extends Component {
         this.generateVideosList = this.generateVideosList.bind(this);
         this.questionChange = this.questionChange.bind(this);
         this.generateInputFields = this.generateInputFields.bind(this);
+
+        this.getUserIds = this.getUserIds.bind(this);
+        this.getUserFromArr = this.getUserFromArr.bind(this);
+        this.updateSemData = this.updateSemData.bind(this);
+        this.attachUserInfoToVids = this.attachUserInfoToVids.bind(this);
+        this.getUsersData = this.getUsersData.bind(this);
+        this.insertActualUserDataIntoVideos = this.insertActualUserDataIntoVideos.bind(this);
+        this.getSubtitle = this.getSubtitle.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {

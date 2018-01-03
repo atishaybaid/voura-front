@@ -16,6 +16,8 @@ class Notifications extends Component {
             notiList: []
         }
         //const FOLLOWING = 'FOLLOWING';
+        this.socketHandling = this.socketHandling.bind(this);
+        this.generateNotiList = this.generateNotiList.bind(this);
     }
 
     socketHandling(){

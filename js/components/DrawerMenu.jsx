@@ -44,7 +44,8 @@ class DrawerMenu extends Component {
         this.handleNotiClick = this.handleNotiClick.bind(this);
         this.logout = this.logout.bind(this);
         this.showProfile = this.showProfile.bind(this);
-        
+        this.getLoggedInMenu = this.getLoggedInMenu.bind(this);
+        this.getNonLoggedInMenu = this.getNonLoggedInMenu.bind(this);
     }
 
     componentDidMount(){

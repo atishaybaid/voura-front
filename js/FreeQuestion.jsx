@@ -32,10 +32,7 @@ class FreeQuestion extends Component {
         this.qDescChange = this.qDescChange.bind(this);
         this.getSelectedTags = this.getSelectedTags.bind(this);
         this.handleRequestClose = this.handleRequestClose.bind(this);
-        /*this.renderChips = this.renderChips.bind(this);
-        this.fetchTags = this.fetchTags.bind(this);
-        this.handleTagSelected = this.handleTagSelected.bind(this);
-        this.handleRequestDelete = this.handleRequestDelete.bind(this);*/
+        this.getMessageBarText = this.getMessageBarText.bind(this);
     };
 
 
@@ -45,20 +42,6 @@ class FreeQuestion extends Component {
     qDescChange(event,newValue){
         this.setState({qDesc:newValue});
     };
-/*
-    handleTagSelected(chosenTag){
-        let tagList = this.state.selectedTag;
-        tagList.push(chosenTag.Name);
-        this.setState({selectedTag:tagList})
-
-    }
-    handleRequestDelete(tag,index){
-        let selectedTag = this.state.selectedTag;
-        selectedTag.splice(index,1);
-        this.setState({selectedTag:selectedTag})
-
-    }
-*/
 
     getMessageBarText( type ) {
         switch (type) {

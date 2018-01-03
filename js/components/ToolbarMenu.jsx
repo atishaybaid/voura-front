@@ -37,6 +37,9 @@ class ToolbarMenu extends Component {
         this.logout = this.logout.bind(this);
         this.showProfile = this.showProfile.bind(this);
         this.handleAskQuestion = this.handleAskQuestion.bind(this);
+        this.handleHomeClick = this.handleHomeClick.bind(this);
+        this.getLoggedInMenu = this.getLoggedInMenu.bind(this);
+        this.getNonLoggedInMenu = this.getNonLoggedInMenu.bind(this);
     }
 
     componentDidMount(){

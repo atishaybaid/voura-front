@@ -18,6 +18,8 @@ class EducationList extends Component {
         this.generateEduList = this.generateEduList.bind(this);
         this.editEduItem = this.editEduItem.bind(this);
         this.getRightIconButton = this.getRightIconButton.bind(this);
+        this.getSecondryText = this.getSecondryText.bind(this);
+        this.getPrimaryText = this.getPrimaryText.bind(this);
     }
 
     getSecondryText( item ){

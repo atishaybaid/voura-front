@@ -17,6 +17,8 @@ class FollowButton extends Component {
             followStatus: ""
         }
         //const FOLLOWING = 'FOLLOWING';
+        this.handleFollowUnfollow = this.handleFollowUnfollow.bind(this);
+        this.generateFollowBtn = this.generateFollowBtn.bind(this);
     }
 
     componentDidMount() {

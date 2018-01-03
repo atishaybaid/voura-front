@@ -71,6 +71,9 @@ class EditProfile extends Component {
         this.removeCollegeIndexes = this.removeCollegeIndexes.bind(this);
         this.removeExpIndexes = this.removeExpIndexes.bind(this);
         this.getFile = this.getFile.bind(this);
+        this._updateEducationItem = this._updateEducationItem.bind(this);
+        this.getSelectedTags = this.getSelectedTags.bind(this);
+        this.getProfileImage = this.getProfileImage.bind(this);
     }
 
     getDataForProfile(){

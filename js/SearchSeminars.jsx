@@ -23,6 +23,13 @@ class SearchSeminars extends Component {
         this.getUsersData = this.getUsersData.bind(this);
         this.updateSemData = this.updateSemData.bind(this);
         this.insertActualUserDataIntoSeminars = this.insertActualUserDataIntoSeminars.bind(this);
+
+        this.getSelectedDateTime = this.getSelectedDateTime.bind(this);
+        this.getUserIds = this.getUserIds.bind(this);
+        this.getUserFromArr = this.getUserFromArr.bind(this);
+        this.getSubtitle = this.getSubtitle.bind(this);
+        this.attachUserInfoToSems = this.attachUserInfoToSems.bind(this);
+
     }
 
     componentDidMount(){

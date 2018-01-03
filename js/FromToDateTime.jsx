@@ -18,6 +18,7 @@ class FromToDateTime extends Component {
         this.handleEndDate = this.handleEndDate.bind(this);
         this.handleEndTime = this.handleEndTime.bind(this);
         this.updateParent = this.updateParent.bind(this);
+        this.generateDateTimeBoxes = this.generateDateTimeBoxes.bind(this);
     }
 
     updateParent(){
