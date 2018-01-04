@@ -51,7 +51,9 @@ class SeminarSM extends Component {
         this.voteQuestion = this.voteQuestion.bind(this);
         this.getVoteCounts = this.getVoteCounts.bind(this);
         this.socketHandling = this.socketHandling.bind( this );
-
+        this.getSemDataForUserCard = this.getSemDataForUserCard.bind(this);
+        this.getEventDataForCreatedSeminar = this.getEventDataForCreatedSeminar.bind(this);
+        this.getYoutubeOpts = this.getYoutubeOpts.bind(this);
     };
     
     socketHandling(){
@@ -150,15 +152,51 @@ class SeminarSM extends Component {
         return rArray;
     }
 
+    getEventDataForCreatedSeminar( dataArr ){
+        var res = {};
+        if( Utils.isNonEmptyArray( dataArr) ){
+            dataArr.forEach(function ( data, inx ) {
+                if( data.mType == 'SEMINAR' && data.state == 'ACCEPTED' ){
+                    res = data;
+                }
+            })
+        }
+        return res;
+    }
+    
+    getSemDataForUserCard( eventData ) {
+        var event = this.getEventDataForCreatedSeminar( eventData );
+        var obj = {};
+        if( Utils.isNonEmptyObject( event ) ) {
+            obj.title = event.title;
+            obj.subtitle = Utils.getStringFromArr(event.tags);
+            obj.videoUrl = Utils.getVideoUrl(event.videoId);
+            obj.description = event.description;
+        }
+        return obj;
+    }
+
+    getYoutubeOpts( embed, id ){
+        //<iframe width="425" height="344" src="https://www.youtube.com/embed/quTM4HDuqTU?autoplay=1&livemonitor=1" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe>
+        return {
+            height: '390',
+                width: '640',
+                url: 'https://www.youtube.com/embed/'+id
+        }
+    }
+
+
     componentDidMount(){
         var that = this;
         var semObj = { videoId: this.state.videoId };
-        Promise.all( [ that.getQuestions(), that.getVoteCounts(), requests.fetchSeminarData( semObj ) ] )
+        Promise.all( [ that.getQuestions(), that.getVoteCounts(), requests.fetchEventsData( semObj ), requests.fetchSeminarData( semObj ) ] )
             .then(  function ( allData ) {
                 var questions = that.getQuestionList( allData[0], allData[1] );
-                that.setState({ questionList:questions, seminarData : allData[2] });
-                if( allData[2] ){
-                    requests.getUserInfo( ).then(function ( resolve ) {
+                var eventData = that.getSemDataForUserCard( allData[2] );
+                var broadCastData = allData[3];
+                that.setState({ questionList:questions, seminarData : eventData, youtubeOpts: that.getYoutubeOpts( broadCastData.broadcast.resource.contentDetails.monitorStream.embedHtml, broadCastData.broadcast.id ) });
+                if( Utils.isNonEmptyObject( eventData ) ){
+                    requests.getUserInfo( eventData.requestee ).then(function ( resolve ) {
                         that.setState({ userInfo: resolve } );
                     }, function ( reject ) {
 

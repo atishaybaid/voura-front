@@ -14,6 +14,13 @@ class UserCard extends Component {
         this.linkProfileClick = this.linkProfileClick.bind(this);
         this.linkVideoClick = this.linkVideoClick.bind(this);
         this.showCardHeader = this.showCardHeader.bind(this);
+        this.getVideoSubtitle = this.getVideoSubtitle.bind(this);
+    }
+
+    getVideoSubtitle(){
+        var sd = new Date( this.props.videoData.broadcast.resource.snippet.scheduledStartTime )
+        var ed = new Date( this.props.videoData.broadcast.resource.snippet.scheduledEndTime )
+        return Utils.js_yyyy_mm_dd_hh_mm_ss( sd ) + ' - ' + Utils.js_yyyy_mm_dd_hh_mm_ss( ed );
     }
 
     showVideoData(){
@@ -24,7 +31,7 @@ class UserCard extends Component {
         if(  Utils.isNonEmptyObject(this.props.videoData.broadcast ) ){
             return (
                 <div>
-            <CardTitle title={this.props.videoData.broadcast.resource.snippet.title} subtitle={this.props.videoData.broadcast.resource.snippet.scheduledStartTime} />
+            <CardTitle title={this.props.videoData.broadcast.resource.snippet.title} subtitle={this.getVideoSubtitle()} />
             <CardText>
                 {this.props.videoData.broadcast.resource.snippet.description}
             </CardText>
@@ -51,7 +58,7 @@ class UserCard extends Component {
     }
 
     linkVideoClick( vidUrl ){
-        window.location.href = vidUrl;
+        //window.location.href = vidUrl;
         Utils.openInNewTab( vidUrl );
     }
 
@@ -61,8 +68,8 @@ class UserCard extends Component {
                 <CardHeader
                     title={this.props.userInfo.name}
                     subtitle={this.props.userInfo.title}
-                    avatar={this.props.userInfo.avatar}
-                    onClick={this.linkProfileClick.bind( null, this.props.userInfo.profileUrl )}
+                    avatar={this.props.userInfo.image}
+                    onClick={this.linkProfileClick.bind( null, Utils.getProfileUrlFromId( this.props.userInfo.userId ) )}
                 />
             );
         }else{
